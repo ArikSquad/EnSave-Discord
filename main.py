@@ -34,6 +34,14 @@ slash = SlashCommand(bot, sync_commands=True, override_type=True)
 
 #oming Soon Commands
 
+@bot.command()
+@commands.cooldown(1, 2, commands.BucketType.user)
+async def slap(ctx, member: discord.User = None):
+    emb = discord.Embed(title=None,
+                        description=f"{ctx.message.author.mention} slaps {member.mention} in the face!",
+                        color=0x3498db)
+
+    await ctx.send(embed=emb)
 
 
 #Working commands
@@ -50,9 +58,6 @@ async def dog(ctx):
             )
             embed.set_image(url=data['url'])
 
-            async with ctx.typing():
-                await asyncio.sleep(1)
-
             await ctx.send(embed=embed)
 
 @bot.command(pass_context=True)
@@ -65,18 +70,15 @@ async def meme(ctx):
             res = await r.json()
             embed.set_image(url=res['data']['children'] [random.randint(0, 25)]['data']['url'])
 
-            async with ctx.typing():
-                await asyncio.sleep(1)
-
             await ctx.send(embed=embed)
 
 emojis2 = ['heart', 'verifycyan', 'uhh']
 @bot.command()
 async def noob(ctx, member: discord.Member):
     await ctx.message.delete()
-    if member != None:
+    if member is not None:
         await ctx.send(f"{member.mention} is noob.")
-        await member.send("I know, I have been a noob lately...")
+        await member.send(f"{ctx.message.author} said you were bad!")
     else:
         await ctx.send("You forgot who!")
 
@@ -197,7 +199,7 @@ async def play(ctx, *, search):
     if voice_channel != None:
         vc = await voice_channel.connect()
         vc.play(discord.FFmpegPCMAudio(executable="C:/FFMPEG/ffmpeg.exe",
-                                       source="C:/Users/Arttu/Desktop/EnSave Reborn/song.mp3"))
+                                       source="D:/misc/EnSave Reborn/song.mp3"))
         while vc.is_playing():
             await msg.edit(embed=playing)
         await vc.disconnect()
@@ -308,22 +310,10 @@ async def join(ctx):
         voice = await channel.connect()
     msg = await ctx.send(embed=joined)
 
-    voice.play(discord.FFmpegPCMAudio(executable="C:/FFMPEG/ffmpeg.exe", source="C:/Users/Arttu/Desktop/EnSave Reborn/song.mp3"))
+    voice.play(discord.FFmpegPCMAudio(executable="C:/FFMPEG/ffmpeg.exe", source="D:/misc/EnSave Reborn/song.mp3"))
     while voice.is_playing():
         await msg.edit(embed=plays)
     await msg.edit(embed=stop)
-
-
-@bot.command(pass_context=True)
-@commands.has_permissions(administrator=True)
-async def nick(ctx, member: discord.Member, nick):
-    nick = discord.Embed(title="Admin",
-                          description=f"Nickname was changed for {member.mention} ",
-                          color=discord.Color.green())
-
-    await ctx.message.delete()
-    await member.edit(nick=nick)
-    await ctx.send(embed=nick)
 
 @bot.command()
 async def pause(ctx):
@@ -482,7 +472,7 @@ async def hello(ctx):
     await ctx.send(embed=msg)
 
 
-@bot.command(help="Says something what you like.", brief="Says something after the .say")
+@bot.command(help="Says something what you like.", brief="Says something after the command")
 async def say(ctx, *, text):
     msg = discord.Embed(title="Fun",
                         description=f'' + ctx.message.author.mention + ': ' + text,
