@@ -517,4 +517,4 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game('AriCC'))
 
 
-bot.run('ODEyODA4ODY1NzI4OTU0Mzk5.YDGJPg.Utd09z1vSe2okDUgzZuHwMCW9xg')
+bot.run('lmao')
