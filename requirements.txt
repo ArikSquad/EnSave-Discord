@@ -2,3 +2,5 @@ discord
 aiohttp
 youtube_dl
 asyncio
+discord-py-slash-command
+pynacl

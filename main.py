@@ -9,10 +9,12 @@ import json
 import os
 import aiohttp
 import random
-import urllib, urllib.parse, urllib.request
+import urllib
+import urllib.parse
+import urllib.request
 import asyncio
-
 import re
+
 
 def get_prefix(client, message):
     try:
@@ -29,10 +31,10 @@ def get_prefix(client, message):
         with open('prefixes.json', 'w') as f:
             json.dump(prefixes, f, indent=4)
 
+
 bot = commands.Bot(command_prefix=get_prefix)
 slash = SlashCommand(bot, sync_commands=True, override_type=True)
 
-#oming Soon Commands
 
 @bot.command()
 @commands.cooldown(1, 2, commands.BucketType.user)
@@ -43,8 +45,6 @@ async def slap(ctx, member: discord.User = None):
 
     await ctx.send(embed=emb)
 
-
-#Working commands
 
 @bot.command()
 async def dog(ctx):
@@ -60,6 +60,7 @@ async def dog(ctx):
 
             await ctx.send(embed=embed)
 
+
 @bot.command(pass_context=True)
 async def meme(ctx):
     await ctx.message.delete()
@@ -68,11 +69,14 @@ async def meme(ctx):
     async with aiohttp.ClientSession() as cs:
         async with cs.get('https://www.reddit.com/r/dankmemes/new.json?sort=hot') as r:
             res = await r.json()
-            embed.set_image(url=res['data']['children'] [random.randint(0, 25)]['data']['url'])
+            embed.set_image(url=res['data']['children'][random.randint(0, 25)]['data']['url'])
 
             await ctx.send(embed=embed)
 
+
 emojis2 = ['heart', 'verifycyan', 'uhh']
+
+
 @bot.command()
 async def noob(ctx, member: discord.Member):
     await ctx.message.delete()
@@ -120,15 +124,17 @@ async def test(ctx, option: str):
     await ctx.send(f"Wow, you actually chose {option}? :(")
 
 
+
 @bot.command()
 async def imgay(ctx):
     await ctx.message.delete()
     embed = discord.Embed(title="Your Gay?",
-                          description="Yes, you are.",
+                          description=f"Yes, {ctx.message.author.mention} is gay.",
                           color=discord.Color.magenta())
     async with ctx.typing():
         await asyncio.sleep(1)
     await ctx.send(embed=embed)
+
 
 @bot.command(pass_context=True, brief="This will play a song 'play [url]'", aliases=['pl'])
 async def play(ctx, *, search):
@@ -140,12 +146,10 @@ async def play(ctx, *, search):
     video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
     url = "https://www.youtube.com/watch?v=" + video_ids[0]
 
-
-
     embed1 = discord.Embed(title="Music Link",
-                          url=f'{url}',
-                          description=f"Is this what you wanted to hear {ctx.message.author}?",
-                          color=0xFF5733)
+                           url=f'{url}',
+                           description=f"Is this what you wanted to hear {ctx.message.author}?",
+                           color=0xFF5733)
     await start1.edit(embed=embed1)
 
     embed2 = discord.Embed(title="Music",
@@ -157,20 +161,21 @@ async def play(ctx, *, search):
                            color=discord.Color.dark_red())
 
     permission = discord.Embed(title="Music",
-                           description=f'Wait for the current playing music end or use the "leave" command. {ctx.message.author.mention}',
-                           color=discord.Color.red())
+                               description=f'Wait for the current playing music end or use the "leave" command.'
+                                           f' {ctx.message.author.mention}',
+                               color=discord.Color.red())
 
     stop = discord.Embed(title="Music",
-                               description=f'Stopped playing the music! {ctx.message.author.mention}',
-                               color=discord.Color.green())
+                            description=f'Stopped playing the music! {ctx.message.author.mention}',
+                            color=discord.Color.green())
 
     isnt = discord.Embed(title="Music",
                          description=f"{ctx.message.author.mention} isn't in a voice chat",
                          color=discord.Color.green())
 
     playing = discord.Embed(title="Music",
-                         description=f'Currently playing the music!',
-                         color=discord.Color.gold())
+                            description=f'Currently playing the music!',
+                            color=discord.Color.gold())
 
     song_there = os.path.isfile("song.mp3")
     try:
@@ -196,13 +201,12 @@ async def play(ctx, *, search):
             os.rename(file, 'song.mp3')
     await msg.edit(embed=embed3)
     voice_channel = ctx.author.voice.channel
-    if voice_channel != None:
+    if voice_channel is not None:
         vc = await voice_channel.connect()
         vc.play(discord.FFmpegPCMAudio(executable="C:/FFMPEG/ffmpeg.exe",
                                        source="D:/misc/EnSave Reborn/song.mp3"))
         while vc.is_playing():
             await msg.edit(embed=playing)
-        await vc.disconnect()
         await msg.edit(embed=stop)
     else:
         await ctx.send(embed=isnt)
@@ -254,12 +258,12 @@ async def changeprefix(ctx, prefix):
 
 @bot.command(help="Multiply numbers.", brief="Multiply numbers.")
 async def multiply(ctx, left: int, right: int):
-    multiply = discord.Embed(title="Maths",
-                           description=f"The answer is: {left * right}! {ctx.message.author.mention}",
-                           color=discord.Color.dark_red())
+    as4 = discord.Embed(title="Maths",
+                        description=f"The answer is: {left * right}! {ctx.message.author.mention}",
+                        color=discord.Color.dark_red())
 
     await ctx.message.delete()
-    await ctx.send(embed=multiply)
+    await ctx.send(embed=as4)
 
 
 @bot.command(help="Multiply numbers.", brief="Multiply numbers.")
@@ -427,7 +431,7 @@ async def add(ctx, left: int, right: int):
 
     await ctx.message.delete()
 
-    if left & right != None:
+    if left & right is not None:
         await ss.edit(embed=msg)
     else:
         ctx.send(embed=no)
@@ -461,6 +465,19 @@ async def ping(ctx):
     print(f'Ping {int(ping)}ms')
 
 
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def console(ctx):
+    times = int(input("Times you want to speak: "))
+    await ctx.message.delete()
+    for i in range(times):
+        text = input("Speak now: ")
+        while text == None:
+            print("Slow")
+        await ctx.send(text)
+
+
+
 @bot.command(help="Says hello to you!", brief="Says a nice little hello back to you.")
 async def hello(ctx):
     msg = discord.Embed(title="Fun",
@@ -481,10 +498,22 @@ async def say(ctx, *, text):
     await ctx.message.delete()
     await ctx.send(embed=msg)
 
+@bot.command()
+async def callarik(ctx):
+    pev = input(f"{ctx.message.author} wants you to say something > ")
+    while pev is None:
+        time.sleep(1)
+    await ctx.send(pev)
+
+
+
 
 @bot.event
 async def on_ready():
-    print('Bot is now working!')
+    print("Logging in...")
+    print("Bot can now be used.")
+    print("EnSave is mow on the use")
+    print("----------------------")
     await bot.change_presence(activity=discord.Game('AriCC'))
 
 
