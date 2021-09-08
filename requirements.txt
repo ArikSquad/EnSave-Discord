@@ -1,4 +1,3 @@
 discord
 aiohttp
-youtube_dl
 asyncio
