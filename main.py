@@ -87,4 +87,4 @@ for filename in os.listdir('./cogs'):
         bot.load_extension(f'cogs.{filename[:-3]}')
 
 
-bot.run('ODEyODA4ODY1NzI4OTU0Mzk5.YDGJPg.LLZpCQsIf8zZR8Nb02S4ofoq-qI')
+bot.run(KEY)
