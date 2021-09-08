@@ -5,11 +5,11 @@ from discord.ext import commands
 from discord_slash import SlashCommand
 import json
 import os
-from os import getenv
 from dotenv import load_dotenv
 
 load_dotenv()
-token = getenv("TOKEN")
+token = os.getenv('token')
+
 
 def get_prefix(ctx, message):
     try:
@@ -82,9 +82,7 @@ async def on_ready():
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="you"))
 
     print("Logging in...")
-    print("Bot can now be used.")
-    print("EnSave is now on the use")
-    print("----------------------")
+    print(f'{bot.user} has connected to Discord!')
 
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
