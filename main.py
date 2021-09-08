@@ -5,7 +5,11 @@ from discord.ext import commands
 from discord_slash import SlashCommand
 import json
 import os
+from os import getenv
+from dotenv import load_dotenv
 
+load_dotenv()
+token = getenv("TOKEN")
 
 def get_prefix(ctx, message):
     try:
@@ -87,4 +91,4 @@ for filename in os.listdir('./cogs'):
         bot.load_extension(f'cogs.{filename[:-3]}')
 
 
-bot.run('ODEyODA4ODY1NzI4OTU0Mzk5.YDGJPg.LLZpCQsIf8zZR8Nb02S4ofoq-qI')
+bot.run(token)
