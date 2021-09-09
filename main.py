@@ -1,3 +1,5 @@
+import random
+
 import discord
 from discord.ext import commands
 from discord_slash import SlashCommand
@@ -67,8 +69,7 @@ async def on_guild_remove(guild):
 async def changeprefix(ctx, prefix):
     prefixss = discord.Embed(title="Moderation",
                              description=f"Changed the prefix to ' + prefix",
-                             color=discord.Color.dark_red())
-
+                             color=discord.Color.gold())
     await ctx.message.delete()
     await ctx.send(embed=prefixss)
     with open('prefixes.json', 'r') as f:
@@ -76,20 +77,29 @@ async def changeprefix(ctx, prefix):
     prefixes[str(ctx.guild.id)] = prefix
     with open('prefixes.json', 'w') as f:
         json.dump(prefixes, f, indent=4)
+    print(f'Changed prefix in {ctx.guild}. Command was ran user {ctx.message.author}.')
 
 
 @bot.event
 async def on_ready():
     DiscordComponents(bot)
 
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="you"))
+    randomints = random.randint(1, 3)
+
+    if randomints == 1:
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="you"))
+    elif randomints == 2:
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Rickroll"))
+    elif randomints == 3:
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="AriCC"))
 
     print("Logging in...")
     print(f'{bot.user} has connected to Discord!')
+    print(f'####################################')
+
 
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         bot.load_extension(f'cogs.{filename[:-3]}')
-
 
 bot.run(token, reconnect=True)
