@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import traceback
 from datetime import datetime
+import dotenv
 
 
 class ErrorHandler(commands.Cog):

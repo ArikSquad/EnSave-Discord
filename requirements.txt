@@ -1,3 +1,4 @@
 discord
 aiohttp
 asyncio
+dotenv

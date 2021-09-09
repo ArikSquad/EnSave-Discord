@@ -1,11 +1,11 @@
-import datetime
-import traceback
 import discord
 from discord.ext import commands
 from discord_slash import SlashCommand
 import json
 import os
 from dotenv import load_dotenv
+from pretty_help import DefaultMenu, PrettyHelp
+from discord_components import DiscordComponents
 
 load_dotenv()
 token = os.getenv('token')
@@ -29,6 +29,9 @@ def get_prefix(ctx, message):
 
 bot = commands.Bot(command_prefix=get_prefix)
 slash = SlashCommand(bot, sync_commands=True)
+
+menu = DefaultMenu('◀️', '▶️', '❌')
+bot.help_command = PrettyHelp(navigation=menu, color=discord.Colour.green(), no_category="Other")
 
 
 @bot.event
@@ -59,10 +62,10 @@ async def on_guild_remove(guild):
         json.dump(prefixes, f, indent=4)
 
 
-@bot.command(help="Change the prefix.", brief="Change the prefix.")
+@bot.command(help="Change the prefix.", brief="Change the prefix of the bot.")
 @commands.has_permissions(administrator=True)
 async def changeprefix(ctx, prefix):
-    prefixss = discord.Embed(title="Admin",
+    prefixss = discord.Embed(title="Moderation",
                              description=f"Changed the prefix to ' + prefix",
                              color=discord.Color.dark_red())
 
@@ -75,10 +78,10 @@ async def changeprefix(ctx, prefix):
         json.dump(prefixes, f, indent=4)
 
 
-
-
 @bot.event
 async def on_ready():
+    DiscordComponents(bot)
+
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="you"))
 
     print("Logging in...")
@@ -89,4 +92,4 @@ for filename in os.listdir('./cogs'):
         bot.load_extension(f'cogs.{filename[:-3]}')
 
 
-bot.run(token)
+bot.run(token, reconnect=True)
