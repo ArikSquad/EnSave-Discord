@@ -2,11 +2,11 @@ import discord
 from discord.ext import commands
 
 
-class Moderation(commands.Cog, name="Moderation"):
+class Moderation(commands.Cog, name="Moderation", description="Moderation Commands"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='kick', pass_context=True)
+    @commands.command(name='Kick', pass_context=True)
     @commands.has_permissions(kick_members=True)
     async def kick(self, context, member: discord.Member, *, reason="Not specified"):
         """
@@ -46,7 +46,7 @@ class Moderation(commands.Cog, name="Moderation"):
                 )
                 await context.message.channel.send(embed=embed)
 
-    @commands.command(name="nick")
+    @commands.command(name="Nick")
     @commands.has_permissions(manage_nicknames=True)
     async def nick(self, context, member: discord.Member, *, nickname=None):
         """
@@ -68,7 +68,7 @@ class Moderation(commands.Cog, name="Moderation"):
             )
             await context.message.channel.send(embed=embed)
 
-    @commands.command(name="ban")
+    @commands.command(name="Ban")
     @commands.has_permissions(ban_members=True)
     async def ban(self, context, member: discord.Member, *, reason="Not specified"):
         """
@@ -103,7 +103,7 @@ class Moderation(commands.Cog, name="Moderation"):
             )
             await context.send(embed=embed)
 
-    @commands.command(name="warn")
+    @commands.command(name="Warn")
     @commands.has_permissions(manage_messages=True)
     async def warn(self, context, member: discord.Member, *, reason="Not specified"):
         """
@@ -124,7 +124,7 @@ class Moderation(commands.Cog, name="Moderation"):
         except:
             pass
 
-    @commands.command(name="purge")
+    @commands.command(name="Purge", aliases=["clear", "vanish"])
     @commands.has_permissions(manage_messages=True, manage_channels=True)
     async def purge(self, context, amount):
         """

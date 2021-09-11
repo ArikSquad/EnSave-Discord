@@ -7,13 +7,17 @@ import aiohttp
 guild_ids = [770634445370687519]
 
 
-class Slash(commands.Cog):
+class Slash(commands.Cog, description="Slash Commands"):
     def __init__(self, bot):
         self.bot = bot
 
     @cog_ext.cog_slash(name="meme", guild_ids=guild_ids, description="Memes!")
     async def _meme(self, ctx: SlashContext):
-        embed = discord.Embed(title="Memes", description="")
+        numbercheck = random.randint(1, 5)
+        if numbercheck == 2:
+            embed = discord.Embed(title=f"Join minecraft server Play.MikArt.eu", description="")
+        else:
+            embed = discord.Embed(title="Memes", description="")
         async with aiohttp.ClientSession() as cs:
             async with cs.get('https://www.reddit.com/r/dankmemes/new.json?sort=hot') as r:
                 res = await r.json()

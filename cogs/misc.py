@@ -2,16 +2,16 @@ import discord
 import random
 from discord.ext import commands
 import aiohttp
-import time
 import asyncio
 from discord_components import Button, ButtonStyle
+import secrets
 
 
-class Misc(commands.Cog):
+class Misc(commands.Cog, description="Miscellaneous commands"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(help="Says something what you like.", brief="Says something after the command")
+    @commands.command(help="Says something what you like", name="Say", aliases=["tell", "repeat"])
     async def say(self, ctx, *, text):
         msg = discord.Embed(title="Misc",
                             description=f'' + ctx.message.author.mention + ': ' + text,
@@ -20,57 +20,22 @@ class Misc(commands.Cog):
             await asyncio.sleep(2)
         await ctx.send(embed=msg)
 
-    @commands.command(help="Says hello to you!", brief="Says a nice little hello back to you.", hidden=True)
+    @commands.command(help="Says hello to you", hidden=True)
     async def hello(self, ctx):
         msg = discord.Embed(title="Misc",
                             description=f"Hello {ctx.author.name}",
                             color=discord.Color.green())
         await ctx.send(embed=msg)
 
-    @commands.command(name="invite")
-    async def invite(self, context):
-        """
-        Get the invite link of the bot to be able to invite it.
-        """
-        embed = discord.Embed(
-            title="Misc",
-            description=f"Invite me by clicking"
-                        f" [here](https://discord.com/api/oauth2/authorize?"
-                        f"client_id=812808865728954399&permissions=8&redirect_uri="
-                        f"http%3A%2F%2Fdiscord.mikart.eu%2F&scope=bot%20applications.commands).",
-            color=0xD75BF4
-        )
-        try:
-            await context.author.send(embed=embed)
-            await context.send("I sent you a private message!")
-        except discord.Forbidden:
-            await context.send(embed=embed)
-
-    @commands.command(help="Prints the User pfp.", brief="Prints the User profile picture.")
-    async def user(self, ctx, *, member: discord.Member = None):
+    @commands.command(help="Sends user profile picture", name="ProfilePicture")
+    async def profilepicture(self, ctx, *, member: discord.Member = None):
         if not member:
             member = ctx.message.author
 
         a = member.avatar_url
         ctx.send(a)
 
-    @commands.command(pass_context=True, help="Shows the latency.", brief="Shows the latency.")
-    async def ping(self, ctx):
-        wait = discord.Embed(title="Fun",
-                             description=f"Waiting the server to respond!",
-                             color=discord.Color.red())
-
-        before = time.monotonic()
-        message = await ctx.send(embed=wait)
-        ping = (time.monotonic() - before) * 1000
-
-        waited = discord.Embed(title="Fun",
-                               description=f"Pong!  `{int(ping)}ms`",
-                               color=discord.Color.green())
-        await message.edit(embed=waited)
-        print(f'Ping {int(ping)}ms')
-
-    @commands.command()
+    @commands.command(name="Slap", description="Slap someone")
     @commands.cooldown(1, 2, commands.BucketType.user)
     async def slap(self, ctx, member: discord.User = None):
         emb = discord.Embed(title="Misc",
@@ -79,7 +44,7 @@ class Misc(commands.Cog):
 
         await ctx.send(embed=emb)
 
-    @commands.command(help="Dog picture")
+    @commands.command(help="Dog picture", name="Dog")
     async def dog(self, ctx):
         async with aiohttp.ClientSession() as cs:
             async with cs.get("https://random.dog/woof.json") as r:
@@ -92,7 +57,7 @@ class Misc(commands.Cog):
 
                 await ctx.send(embed=embed)
 
-    @commands.command(help="MikArt website link!")
+    @commands.command(help="MikArt website link!", name="Website")
     async def website(self, ctx):
 
         embed = discord.Embed(title=f"Website", color=discord.Color.gold())
@@ -106,10 +71,10 @@ class Misc(commands.Cog):
         )
 
     # Meme command
-    @commands.command(pass_context=True, help="Shows a funny meme")
+    @commands.command(pass_context=True, help="Shows a funny meme", name="Meme")
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def meme(self, ctx):
-        numbercheck = random.randint(1, 20)
+        numbercheck = random.randint(1, 5)
         if numbercheck == 2:
             embed = discord.Embed(title=f"Join minecraft server Play.MikArt.eu", description="")
         else:
@@ -120,6 +85,72 @@ class Misc(commands.Cog):
                 res = await r.json()
                 embed.set_image(url=res['data']['children'][random.randint(0, 25)]['data']['url'])
                 await ctx.send(embed=embed)
+
+    @commands.command(aliases=["8ball"], name="8Ball")
+    async def eightball(self, ctx, *, question: commands.clean_content):
+        """ Consult 8ball to receive an answer """
+        ballresponse = [
+            "Yes", "No", "Take a wild guess...", "Very doubtful",
+            "Sure", "Without a doubt", "Most likely", "Might be possible",
+            "You'll be the judge", "no... (╯°□°）╯︵ ┻━┻", "no... baka",
+            "senpai, pls no ;-;"
+        ]
+
+        answer = random.choice(ballresponse)
+
+        embed1 = discord.Embed(title=f"Misc", description=f"🎱 **Question:** {question}\n**Answer:** {answer}",
+                               color=discord.Color.green())
+
+        await ctx.send(embed=embed1)
+
+    @commands.command(name="Password")
+    async def password(self, ctx, nbytes: int = 18):
+        """ Generates a random password string for you
+        This returns a random URL-safe text string, containing nbytes random bytes.
+        The text is Base64 encoded, so on average each byte results in approximately 1.3 characters.
+        """
+
+        embed1 = discord.Embed(title=f"Misc", description="I only accept any numbers between 3-1400",
+                               color=discord.Color.dark_red())
+
+        embed2 = discord.Embed(title=f"Misc", description=f"Sending you a private message with your "
+                                                          f"random generated password **{ctx.author.name}**",
+                               color=discord.Color.green())
+
+        embed3 = discord.Embed(title=f"Misc", description=f"🎁 **Here is your "
+                                                          f"password:**\n{secrets.token_urlsafe(nbytes)}",
+                               color=discord.Color.green())
+
+        if nbytes not in range(3, 1401):
+            return await ctx.send(embed=embed1)
+        if hasattr(ctx, "guild") and ctx.guild is not None:
+            await ctx.send(embed=embed2)
+        await ctx.author.send(embed=embed3)
+
+    @commands.command(aliases=["slots", "bet"], name="Slot")
+    @commands.cooldown(rate=1, per=10.0, type=commands.BucketType.user)
+    async def slot(self, ctx):
+        """ Roll the slot machine """
+        emojis = "🍎🍊🍐🍋🍉🍇🍓🍒"
+        a = random.choice(emojis)
+        b = random.choice(emojis)
+        c = random.choice(emojis)
+
+        slotmachine = f"**[ {a} {b} {c} ]\n{ctx.author.name}**,"
+
+        embed1 = discord.Embed(title=f"Misc", description=f"{slotmachine} All matching, you won! 🎉",
+                               color=discord.Color.green())
+        embed2 = discord.Embed(title=f"Misc", description=f"{slotmachine} 2 in a row, you won! 🎉",
+                               color=discord.Color.purple())
+        embed3 = discord.Embed(title=f"Misc", description=f"{slotmachine} No match, you lost 😢",
+                               color=discord.Color.red())
+
+        if a == b == c:
+            await ctx.send(embed=embed1)
+        elif (a == b) or (a == c) or (b == c):
+            await ctx.send(embed=embed2)
+        else:
+            await ctx.send(embed=embed3)
 
 
 def setup(bot):

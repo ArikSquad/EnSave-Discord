@@ -32,8 +32,12 @@ def get_prefix(ctx, message):
 bot = commands.Bot(command_prefix=get_prefix)
 slash = SlashCommand(bot, sync_commands=True)
 
-menu = DefaultMenu('◀️', '▶️', '❌')
-bot.help_command = PrettyHelp(navigation=menu, color=discord.Colour.green(), no_category="Other")
+menu = DefaultMenu(
+    '◀️', '▶️', '❌',
+    active_time=5,
+    delete_after_timeout=True,
+)
+bot.help_command = PrettyHelp(navigation=menu, color=discord.Colour.green(), no_category="Other", )
 
 
 @bot.event
@@ -64,7 +68,7 @@ async def on_guild_remove(guild):
         json.dump(prefixes, f, indent=4)
 
 
-@bot.command(help="Change the prefix.", brief="Change the prefix of the bot.")
+@bot.command(help="Change the prefix.", name="ChangePrefix")
 @commands.has_permissions(administrator=True)
 async def changeprefix(ctx, prefix):
     prefixss = discord.Embed(title="Moderation",

@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 import traceback
 from datetime import datetime
-import dotenv
 
 
 class ErrorHandler(commands.Cog):
@@ -57,11 +56,11 @@ class ErrorHandler(commands.Cog):
         commands.DisabledCommand: 'This command is disabled and cannot be used',
         commands.CheckFailure: '{err}',
         commands.CommandOnCooldown: '{err}',
-        commands.MissingRequiredArgument: 'You are missing a required argument!'
-                                          ' (See `{ctx.prefix}help {ctx.command.qualified_name}`'
-                                          ' for info on how to use this command).',
-        commands.BadArgument: 'Invalid argument given! (See `{ctx.prefix}help'
-                              ' {ctx.command.qualified_name}` for info on how to use this command).',
+        commands.MissingRequiredArgument: 'You are missing a required argument! '
+                                          '(See `{ctx.prefix}help {ctx.command.qualified_name}` '
+                                          'for info on how to use this command).',
+        commands.BadArgument: 'Invalid argument given! (See `{ctx.prefix}help {ctx.command.qualified_name}` '
+                              'for info on how to use this command).',
         commands.CommandNotFound: None,
 
     }
@@ -96,11 +95,12 @@ class ErrorHandler(commands.Cog):
             )
 
             embed.add_field(name='Command', value=ctx.command)
-            embed.add_field(name='Original message', value=ctx.message.content[:1021] +
-                                                           (ctx.message.content[1021:] and '...'))
-            embed.add_field(name='Channel', value='Private Message'
-            if isinstance(ctx.channel, discord.DMChannel) else f'#{ctx.channel.name} (`{ctx.channel.id}`)')
-
+            embed.add_field(name='Original message',
+                            value=ctx.message.content[:1021] + (ctx.message.content[1021:] and '...'))
+            embed.add_field(name='Channel',
+                            value='Private Message' if isinstance(ctx.channel,
+                                                                  discord.DMChannel) else f'#{ctx.channel.name}'
+                                                                                          f' (`{ctx.channel.id}`)')
             embed.add_field(name='Sender', value=f'{ctx.author} (`{ctx.author.id}`)')
             embed.add_field(name='Exception', value=str(error))
 
