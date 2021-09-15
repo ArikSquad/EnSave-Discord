@@ -26,7 +26,8 @@
   <a href="https://docs.mikart.eu">
     <img src="https://readthedocs.org/projects/red-discordbot/badge/?version=stable" alt="Red on readthedocs.org">
   </a>
- 
+ <a href="https://www.python.org/downloads/">
+    <img src="https://img.shields.io/badge/python-3-brightgreen">
   </a>
   <a href="https://opensource.org/licenses/MIT">
     <img src="https://img.shields.io/github/license/ArikSquad/EnSave-Discord">
