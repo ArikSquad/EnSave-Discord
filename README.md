@@ -6,7 +6,7 @@
   <br>
 </h1>
 
-<h4 align="center">Music, Moderation, Memes.</h4>
+<h4 align="center">Moderation, Memes.</h4>
 
 <p align="center">
   <a href="https://discord.gg/Z5N5AWJmrA">
@@ -17,6 +17,7 @@
   </a>
   <a href="https://github.com/Rapptz/discord.py/">
      <img src="https://img.shields.io/badge/discord-py-blue.svg" alt="discord.py">
+      </a>
   </a>
   <a href="https://www.patreon.com/Mhilkos">
     <img src="https://img.shields.io/badge/Support-EnSave!-red.svg" alt="Support EnSave on Patreon!">
