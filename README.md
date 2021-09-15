@@ -43,9 +43,7 @@
   •
   <a href="https://docs.mikart.eu">Documentation</a>
   •
-  <a href="#plugins">Plugins</a>
-  •
-  <a href="#join-the-community">Community</a>
+  <a href="https://discord.gg/Z5N5AWJmrA">Community</a>
   •
   <a href="#license">License</a>
 </p>
