@@ -1,5 +1,4 @@
-<a href="https://discord.gg/mikart%22%3E"
-    <img src="https://discordapp.com/api/guilds/770634445370687519/widget.png?style=shield" alt="Discord Server">
+<img src="https://discordapp.com/api/guilds/770634445370687519/widget.png?style=shield" alt="Discord Server">
   </a>
 
 # EnSave
