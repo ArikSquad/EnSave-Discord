@@ -1,5 +1,5 @@
 # EnSave
-This is a discord bot!
+This is an open-source discord bot developed by ArikSquad.
 
 # Installation
 Clone this repository.
