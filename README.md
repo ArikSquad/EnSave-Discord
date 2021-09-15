@@ -31,8 +31,8 @@
   </a>
  
   </a>
-  <a href="http://makeapullrequest.com">
-    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg">
+  <a href="https://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/github/license/ArikSquad/EnSave-Discord">
   
   </a>
 </p>
