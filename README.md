@@ -31,6 +31,8 @@
   </a>
   <a href="https://opensource.org/licenses/MIT">
     <img src="https://img.shields.io/github/license/ArikSquad/EnSave-Discord">
+  <a href="https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2FArikSquad%2FEnSave-Discord">
+  <img src="https://img.shields.io/twitter/url?url=https%3A%2F%2Fgithub.com%2FArikSquad%2FEnSave-Discord">
   
   </a>
 </p>
