@@ -16,7 +16,7 @@
      <img src="https://img.shields.io/badge/discord-py-blue.svg" alt="discord.py">
       </a>
   </a>
-  <a href="https://www.patreon.com/Mhilkos">
+  <a href="https://www.patreon.com/Ariksquad">
     <img src="https://img.shields.io/badge/Support-EnSave!-red.svg" alt="Support EnSave on Patreon!">
   </a>
 </p>
