@@ -6,7 +6,7 @@
   <br>
 </h1>
 
-<h4 align="center">Moderation, Memes.</h4>
+<h4 align="center">Moderation, Memes, Dogs.</h4>
 
 <p align="center">
   <a href="https://discord.gg/Z5N5AWJmrA">
