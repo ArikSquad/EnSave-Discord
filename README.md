@@ -62,5 +62,5 @@ Then unzip it!
 After that you can just run the main.py, and you are good to go!
 
 # License
-Released under the [MIT License](https://opensource.org/licenses/MIT).
+Released under the [CC0 License](https://creativecommons.org/publicdomain/zero/1.0/).
 
