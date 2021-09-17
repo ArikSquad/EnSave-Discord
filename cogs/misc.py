@@ -86,7 +86,7 @@ class Misc(commands.Cog, description="Miscellaneous commands"):
                 embed.set_image(url=res['data']['children'][random.randint(0, 25)]['data']['url'])
                 await ctx.send(embed=embed)
 
-    @commands.command(aliases=["8ball"], name="8Ball")
+    @commands.command(aliases=["8ba"], name="8Ball")
     async def eightball(self, ctx, *, question: commands.clean_content):
         """ Consult 8ball to receive an answer """
         ballresponse = [

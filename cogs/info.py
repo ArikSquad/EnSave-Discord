@@ -47,14 +47,14 @@ class Info(commands.Cog, description="Info commands"):
         """ Get an invite to our support server! """
 
         embed = discord.Embed(title="Info",
-                              description=f"**Here you go {ctx.author.name} 🍻**\nhttps://discord.gg/DpxkY3x",
+                              description=f"**Here you go {ctx.author.name} 🍻**\n[Click Me](http://discord.mikart.eu/)",
                               color=discord.Color.green())
 
         embed2 = discord.Embed(title="Info",
                                description=f"**{ctx.author.name}** This is the feedback server!",
                                color=discord.Color.green())
 
-        if isinstance(ctx.channel, discord.DMChannel) or ctx.guild.id != 86484642730885120:
+        if isinstance(ctx.channel, discord.DMChannel) or ctx.guild.id != 770634445370687519:
             return await ctx.send(embed=embed)
         await ctx.send(embed=embed2)
 

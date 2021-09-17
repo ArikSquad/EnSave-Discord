@@ -3,10 +3,9 @@ from discord.ext import commands
 import random
 
 
-class Info(commands.Cog, description="Fun commands"):
+class Fun(commands.Cog, description="Fun commands"):
     def __init__(self, bot):
         self.bot = bot
-
 
     @commands.command(help="Coinflip", name="Coinflip")
     async def coinflip(self, ctx):
@@ -23,4 +22,4 @@ class Info(commands.Cog, description="Fun commands"):
 
 
 def setup(bot):
-    bot.add_cog(Info(bot))
+    bot.add_cog(Fun(bot))

@@ -1,5 +1,4 @@
-import random
-
+import asyncio
 import discord
 from discord.ext import commands
 from discord_slash import SlashCommand
@@ -29,7 +28,7 @@ def get_prefix(ctx, message):
             json.dump(prefixes, f, indent=4)
 
 
-bot = commands.Bot(command_prefix=get_prefix)
+bot = commands.Bot(command_prefix=get_prefix, case_insensitive=True)
 slash = SlashCommand(bot, sync_commands=True)
 
 menu = DefaultMenu(
@@ -84,26 +83,49 @@ async def changeprefix(ctx, prefix):
     print(f'Changed prefix in {ctx.guild}. Command was ran user {ctx.message.author}.')
 
 
+async def status_task():
+    while True:
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="you"))
+        await asyncio.sleep(10)
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Rick Astley"))
+        await asyncio.sleep(10)
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="AriCC"))
+        await asyncio.sleep(10)
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,
+                                                            name=f'{len(bot.guilds)} guilds'))
+        await asyncio.sleep(10)
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="Minecraft"))
+        await asyncio.sleep(10)
+
+
+class ColoredText:
+    HEADER = '\033[95m'
+    BLUE = '\033[94m'
+    CYAN = '\033[96m'
+    GREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    END = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
 @bot.event
 async def on_ready():
     DiscordComponents(bot)
 
-    randomints = random.randint(1, 3)
-
-    if randomints == 1:
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="you"))
-    elif randomints == 2:
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Rickroll"))
-    elif randomints == 3:
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="AriCC"))
+    bot.loop.create_task(status_task())
+    print(f"{ColoredText.CYAN}Started bot loop for custom RPC{ColoredText.END}")
 
     print("Logging in...")
-    print(f'{bot.user} has connected to Discord!')
-    print(f'####################################')
+    print(f'{ColoredText.WARNING}{bot.user} has connected to Discord!{ColoredText.END}')
+    print(f'{ColoredText.BOLD}####################################{ColoredText.END}')
 
 
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
-        bot.load_extension(f'cogs.{filename[:-3]}')
+        loader = filename[:-3]
+        bot.load_extension(f'cogs.{loader}')
+        print(f'{loader.capitalize()} has been loaded')
 
 bot.run(token, reconnect=True)
