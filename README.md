@@ -29,8 +29,8 @@
   </a>
    <a href="https://github.com/Rapptz/discord.py/">
      <img src="https://img.shields.io/badge/discord-py-blue.svg" alt="discord.py">
-  <a href="https://opensource.org/licenses/MIT">
-    <img src="https://img.shields.io/github/license/ArikSquad/EnSave-Discord">
+  <a href="https://creativecommons.org/publicdomain/zero/1.0/">
+    <img src="https://img.shields.io/badge/license-CC0-yellowgreen">
   <a href="https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2FArikSquad%2FEnSave-Discord">
   
   
