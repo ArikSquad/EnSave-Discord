@@ -61,6 +61,3 @@ git clone https://github.com/ArikSquad/EnSave-Discord.git
 Then unzip it!
 After that you can just run the main.py, and you are good to go!
 
-# License
-Released under the [MIT License](https://opensource.org/licenses/MIT).
-
