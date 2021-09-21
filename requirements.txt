@@ -1,4 +1,8 @@
 discord
 aiohttp
 asyncio
-dotenv
+python-dotenv
+pyparsing
+discord-py-slash-command
+discord-pretty-help
+discord-components
