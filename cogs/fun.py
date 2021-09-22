@@ -1,9 +1,10 @@
+import asyncio
+import datetime
+import json
+import random
+
 import discord
 from discord.ext import commands
-import random
-import asyncio
-import json
-import datetime
 
 
 class Fun(commands.Cog, description="Fun commands"):
@@ -21,27 +22,22 @@ class Fun(commands.Cog, description="Fun commands"):
     async def cookie(self, ctx):
         """Who can catch the cookie first?"""
 
-        # We send cookie is coming and then wait for 3 seconds
         m = await ctx.send(embed=discord.Embed(title="🍪 Cookie is coming..."))
         await asyncio.sleep(3)
-
-        # Now every second we edit the message till the time is 0
         for i in range(3, 0, -1):
             await m.edit(embed=discord.Embed(title=f"🍪 Cookie is coming in **{i}**"))
             await asyncio.sleep(1)
 
-        # If the time is 0 then we start the challenge
-        # First we save the start time
         start = datetime.datetime.utcnow()
         await m.add_reaction("🍪")
         try:
             # Now we wait for the reaction
             _, user = await self.bot.wait_for(
-                "reaction_add",  # an reaction is being added
-                check=lambda r, u: str(r.emoji) == "🍪"  # the emoji is cookie
-                                and r.message == m  # the reaction is on the message we want
-                                and not u.bot,  # the reaction was not by a bot
-                timeout=10,  # we stop after 10 seconds
+                "reaction_add",
+                check=lambda r, u: str(r.emoji) == "🍪" 
+                                and r.message == m
+                                and not u.bot,
+                timeout=10,
             )
         except asyncio.TimeoutError:
             await ctx.send("No one got the cookie :(")
