@@ -9,6 +9,10 @@ from discord_components import Button, ButtonStyle
 
 
 class Misc(commands.Cog, description="Miscellaneous commands"):
+    """
+    Miscellaneous commands.
+    """
+
     def __init__(self, bot):
         self.bot = bot
 
