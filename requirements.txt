@@ -1,8 +1,8 @@
-discord
-aiohttp
-asyncio
-python-dotenv
-pyparsing
+discord~=1.7.3
+aiohttp~=3.7.4.post0
+asyncio~=3.4.3
+python-dotenv~=0.19.0
+pyparsing~=2.4.7
 discord-py-slash-command
 discord-pretty-help
 discord-components

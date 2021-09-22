@@ -51,9 +51,6 @@ class Fun(commands.Cog, description="Fun commands"):
 
     @commands.command(help="Coinflip", name="Coinflip")
     async def coinflip(self, ctx):
-        """
-        Flips coin.
-        """
 
         determine_flip = [1, 0]
         if random.choice(determine_flip) == 1:
