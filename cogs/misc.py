@@ -1,17 +1,18 @@
-import discord
-import random
-from discord.ext import commands
-import aiohttp
 import asyncio
-from discord_components import Button, ButtonStyle
+import random
 import secrets
+
+import aiohttp
+import discord
+from discord.ext import commands
+from discord_components import Button, ButtonStyle
 
 
 class Misc(commands.Cog, description="Miscellaneous commands"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(help="Says something what you like", name="Say", aliases=["tell", "repeat"])
+    @commands.command(help="Says something what you like", name="Say", aliases=["tell", "echo", "speak", "repeat"])
     async def say(self, ctx, *, text):
         msg = discord.Embed(title="Misc",
                             description=f'' + ctx.message.author.mention + ': ' + text,
@@ -27,8 +28,10 @@ class Misc(commands.Cog, description="Miscellaneous commands"):
                             color=discord.Color.green())
         await ctx.send(embed=msg)
 
-    @commands.command(help="Sends user profile picture", name="ProfilePicture")
-    async def profilepicture(self, ctx, *, member: discord.Member = None):
+    @commands.command(
+        aliases=["pfp", "av", "profilepicture", "profile"], name="Avatar"
+    )
+    async def avatar(self, ctx, *, member: discord.Member = None):
         if not member:
             member = ctx.message.author
 
