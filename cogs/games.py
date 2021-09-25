@@ -11,7 +11,9 @@ class Games(commands.Cog, description="Game commands"):
     @commands.command(help="Roll dice!", name="Dice", aliases=["rollingdice", "diceroll", "rolldice"])
     async def rolldice(self, ctx):
         """Roll dice!"""
-        await ctx.send("Rolled a {}!".format(random.randint(1, 6)))
+        embed1 = discord.Embed(title=f"Games", description="Rolled a {}!".format(random.randint(1, 6)),
+                               color=discord.Color.green())
+        await ctx.send(embed=embed1)
 
     @commands.command(aliases=["8ba"], name="8Ball")
     async def eightball(self, ctx, *, question: commands.clean_content):
