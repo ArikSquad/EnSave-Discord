@@ -54,15 +54,18 @@
 This is an open-source discord bot developed by ArikSquad.
 
 # Installation
-1. Clone this repository.
+1. Clone this repository./
 ```
 git clone https://github.com/ArikSquad/EnSave-Discord.git
 ```
 2. Then unzip it!
 You can use [7zip](https://www.7-zip.org/) to unzip the file.
+  
+3. Open Command Prompt or Terminal. Here is and example if you have it on your desktop: 
+  ```
+  cd Desktop/EnSave-Discord
+  ```
  
-3. Then cd to the folder.
-
 4. Then pip install requirements.txt in your shell.
 ```
 pip install -r requirements.txt
