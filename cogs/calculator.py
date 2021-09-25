@@ -1,8 +1,11 @@
 from __future__ import division
+
 import math
 import operator
-from discord.ext import commands
+from datetime import datetime
 
+import discord
+from discord.ext import commands
 from pyparsing import (
     CaselessLiteral,
     Combine,
@@ -16,6 +19,7 @@ from pyparsing import (
     nums,
     oneOf
 )
+
 
 class NumericStringParser(object):
     """
@@ -139,14 +143,23 @@ class Calculator(commands.Cog, description="Math commands"):
         try:
             answer = self.nsp.eval(formula)
         except Exception as e:
-            return await ctx.send(f"Could not parse formula. {e}")
+            exeuterror = discord.Embed(
+                color=discord.Colour(0xff0000),
+                title=f"Could not parse formula. {e}",
+                timestamp=datetime.utcnow()
+            )
+            return await ctx.send(embed=exeuterror)
 
         if int(answer) == answer:
             # Check if it's a whole number and cast to int if so
             answer = int(answer)
 
         # Send answer
-        await ctx.send(f"{formula} = {answer}")
+        answers = discord.Embed(
+            color=discord.Colour.gold(),
+            title=f"{formula} = {answer}"
+        )
+        await ctx.send(embed=answers)
 
 
 def setup(bot):
