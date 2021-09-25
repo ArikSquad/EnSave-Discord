@@ -86,10 +86,10 @@ class ErrorHandler(commands.Cog):
                 return await ctx.send(f':x: {error}')
 
             exeuterror = discord.Embed(
-                color=discord.Colour(discord.Color.dark_red()),
+                color=discord.Colour(0xff0000),
                 title=':rotating_light: An error occured while trying to execute that command, '
                       'Please contact ArikSquad#6222',
-                timestamp=datetime.now()
+                timestamp=datetime.utcnow()
             )
 
             await ctx.send(embed=exeuterror)
