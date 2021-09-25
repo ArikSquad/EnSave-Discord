@@ -59,7 +59,7 @@ This is an open-source discord bot developed by ArikSquad.
 git clone https://github.com/ArikSquad/EnSave-Discord.git
 ```
 2. Then unzip it!
-You can use 7zip to unzip the file.
+You can use [7zip](https://www.7-zip.org/) to unzip the file.
  
 3. Then cd to the folder.
 
@@ -71,5 +71,5 @@ pip install -r requirements.txt
 5. After that you can just run the main.py, and you are good to go!
 
 # License
-This work is licensed under a [Creative Commons Attribution-NonCommercial 4.0 International License](https://creativecommons.org/licenses/by-nc/4.0/).
+This work is licensed under the [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. You are allowed to fork the project and distribute it, if you give credit. You may not sell any code protected by the license. Not all source files are protected by this license - Some third party libraries may be under different copyright.
 
