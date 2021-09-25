@@ -1,6 +1,7 @@
-from discord.ext import commands
 import random
+
 import discord
+from discord.ext import commands
 
 
 class Games(commands.Cog, description="Game commands"):
@@ -24,7 +25,7 @@ class Games(commands.Cog, description="Game commands"):
 
         answer = random.choice(ballresponse)
 
-        embed1 = discord.Embed(title=f"Misc", description=f"🎱 **Question:** {question}\n**Answer:** {answer}",
+        embed1 = discord.Embed(title=f"Games", description=f"🎱 **Question:** {question}\n**Answer:** {answer}",
                                color=discord.Color.green())
 
         await ctx.send(embed=embed1)
@@ -40,11 +41,11 @@ class Games(commands.Cog, description="Game commands"):
 
         slotmachine = f"**[ {a} {b} {c} ]\n{ctx.author.name}**,"
 
-        embed1 = discord.Embed(title=f"Misc", description=f"{slotmachine} All matching, you won! 🎉",
+        embed1 = discord.Embed(title=f"Games", description=f"{slotmachine} All matching, you won! 🎉",
                                color=discord.Color.green())
-        embed2 = discord.Embed(title=f"Misc", description=f"{slotmachine} 2 in a row, you won! 🎉",
+        embed2 = discord.Embed(title=f"Games", description=f"{slotmachine} 2 in a row, you won! 🎉",
                                color=discord.Color.purple())
-        embed3 = discord.Embed(title=f"Misc", description=f"{slotmachine} No match, you lost 😢",
+        embed3 = discord.Embed(title=f"Games", description=f"{slotmachine} No match, you lost 😢",
                                color=discord.Color.red())
 
         if a == b == c:
