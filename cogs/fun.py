@@ -1,6 +1,5 @@
 import asyncio
 import datetime
-import json
 import random
 
 import aiohttp
@@ -24,13 +23,6 @@ class Fun(commands.Cog, description="Fun commands"):
                 embed.set_image(url=data['url'])
 
                 await ctx.send(embed=embed)
-
-    @commands.command(name="Advice")
-    async def advice(self, ctx):
-        """Gives a random advice"""
-        async with self.bot.session.get("https://api.adviceslip.com/advice") as r:
-            resp = json.loads(await r.text())
-            await ctx.send(embed=discord.Embed(title="Advice", description=resp["slip"]["advice"], color=0x2F3136))
 
     @commands.command(aliases=["co"], name="Cookie")
     async def cookie(self, ctx):
