@@ -1,7 +1,8 @@
-import discord
-from discord.ext import commands
 import traceback
 from datetime import datetime
+
+import discord
+from discord.ext import commands
 
 
 class ErrorHandler(commands.Cog):
@@ -84,7 +85,14 @@ class ErrorHandler(commands.Cog):
                     and not isinstance(error, commands.CommandInvokeError):
                 return await ctx.send(f':x: {error}')
 
-            await ctx.send(':rotating_light: An error occured while trying to execute that command')
+            exeuterror = discord.Embed(
+                color=discord.Colour(discord.Color.dark_red()),
+                title=':rotating_light: An error occured while trying to execute that command, '
+                      'Please contact ArikSquad#6222',
+                timestamp=datetime.now()
+            )
+
+            await ctx.send(embed=exeuterror)
 
             print(error.original)
 
