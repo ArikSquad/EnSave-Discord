@@ -72,7 +72,7 @@ async def on_guild_remove(guild):
 @commands.has_permissions(administrator=True)
 async def changeprefix(ctx, prefix):
     prefixss = discord.Embed(title="Moderation",
-                             description=f"Changed the prefix to" + prefix,
+                             description=f"Changed the prefix to: " + prefix,
                              color=discord.Color.gold())
     await ctx.send(embed=prefixss)
     with open('prefixes.json', 'r') as f:
