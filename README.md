@@ -80,8 +80,7 @@ We suggest using the latest available version!
 
 | Issues          |
 | ------------------ |
-|Meme command|
-
+Meme command, Advice command
 
 ## Reporting a Vulnerability
 
