@@ -62,5 +62,5 @@ Then unzip it!
 After that you can just run the main.py, and you are good to go!
 
 # License
-Released under the [CC0 License](https://creativecommons.org/publicdomain/zero/1.0/).
+Released under the [CC BY-NC 4.0 License](https://creativecommons.org/licenses/by-nc/4.0/).
 
