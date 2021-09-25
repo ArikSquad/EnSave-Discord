@@ -74,7 +74,7 @@ pip install -r requirements.txt
 5. After that you can just run the main.py, and you are good to go!
 
 
-  ## Known issues
+  ## Known Issues
 
 We suggest using the latest available version!
 
