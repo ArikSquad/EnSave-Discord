@@ -42,7 +42,7 @@
   •
   <a href="#installation">Installation</a>
   •
-  <a href="https://docs.mikart.eu">Documentation</a>
+  <a href="docs.mikart.eu">Documentation</a>
   •
   <a href="https://discord.gg/Z5N5AWJmrA">Community</a>
   •
@@ -51,18 +51,21 @@
 
 
 # Overview
-This is an open-source discord bot developed by ArikSquad.
+This is an open-source discord bot developed by [ArikSquad](http://github.com/ariksquad) and [Mhilkos](http://github.com/mhilkos).
 
 # Installation
-1. Clone this repository.
+1. Clone this repository./
 ```
 git clone https://github.com/ArikSquad/EnSave-Discord.git
 ```
 2. Then unzip it!
 You can use [7zip](https://www.7-zip.org/) to unzip the file.
+  
+3. Open Command Prompt or Terminal. Here is and example if you have it on your desktop: 
+  ```
+  cd Desktop/EnSave-Discord
+  ```
  
-3. Then cd to the folder.
-
 4. Then pip install requirements.txt in your shell.
 ```
 pip install -r requirements.txt
@@ -70,6 +73,20 @@ pip install -r requirements.txt
 
 5. After that you can just run the main.py, and you are good to go!
 
+
+
+
+
+
+
+## Reporting a Vulnerability
+
+If you found any vulnerabilities please open an issue at the <a href="https://github.com/ArikSquad/EnSave-Discord/issues">Issues</a> tab.
+
+| Known Issues        |
+| ------------------ |
+Meme command, Advice command
+  
 # License
 This work is licensed under the [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. You are allowed to fork the project and distribute it, if you give credit. You may not sell any code protected by the license. Not all source files are protected by this license - Some third party libraries may be under different copyright.
 
