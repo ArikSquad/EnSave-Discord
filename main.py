@@ -1,12 +1,13 @@
 import asyncio
-import discord
-from discord.ext import commands
-from discord_slash import SlashCommand
 import json
 import os
+
+import discord
+from discord.ext import commands
+from discord_components import DiscordComponents
+from discord_slash import SlashCommand
 from dotenv import load_dotenv
 from pretty_help import DefaultMenu, PrettyHelp
-from discord_components import DiscordComponents
 
 load_dotenv()
 token = os.getenv('token')
@@ -73,7 +74,6 @@ async def changeprefix(ctx, prefix):
     prefixss = discord.Embed(title="Moderation",
                              description=f"Changed the prefix to" + prefix,
                              color=discord.Color.gold())
-    await ctx.message.delete()
     await ctx.send(embed=prefixss)
     with open('prefixes.json', 'r') as f:
         prefixes = json.load(f)
