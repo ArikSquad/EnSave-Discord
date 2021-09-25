@@ -59,7 +59,7 @@ This is an open-source discord bot developed by ArikSquad.
 git clone https://github.com/ArikSquad/EnSave-Discord.git
 ```
 2. Then unzip it!
-You can use 7zip to unzip the file.
+You can use [7zip](https://www.7-zip.org/) to unzip the file.
  
 3. Then cd to the folder.
 
