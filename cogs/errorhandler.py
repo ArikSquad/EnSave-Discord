@@ -99,7 +99,7 @@ class ErrorHandler(commands.Cog):
             embed = discord.Embed(
                 color=discord.Colour(0xff0000),
                 title='Command execution failed',
-                timestamp=datetime.now()
+                timestamp=datetime.utcnow()
             )
 
             embed.add_field(name='Command', value=ctx.command)
