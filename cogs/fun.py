@@ -3,6 +3,7 @@ import datetime
 import json
 import random
 
+import aiohttp
 import discord
 from discord.ext import commands
 
@@ -10,6 +11,19 @@ from discord.ext import commands
 class Fun(commands.Cog, description="Fun commands"):
     def __init__(self, bot):
         self.bot = bot
+
+    @commands.command(help="Dog picture", name="Dog")
+    async def dog(self, ctx):
+        async with aiohttp.ClientSession() as cs:
+            async with cs.get("https://random.dog/woof.json") as r:
+                data = await r.json()
+                embed = discord.Embed(
+                    title="Doggo",
+                    color=ctx.author.color
+                )
+                embed.set_image(url=data['url'])
+
+                await ctx.send(embed=embed)
 
     @commands.command(name="Advice")
     async def advice(self, ctx):

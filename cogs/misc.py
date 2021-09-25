@@ -2,7 +2,6 @@ import asyncio
 import random
 import secrets
 
-import aiohttp
 import discord
 from discord.ext import commands
 from discord_components import Button, ButtonStyle
@@ -51,19 +50,6 @@ class Misc(commands.Cog, description="Miscellaneous commands"):
 
         await ctx.send(embed=emb)
 
-    @commands.command(help="Dog picture", name="Dog")
-    async def dog(self, ctx):
-        async with aiohttp.ClientSession() as cs:
-            async with cs.get("https://random.dog/woof.json") as r:
-                data = await r.json()
-                embed = discord.Embed(
-                    title="Misc",
-                    color=ctx.author.color
-                )
-                embed.set_image(url=data['url'])
-
-                await ctx.send(embed=embed)
-
     @commands.command(help="MikArt website link!", name="Website")
     async def website(self, ctx):
 
@@ -76,22 +62,6 @@ class Misc(commands.Cog, description="Miscellaneous commands"):
                 Button(style=ButtonStyle.URL, label="Docs", url="http://docs.mikart.eu"),
             ],
         )
-
-    # Meme command
-    @commands.command(pass_context=True, help="Shows a funny meme", name="Meme")
-    @commands.cooldown(1, 10, commands.BucketType.user)
-    async def meme(self, ctx):
-        numbercheck = random.randint(1, 5)
-        if numbercheck == 2:
-            embed = discord.Embed(title=f"Join minecraft server Play.MikArt.eu", description="")
-        else:
-            embed = discord.Embed(title="", description="")
-
-        async with aiohttp.ClientSession() as cs:
-            async with cs.get('https://www.reddit.com/r/dankmemes/new.json?sort=hot') as r:
-                res = await r.json()
-                embed.set_image(url=res['data']['children'][random.randint(0, 25)]['data']['url'])
-                await ctx.send(embed=embed)
 
     @commands.command(aliases=["8ba"], name="8Ball")
     async def eightball(self, ctx, *, question: commands.clean_content):
