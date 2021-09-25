@@ -29,8 +29,8 @@
   </a>
    <a href="https://github.com/Rapptz/discord.py/">
      <img src="https://img.shields.io/badge/discord-py-blue.svg" alt="discord.py">
-  <a href="https://creativecommons.org/publicdomain/zero/1.0/">
-    <img src="https://img.shields.io/badge/license-CC0-yellowgreen">
+  <a href="https://creativecommons.org/licenses/by-nc/4.0/">
+    <img src="https://img.shields.io/badge/license-CC%20BY--NC%204.0-yellowgreen">
   <a href="https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2FArikSquad%2FEnSave-Discord">
   
   
@@ -62,5 +62,5 @@ Then unzip it!
 After that you can just run the main.py, and you are good to go!
 
 # License
-Released under the [CC BY-NC 4.0 License](https://creativecommons.org/licenses/by-nc/4.0/).
+This work is licensed under a [Creative Commons Attribution-NonCommercial 4.0 International License](https://creativecommons.org/licenses/by-nc/4.0/).
 
