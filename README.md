@@ -74,20 +74,18 @@ pip install -r requirements.txt
 5. After that you can just run the main.py, and you are good to go!
 
 
-  ## Supported Versions
-
-EnSave's latest version is always supported but old versions are not usually supported!
+  ## Known issues
 
 We suggest using the latest available version!
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 0.1.x   | :white_check_mark: |
+| Issues          |
+| ------------------ |
+|Meme command|
 
 
 ## Reporting a Vulnerability
 
-If you found any vulnerabilities please open an issue at the <a href="https://github.com/ArikSquad/EnSave-Discord/issues">Issues</a> tab!
+If you found any vulnerabilities please open an issue at the <a href="https://github.com/ArikSquad/EnSave-Discord/issues">Issues</a> tab.
 
   
 # License
