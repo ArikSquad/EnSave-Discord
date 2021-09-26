@@ -29,6 +29,7 @@ images = ['```\n   +---+\n   O   | \n  /|\\  | \n  / \\  | \n      ===```',
           '```\n  +---+ \n      | \n      | \n      | \n     ===```']
 
 
+# All credits goes to https://github.com/1Prototype1/HexBot/blob/master/games/hangman.py
 async def play(bot, ctx):
     def check(m):
         return m.author == ctx.author
