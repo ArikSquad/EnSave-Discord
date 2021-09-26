@@ -172,9 +172,11 @@ def get_printable_board(board):
     output += '**'
     return output
 
+
 async def play_game(bot, ctx, chance_for_error=0.0):
     def check(m):
         return m.author == ctx.author
+
     board, winner = EMPTY_BOARD, None
     await ctx.send("Input the row and col number separated by a comma`,`")
     await ctx.send("e.g.: To tick the middle cell in the top row: `1,2`\n`exit` to end game")
