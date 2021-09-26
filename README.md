@@ -74,11 +74,6 @@ pip install -r requirements.txt
 5. After that you can just run the main.py, and you are good to go!
 
 
-
-
-
-
-
 ## Reporting a Vulnerability
 
 If you found any vulnerabilities please open an issue at the <a href="https://github.com/ArikSquad/EnSave-Discord/issues">Issues</a> tab.
