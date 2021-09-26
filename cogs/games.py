@@ -15,14 +15,11 @@ class Games(commands.Cog, description="Game commands"):
         """Play Hangman"""
         await hangman.play(self.bot, ctx)
 
-    """
-    
     # NEED TO BE FIXED
-    
     @commands.command(name='rps', aliases=['rockpaperscissors'])
     async def rps(self, ctx):
-        
-
+        ctx.send("This command is disabled.")
+        """
         def check_win(p, b):
             if p == '🌑':
                 return False if b == '📄' else True
@@ -67,7 +64,7 @@ class Games(commands.Cog, description="Game commands"):
                                        color=discord.Color.red())
 
                 await ctx.send(embed=embed3)
-    """
+        """
 
     @commands.command(help="Roll dice!", name="Dice", aliases=["rollingdice", "diceroll", "rolldice"])
     @commands.cooldown(rate=1, per=10.0, type=commands.BucketType.user)
