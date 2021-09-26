@@ -15,6 +15,7 @@ load_dotenv()
 token = os.getenv('token')
 
 
+# noinspection PyUnusedLocal
 def get_prefix(ctx, message):
     try:
         with open('prefixes.json', 'r') as f:
@@ -130,4 +131,6 @@ for filename in os.listdir('./cogs'):
         bot.load_extension(f'cogs.{loader}')
         print(f'{loader.capitalize()} has been loaded')
 
-bot.run(token, reconnect=True)
+
+if __name__ == "__main__":
+    bot.run(token, reconnect=True)
