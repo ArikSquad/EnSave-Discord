@@ -1,9 +1,10 @@
+import asyncio
 import random
 
 import discord
 from discord.ext import commands
 
-from game import hangman
+from game import hangman, tictactoe
 
 
 class Games(commands.Cog, description="Game commands"):
@@ -15,11 +16,13 @@ class Games(commands.Cog, description="Game commands"):
         """Play Hangman"""
         await hangman.play(self.bot, ctx)
 
-    # NEED TO BE FIXED
+    @commands.command(name='tictactoe', aliases=['ttt'])
+    async def ttt(self, ctx):
+        """Play Tic-Tac-Toe"""
+        await tictactoe.play_game(self.bot, ctx, chance_for_error=0.2)
+
     @commands.command(name='rps', aliases=['rockpaperscissors'])
     async def rps(self, ctx):
-        ctx.send("This command is disabled.")
-        """
         def check_win(p, b):
             if p == '🌑':
                 return False if b == '📄' else True
@@ -64,7 +67,6 @@ class Games(commands.Cog, description="Game commands"):
                                        color=discord.Color.red())
 
                 await ctx.send(embed=embed3)
-        """
 
     @commands.command(help="Roll dice!", name="Dice", aliases=["rollingdice", "diceroll", "rolldice"])
     @commands.cooldown(rate=1, per=10.0, type=commands.BucketType.user)

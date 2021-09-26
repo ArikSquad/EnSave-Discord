@@ -76,5 +76,5 @@ async def play(bot, ctx):
             if turns == 0:
                 await word_msg.edit(content=f'**{word}**')
                 embed123 = discord.Embed(title=f"Games", description="You Loose :x:",
-                                       color=discord.Color.red())
+                                         color=discord.Color.red())
                 return await ctx.send(embed=embed123)
