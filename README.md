@@ -13,17 +13,12 @@
     <img src="https://discordapp.com/api/guilds/770634445370687519/widget.png?style=shield" alt="Discord Server">
   </a>
 
-   
-  </a>
   <a href="https://www.patreon.com/ariksquad">
     <img src="https://img.shields.io/badge/Support-EnSave!-red.svg" alt="Support EnSave on Patreon!">
   </a>
 </p>
 <p align="center">
- 
-  </a>
-  
-  </a>
+
  <a href="https://www.python.org/downloads/">
     <img src="https://img.shields.io/badge/python-3-brightgreen">
   </a>
@@ -32,9 +27,9 @@
   <a href="https://creativecommons.org/licenses/by-nc/4.0/">
     <img src="https://img.shields.io/static/v1?label=license&message=BY-NC%204.0&color=orange&logo=creative%20commons&logoColor=white">
   <a href="https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2FArikSquad%2FEnSave-Discord">
-  
-  
   </a>
+  </a>
+</a>
 </p>
 
 <p align="center">
