@@ -61,7 +61,7 @@ You can use [7zip](https://www.7-zip.org/) to unzip the file.
   cd Desktop/EnSave-Discord
   ```
  
-4. Then pip install requirements.txt in your shell.
+4. Then install requirements in your shell.
 ```
 pip install -r requirements.txt
 ```
