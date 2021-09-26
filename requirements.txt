@@ -6,3 +6,4 @@ pyparsing~=2.4.7
 discord-py-slash-command
 discord-pretty-help
 discord-components
+YouTube_dl

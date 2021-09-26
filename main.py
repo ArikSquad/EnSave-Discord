@@ -1,5 +1,6 @@
 import asyncio
 import json
+import logging
 import os
 
 import discord
@@ -8,6 +9,8 @@ from discord_components import DiscordComponents
 from discord_slash import SlashCommand
 from dotenv import load_dotenv
 from pretty_help import DefaultMenu, PrettyHelp
+
+logging.basicConfig(level=logging.WARNING)
 
 load_dotenv()
 token = os.getenv('token')
