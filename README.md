@@ -49,7 +49,7 @@
 This is an open-source discord bot developed by [ArikSquad](http://github.com/Ariksquad) and [Mhilkos](http://github.com/Mhilkos).
 
 # Installation
-1. Clone this repository./
+1. Clone this repository.
 ```
 git clone https://github.com/ArikSquad/EnSave-Discord.git
 ```
