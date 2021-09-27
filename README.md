@@ -20,7 +20,7 @@
 <p align="center">
 
  <a href="https://www.python.org/downloads/">
-    <img src="https://img.shields.io/badge/python-3.8%20%7C%203.9-brightgreen">
+    <img src="https://img.shields.io/badge/python-3.8%20%7C%203.9-blue">
   </a>
    <a href="https://github.com/Rapptz/discord.py/">
      <img src="https://img.shields.io/badge/discord-py-blue.svg" alt="discord.py">
