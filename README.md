@@ -20,7 +20,7 @@
 <p align="center">
 
  <a href="https://www.python.org/downloads/">
-    <img src="https://img.shields.io/badge/python-3.9-brightgreen">
+    <img src="https://img.shields.io/badge/python-3-brightgreen">
   </a>
    <a href="https://github.com/Rapptz/discord.py/">
      <img src="https://img.shields.io/badge/discord-py-blue.svg" alt="discord.py">
@@ -73,7 +73,7 @@ pip install -r requirements.txt
 
 If you found any vulnerabilities please open an issue at the <a href="https://github.com/ArikSquad/EnSave-Discord/issues">Issues</a> tab.
 
-### Known Issues
+## Known Issues
  •  Meme
  •  Music
  
