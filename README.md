@@ -14,7 +14,7 @@
   </a>
 
   <a href="https://www.patreon.com/ariksquad">
-    <img src="https://img.shields.io/badge/Support-EnSave!-red.svg" alt="Support EnSave on Patreon!">
+    <img src="https://img.shields.io/badge/Support-EnSave-red.svg" alt="Support EnSave on Patreon!">
   </a>
 </p>
 <p align="center">
