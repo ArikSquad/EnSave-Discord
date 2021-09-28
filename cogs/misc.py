@@ -14,7 +14,7 @@ class Misc(commands.Cog, description="Miscellaneous commands"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(help="Says something what you like", name="Say", aliases=["tell", "echo", "speak", "repeat"])
+    @commands.command(help="Says something what you like", name="Say", aliases=["tell", "echo", "speak"])
     async def say(self, ctx, *, text):
         msg = discord.Embed(title="Misc",
                             description=f'' + ctx.message.author.mention + ': ' + text,
