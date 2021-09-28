@@ -37,7 +37,7 @@
   •
   <a href="#installation">Installation</a>
   •
-  <a href="docs.mikart.eu">Documentation</a>
+  <a href="https://docs.mikart.eu">Documentation</a>
   •
   <a href="https://discord.gg/Z5N5AWJmrA">Community</a>
   •
