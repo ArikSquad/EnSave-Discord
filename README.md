@@ -14,13 +14,13 @@
   </a>
 
   <a href="https://www.patreon.com/ariksquad">
-    <img src="https://img.shields.io/badge/Support-EnSave!-red.svg" alt="Support EnSave on Patreon!">
+    <img src="https://img.shields.io/badge/Support-EnSave-red.svg" alt="Support EnSave on Patreon!">
   </a>
 </p>
 <p align="center">
 
  <a href="https://www.python.org/downloads/">
-    <img src="https://img.shields.io/badge/python-3-brightgreen">
+    <img src="https://img.shields.io/badge/python-3.8%20%7C%203.9-blue">
   </a>
    <a href="https://github.com/Rapptz/discord.py/">
      <img src="https://img.shields.io/badge/discord-py-blue.svg" alt="discord.py">
@@ -73,11 +73,11 @@ pip install -r requirements.txt
 
 If you found any vulnerabilities please open an issue at the <a href="https://github.com/ArikSquad/EnSave-Discord/issues">Issues</a> tab.
 
-| Known Issues        |
-| ------------------ |
-Meme command is broken
-Music commands are broken
-
+## Known Issues
+ •  Meme
+ 
+ •  Music
+ 
 # License
 This work is licensed under the [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. You are allowed to fork the project and distribute it, if you give credit. You may not sell any code protected by the license. Not all source files are protected by this license - Some third party libraries may be under different copyright.
 

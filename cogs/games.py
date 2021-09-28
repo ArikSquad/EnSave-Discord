@@ -50,7 +50,7 @@ class Games(commands.Cog, description="Game commands"):
             # if conds
             if str(reaction.emoji) == bot_emoji:
                 embed1 = discord.Embed(title=f"Games", description="**It's a Tie :ribbon:**",
-                                       color=discord.Color.gold)
+                                       color=discord.Color.gold())
 
                 await ctx.send(embed=embed1)
 
