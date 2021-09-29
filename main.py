@@ -1,4 +1,3 @@
-import asyncio
 import json
 import logging
 import os
@@ -86,21 +85,6 @@ async def changeprefix(ctx, prefix):
     print(f'Changed prefix in {ctx.guild}. Command was ran user {ctx.message.author}.')
 
 
-async def status_task():
-    while True:
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="you"))
-        await asyncio.sleep(10)
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Rick Astley"))
-        await asyncio.sleep(10)
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="AriCC"))
-        await asyncio.sleep(10)
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,
-                                                            name=f'{len(bot.guilds)} guilds'))
-        await asyncio.sleep(10)
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="Minecraft"))
-        await asyncio.sleep(10)
-
-
 class ColoredText:
     HEADER = '\033[95m'
     BLUE = '\033[94m'
@@ -116,9 +100,8 @@ class ColoredText:
 @bot.event
 async def on_ready():
     DiscordComponents(bot)
-
-    bot.loop.create_task(status_task())
-    print(f"{ColoredText.CYAN}Started bot loop for custom RPC{ColoredText.END}")
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,
+                                                        name=f'{len(bot.guilds)} guilds'))
 
     print("Logging in...")
     print(f'{ColoredText.WARNING}{bot.user} has connected to Discord!{ColoredText.END}')
