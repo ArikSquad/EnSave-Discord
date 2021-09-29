@@ -31,7 +31,8 @@ def get_prefix(ctx, message):
             json.dump(prefixes, f, indent=4)
 
 
-bot = commands.Bot(command_prefix=get_prefix, case_insensitive=True, description="Discord ")
+bot = commands.Bot(command_prefix=get_prefix, case_insensitive=True, description="This is a discord utility bot. Thanks for using this bot, "
+                                                                                 "it is very cool!")
 slash = SlashCommand(bot, sync_commands=True)
 
 menu = DefaultMenu(
