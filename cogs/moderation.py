@@ -103,6 +103,23 @@ class Moderation(commands.Cog, name="Moderation", description="Moderation Comman
             )
             await context.send(embed=embed)
 
+    @commands.is_owner()
+    @commands.command(name="UnloadMusic")
+    async def unloadmusic(self, ctx):
+        """
+        Unloads inputted Cog.
+        """
+
+        if ctx.message.author.id == 549152470194978817:
+            self.bot.unload_extension(f"cogs.music")
+            await ctx.send(f"Unloaded music")
+        elif ctx.message.author.id == 537237654207725568:
+            self.bot.unload_extension(f"cogs.music")
+            await ctx.send(f"Unloaded music")
+        else:
+            await ctx.send("YOU DO NOT HAVE PERMISSIONSSSS!!!!")
+
+
     @commands.command(name="Warn")
     @commands.has_permissions(manage_messages=True)
     async def warn(self, context, member: discord.Member, *, reason="Not specified"):
