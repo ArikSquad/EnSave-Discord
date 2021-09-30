@@ -351,7 +351,6 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
                 "region": "europe",
             }
         }
-
         for n in nodes.values():
             await self.wavelink.initiate_node(**n)
 
@@ -366,7 +365,8 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await payload.player.do_next()
 
     @commands.Cog.listener()
-    async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
+    async def on_voice_state_update(self, member: discord.Member,
+                                    before: discord.VoiceState, after: discord.VoiceState):
         if member.bot:
             return
 
@@ -414,7 +414,8 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
 
         if player.context:
             if player.context.channel != ctx.channel:
-                await ctx.send(f'{ctx.author.mention}, you must be in {player.context.channel.mention} for this session.')
+                await ctx.send(f'{ctx.author.mention},'
+                               f' you must be in {player.context.channel.mention} for this session.')
                 raise IncorrectChannelError
 
         if ctx.command.name == 'connect' and not player.context:
@@ -453,7 +454,10 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         return player.dj == ctx.author or ctx.author.guild_permissions.kick_members
 
     @commands.command()
-    async def connect(self, ctx: commands.Context, *, channel: typing.Union[discord.VoiceChannel, discord.StageChannel] = None):
+    async def connect(self,
+                      ctx: commands.Context,
+                      *,
+                      channel: typing.Union[discord.VoiceChannel, discord.StageChannel] = None):
         """Connect to a voice channel."""
         player: Player = self.wavelink.get_player(guild_id=ctx.guild.id, cls=Player, context=ctx)
 
