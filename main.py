@@ -46,14 +46,6 @@ bot.help_command = PrettyHelp(navigation=menu, color=discord.Colour.green(), no_
 
 
 @bot.event
-async def on_member_join(member):
-    guild = member.guild
-    if guild.system_channel is not None:
-        to_send = f'Welcome {member.mention} to {guild.name}!'
-        await guild.system_channel.send(to_send)
-
-
-@bot.event
 async def on_guild_join(guild):
     with open('db/prefixes.json', 'r') as f:
         prefixes = json.load(f)
@@ -108,7 +100,10 @@ async def on_ready():
 
     print("Logging in...")
     print(f'{ColoredText.WARNING}{bot.user} has connected to Discord!{ColoredText.END}')
+    print(f"Name: {ColoredText.CYAN}{bot.user.name}{ColoredText.END}")
+    print(f"ID: {ColoredText.CYAN}{bot.user.id}{ColoredText.END}")
     print(f'{ColoredText.BOLD}####################################{ColoredText.END}')
+    print(f"Connected to {ColoredText.GREEN}{len(bot.guilds)} guilds{ColoredText.END}")
 
 
 for filename in os.listdir('./cogs'):
