@@ -38,8 +38,8 @@ class Games(commands.Cog, description="Game commands"):
                 await game_message.add_reaction(reaction)
             bot_emoji = random.choice(reactions)
 
-        def check(reaction, user):
-            return user != self.bot.user and user == ctx.author and (str(reaction.emoji) == '🪨' or '📄' or '✂')
+        def check(reaction2s, user):
+            return user != self.bot.user and user == ctx.author and (str(reaction2s.emoji) == '🪨' or '📄' or '✂')
 
         try:
             reaction, _ = await self.bot.wait_for('reaction_add', timeout=10.0, check=check)
