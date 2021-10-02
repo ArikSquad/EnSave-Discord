@@ -17,17 +17,17 @@ token = os.getenv('token')
 # noinspection PyUnusedLocal
 def get_prefix(ctx, message):
     try:
-        with open('prefixes.json', 'r') as f:
+        with open('db/prefixes.json', 'r') as f:
             prefixes = json.load(f)
 
         return prefixes[str(message.guild.id)]
     except KeyError:
-        with open('prefixes.json', 'r') as f:
+        with open('db/prefixes.json', 'r') as f:
             prefixes = json.load(f)
 
         prefixes[str(message.guild.id)] = '.'
 
-        with open('prefixes.json', 'w') as f:
+        with open('db/prefixes.json', 'w') as f:
             json.dump(prefixes, f, indent=4)
 
 
@@ -55,21 +55,21 @@ async def on_member_join(member):
 
 @bot.event
 async def on_guild_join(guild):
-    with open('prefixes.json', 'r') as f:
+    with open('db/prefixes.json', 'r') as f:
         prefixes = json.load(f)
 
     prefixes[str(guild.id)] = '.'
 
-    with open('prefixes.json', 'w') as f:
+    with open('db/prefixes.json', 'w') as f:
         json.dump(prefixes, f, indent=4)
 
 
 @bot.event
 async def on_guild_remove(guild):
-    with open('prefixes.json', 'r') as f:
+    with open('db/prefixes.json', 'r') as f:
         prefixes = json.load(f)
     prefixes.pop(str(guild.id))
-    with open('prefixes.json', 'w') as f:
+    with open('db/prefixes.json', 'w') as f:
         json.dump(prefixes, f, indent=4)
 
 
@@ -80,10 +80,10 @@ async def changeprefix(ctx, prefix):
                              description=f"Changed the prefix to: " + prefix,
                              color=discord.Color.gold())
     await ctx.send(embed=prefixss)
-    with open('prefixes.json', 'r') as f:
+    with open('db/prefixes.json', 'r') as f:
         prefixes = json.load(f)
     prefixes[str(ctx.guild.id)] = prefix
-    with open('prefixes.json', 'w') as f:
+    with open('db/prefixes.json', 'w') as f:
         json.dump(prefixes, f, indent=4)
     print(f'Changed prefix in {ctx.guild}. Command was ran user {ctx.message.author}.')
 
