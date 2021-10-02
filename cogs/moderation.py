@@ -41,7 +41,8 @@ class Moderation(commands.Cog, name="Moderation", description="Moderation Comman
             except:
                 embed = discord.Embed(
                     title="Error!",
-                    description="An error occurred while trying to kick the user. Make sure my role is above the role of the user you want to kick.",
+                    description="An error occurred while trying to kick the user. "
+                                "Make sure my role is above the role of the user you want to kick.",
                     color=0xE02B2B
                 )
                 await context.message.channel.send(embed=embed)
@@ -99,7 +100,8 @@ class Moderation(commands.Cog, name="Moderation", description="Moderation Comman
         except:
             embed = discord.Embed(
                 title="Error!",
-                description="An error occurred while trying to ban the user. Make sure my role is above the role of the user you want to ban.",
+                description="An error occurred while trying to ban the user. "
+                            "Make sure my role is above the role of the user you want to ban.",
                 color=0xE02B2B
             )
             await context.send(embed=embed)
