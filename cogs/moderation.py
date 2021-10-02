@@ -119,7 +119,6 @@ class Moderation(commands.Cog, name="Moderation", description="Moderation Comman
         else:
             await ctx.send("YOU DO NOT HAVE PERMISSIONSSSS!!!!")
 
-
     @commands.command(name="Warn")
     @commands.has_permissions(manage_messages=True)
     async def warn(self, context, member: discord.Member, *, reason="Not specified"):
