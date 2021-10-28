@@ -14,6 +14,21 @@ class Misc(commands.Cog, description="Miscellaneous commands"):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.command(help="Play Airmax Violin", name="Airmax")
+    async def airmax(self, ctx):
+        msg = discord.Embed(title="Misc",
+                            description=f'Playing AirMax Violin',
+                            color=discord.Color.green())
+        await ctx.send(embed=msg)
+        if ctx.author.voice.channel:
+            if not ctx.guild.voice_client:  # error would be thrown if bot already connected, this stops the error
+                player = await ctx.author.voice.channel.connect()
+            else:
+                player = ctx.guild.voice_client
+            player.play(discord.FFmpegPCMAudio("music/airmaxviolin.mp3"))  # or "path/to/your.mp3"
+        else:
+            await ctx.send("Please connect to a voice channel.")
+
     @commands.command(help="Says something what you like", name="Say", aliases=["tell", "echo", "speak"])
     async def say(self, ctx, *, text):
         msg = discord.Embed(title="Misc",
