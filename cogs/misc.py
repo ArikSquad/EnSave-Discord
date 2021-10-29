@@ -5,6 +5,8 @@ import discord
 from discord.ext import commands
 from discord_components import Button, ButtonStyle
 
+import config
+
 
 class Misc(commands.Cog, description="Miscellaneous commands"):
     """
@@ -29,7 +31,7 @@ class Misc(commands.Cog, description="Miscellaneous commands"):
         else:
             await ctx.send("Please connect to a voice channel.")
 
-    @commands.command(help="Says something what you like", name="Say", aliases=["tell", "echo", "speak"])
+    @commands.command(help=config.en_us['sayCommandDescription'], name="Say", aliases=["tell", "echo", "speak"])
     async def say(self, ctx, *, text):
         msg = discord.Embed(title="Misc",
                             description=f'' + ctx.message.author.mention + ': ' + text,
@@ -64,7 +66,7 @@ class Misc(commands.Cog, description="Miscellaneous commands"):
 
         await ctx.send(embed=emb)
 
-    @commands.command(help="MikArt website link!", name="Website")
+    @commands.command(help=config.en_us['websiteCommandDescription'], name=config.en_us['websiteCommandName'])
     async def website(self, ctx):
 
         embed = discord.Embed(title=f"Website", color=discord.Color.gold())
