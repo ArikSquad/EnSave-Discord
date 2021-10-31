@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 from discord_components import Button, ButtonStyle
 
-import config
+from db import config
 
 
 class Misc(commands.Cog, description="Miscellaneous commands"):
@@ -16,22 +16,9 @@ class Misc(commands.Cog, description="Miscellaneous commands"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(help="Play Airmax Violin", name="Airmax")
-    async def airmax(self, ctx):
-        msg = discord.Embed(title="Misc",
-                            description=f'Playing AirMax Violin',
-                            color=discord.Color.green())
-        await ctx.send(embed=msg)
-        if ctx.author.voice.channel:
-            if not ctx.guild.voice_client:  # error would be thrown if bot already connected, this stops the error
-                player = await ctx.author.voice.channel.connect()
-            else:
-                player = ctx.guild.voice_client
-            player.play(discord.FFmpegPCMAudio("music/airmaxviolin.mp3"))  # or "path/to/your.mp3"
-        else:
-            await ctx.send("Please connect to a voice channel.")
-
-    @commands.command(help=config.en_us['sayCommandDescription'], name="Say", aliases=["tell", "echo", "speak"])
+    @commands.command(help=config.misc['sayCommandDescription'],
+                      name=config.misc['sayCommandName'],
+                      aliases=["tell", "echo", "speak"])
     async def say(self, ctx, *, text):
         msg = discord.Embed(title="Misc",
                             description=f'' + ctx.message.author.mention + ': ' + text,
@@ -66,7 +53,7 @@ class Misc(commands.Cog, description="Miscellaneous commands"):
 
         await ctx.send(embed=emb)
 
-    @commands.command(help=config.en_us['websiteCommandDescription'], name=config.en_us['websiteCommandName'])
+    @commands.command(help=config.misc['websiteCommandDescription'], name=config.misc['websiteCommandName'])
     async def website(self, ctx):
 
         embed = discord.Embed(title=f"Website", color=discord.Color.gold())
