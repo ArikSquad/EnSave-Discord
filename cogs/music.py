@@ -4,7 +4,7 @@ from discord.ext import commands
 from db import config
 
 
-class Misc(commands.Cog, description=config.music['description']):
+class Music(commands.Cog, description=config.music['description']):
 
     def __init__(self, bot):
         self.bot = bot
@@ -25,5 +25,6 @@ class Misc(commands.Cog, description=config.music['description']):
             await ctx.send(config.music['musicFailed'])
 
 
-def setup(bot):
-    bot.add_cog(Misc(bot))
+def setup(bot: commands.Bot):
+    bot.add_cog(Music(bot))
+
