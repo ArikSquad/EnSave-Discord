@@ -1,3 +1,5 @@
+# ALL CREDITS GOES TO https://github.com/Carberra/discord.py-music-tutorial
+# even tho i fixed a ton of bugs, all credits goes to Carberra.
 import asyncio
 import datetime as dt
 import random
