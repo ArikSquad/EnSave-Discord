@@ -31,10 +31,13 @@ def get_prefix(ctx, message):
             json.dump(prefixes, f, indent=4)
 
 
-bot = commands.Bot(command_prefix=get_prefix, case_insensitive=True,
-                   description="This is a discord utility bot. Thanks for using this bot, "
-                               "it is very cool!"
-                   )
+bot = commands.Bot(
+            command_prefix=get_prefix, case_insensitive=True,
+            description="This is a discord utility bot. Thanks for using this bot, "
+            "it is very cool!",
+            intents=discord.Intents.all()
+        )
+
 slash = SlashCommand(bot, sync_commands=True)
 
 menu = DefaultMenu(
@@ -110,7 +113,7 @@ for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         loader = filename[:-3]
         bot.load_extension(f'cogs.{loader}')
-        print(f'{loader.capitalize()} has been loaded')
+        print(f'{ColoredText.HEADER}{loader.capitalize()} has been loaded{ColoredText.END}')
 
 if __name__ == "__main__":
     bot.run(token, reconnect=True)
