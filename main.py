@@ -36,7 +36,6 @@ bot = commands.Bot(
             description="This is a discord utility bot. Thanks for using this bot",
             intents=discord.Intents.all()
         )
-
 slash = SlashCommand(bot, sync_commands=True)
 
 menu = DefaultMenu(
