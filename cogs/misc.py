@@ -16,7 +16,6 @@ class Misc(commands.Cog, description="Miscellaneous commands"):
     def __init__(self, bot):
         self.bot = bot
 
-
     @commands.command(help=config.misc['sayCommandDescription'],
                       name=config.misc['sayCommandName'],
                       aliases=["tell", "echo", "speak"])
