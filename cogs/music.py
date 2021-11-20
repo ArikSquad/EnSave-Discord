@@ -1,7 +1,7 @@
 # ALL CREDITS GOES TO https://github.com/Carberra/discord.py-music-tutorial
 # even tho i fixed a ton of bugs, all credits goes to Carberra.
 import asyncio
-import datetime as dt
+import datetime
 import random
 import re
 import typing as t
@@ -26,7 +26,7 @@ OPTIONS = {
     "5⃣": 4,
 }
 
-timestampEmbed = dt.datetime.utcnow()
+timestampEmbed = datetime.datetime.now()
 
 
 class AlreadyConnectedToChannel(commands.CommandError):
@@ -210,11 +210,21 @@ class Player(wavelink.Player):
             self.queue.add(*tracks.tracks)
         elif len(tracks) == 1:
             self.queue.add(tracks[0])
-            await ctx.send(f"Added {tracks[0].title} to the queue.")
+            embed = discord.Embed(
+                description=f"Added {tracks[0].title} to the queue.",
+                colour=ctx.author.colour,
+                timestamp=timestampEmbed
+            )
+            await ctx.send(embed=embed)
         else:
             if (track := await self.choose_track(ctx, tracks)) is not None:
                 self.queue.add(track)
-                await ctx.send(f"Added {track.title} to the queue.")
+                embed2 = discord.Embed(
+                    description=f"Added {track.title} to the queue.",
+                    colour=ctx.author.colour,
+                    timestamp=timestampEmbed
+                )
+                await ctx.send(embed=embed2)
 
         if not self.is_playing and not self.queue.is_empty:
             await self.start_playback()
