@@ -16,6 +16,7 @@ class Misc(commands.Cog, description="Miscellaneous commands"):
     def __init__(self, bot):
         self.bot = bot
 
+
     @commands.command(help=config.misc['sayCommandDescription'],
                       name=config.misc['sayCommandName'],
                       aliases=["tell", "echo", "speak"])
@@ -53,7 +54,7 @@ class Misc(commands.Cog, description="Miscellaneous commands"):
 
         await ctx.send(embed=emb)
 
-    @commands.command(help=config.misc['websiteCommandDescription'], name=config.misc['websiteCommandName'])
+    @commands.command(help="Information about websites", name="Website")
     async def website(self, ctx):
 
         embed = discord.Embed(title=f"Website", color=ctx.author.color)
@@ -63,8 +64,16 @@ class Misc(commands.Cog, description="Miscellaneous commands"):
             components=[
                 Button(style=ButtonStyle.URL, label="Website", url="http://www.mikart.eu"),
                 Button(style=ButtonStyle.URL, label="Docs", url="http://docs.mikart.eu"),
+                Button(style=ButtonStyle.URL, label="Github", url="https://github.com/ariksquad/ensave-discord"),
             ],
         )
+
+    @commands.command(name="Github")
+    async def _github(self, ctx):
+        embed1 = discord.Embed(title=f"Misc", description="Check the code from the button below!",
+                               color=ctx.author.color)
+        await ctx.send(embed=embed1)
+
 
     @commands.command(name="Password")
     async def password(self, ctx, nbytes: int = 18):
