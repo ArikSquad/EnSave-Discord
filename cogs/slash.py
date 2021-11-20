@@ -8,6 +8,7 @@ import discord
 from discord.ext import commands
 from discord_slash import cog_ext, SlashContext
 
+from db import config
 from game import tictactoe
 
 guild_ids = [770634445370687519]
@@ -171,9 +172,9 @@ class Slash(commands.Cog, description="Slash Commands"):
         else:
             await ctx.send(embed=embed3)
 
-    @cog_ext.cog_slash(name="Say", guild_ids=guild_ids)
+    @cog_ext.cog_slash(name=config.misc['sayCommandName'], guild_ids=guild_ids)
     async def say(self, ctx, *, text):
-        """Says something what you want"""
+        f"""{config.misc['sayCommandDescription']}"""
         msg = discord.Embed(title="Misc",
                             description=f'' + ctx.message.author.mention + ': ' + text,
                             color=discord.Color.green())
