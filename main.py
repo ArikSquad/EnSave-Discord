@@ -33,8 +33,7 @@ def get_prefix(ctx, message):
 
 bot = commands.Bot(
             command_prefix=get_prefix, case_insensitive=True,
-            description="This is a discord utility bot. Thanks for using this bot, "
-            "it is very cool!",
+            description="This is a discord utility bot. Thanks for using this bot",
             intents=discord.Intents.all()
         )
 
@@ -45,7 +44,7 @@ menu = DefaultMenu(
     active_time=5,
     delete_after_timeout=True,
 )
-bot.help_command = PrettyHelp(navigation=menu, color=discord.Colour.green(), no_category="Other", )
+bot.help_command = PrettyHelp(navigation=menu, color=discord.Colour.green(), no_category="Other",)
 
 
 @bot.event
@@ -80,7 +79,7 @@ async def changeprefix(ctx, prefix):
     prefixes[str(ctx.guild.id)] = prefix
     with open('db/prefixes.json', 'w') as f:
         json.dump(prefixes, f, indent=4)
-    print(f'Changed prefix in {ctx.guild}. Command was ran user {ctx.message.author}.')
+    print(f'Changed prefix in {ctx.guild} to {prefix}. Command was ran user {ctx.message.author}.')
 
 
 class ColoredText:
