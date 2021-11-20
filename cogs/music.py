@@ -11,7 +11,6 @@ import aiohttp
 import discord
 import wavelink
 from discord.ext import commands
-from discord_slash import cog_ext
 
 guild_ids = [770634445370687519]
 URL_REGEX = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s(" \
@@ -329,7 +328,6 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         elif isinstance(obj, discord.Guild):
             return self.bot.wavelink.get_player(obj.id, cls=Player)
 
-    @cog_ext.cog_slash(name="connect", guild_ids=guild_ids, description="Connects to the voice channel.")
     @commands.command(name="connect", aliases=["join"])
     async def connect_command(self, ctx, *, channel: t.Optional[discord.VoiceChannel]):
         player = self.get_player(ctx)
