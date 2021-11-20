@@ -56,7 +56,7 @@ class Misc(commands.Cog, description="Miscellaneous commands"):
     @commands.command(help=config.misc['websiteCommandDescription'], name=config.misc['websiteCommandName'])
     async def website(self, ctx):
 
-        embed = discord.Embed(title=f"Website", color=discord.Color.gold())
+        embed = discord.Embed(title=f"Website", color=ctx.author.color)
 
         await ctx.send(
             embed=embed,
