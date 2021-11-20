@@ -18,7 +18,8 @@ words = ['conversation', 'bowtie', 'skateboard', 'penguin', 'hospital', 'player'
          'mushroom', 'student', 'mathematics', 'instruction', 'newspaper', 'gingerbread',
          'emergency', 'lawnmower', 'industry', 'evidence', 'dominoes', 'lightbulb', 'stingray',
          'background', 'atmosphere', 'treasure', 'mosquito', 'popsicle', 'aircraft', 'photograph',
-         'imagination', 'landscape', 'digital', 'pepper', 'roller', 'bicycle', 'toothbrush', 'newsletter']
+         'imagination', 'landscape', 'digital', 'pepper', 'roller', 'bicycle', 'toothbrush', 'newsletter',
+         'hacker']
 
 images = ['```\n   +---+\n   O   | \n  /|\\  | \n  / \\  | \n      ===```',
           '```\n   +---+ \n   O   | \n  /|\\  | \n  /    | \n      ===```',
