@@ -228,7 +228,7 @@ class Slash(commands.Cog, description="Slash Commands"):
         """Shows the latency of the bot."""
         wait = discord.Embed(title="Info",
                              description=f"Waiting the server to respond!",
-                             color=ctx.author.color())
+                             color=ctx.author.color)
 
         before = time.monotonic()
         message = await ctx.send(embed=wait)
@@ -236,7 +236,7 @@ class Slash(commands.Cog, description="Slash Commands"):
 
         waited = discord.Embed(title="Info",
                                description=f"Pong!  `{int(ping)}ms`",
-                               color=ctx.author.color())
+                               color=ctx.author.color)
         await message.edit(embed=waited)
         print(f'Ping {int(ping)}ms')
 
@@ -250,7 +250,7 @@ class Slash(commands.Cog, description="Slash Commands"):
 
         embed2 = discord.Embed(title="Info",
                                description=f"**{ctx.author.name}** This is the support server!",
-                               color=ctx.author.color())
+                               color=ctx.author.color)
 
         if isinstance(ctx.channel, discord.DMChannel) or ctx.guild.id != 770634445370687519:
             return await ctx.send(embed=embed)
@@ -283,6 +283,21 @@ class Slash(commands.Cog, description="Slash Commands"):
 
         a = member.avatar_url
         ctx.send(a)
+
+    @cog_ext.cog_slash(name="Coinflip", guild_ids=guild_ids)
+    async def coinflip(self, ctx):
+        """Flips a coin"""
+
+        determine_flip = [1, 0]
+        if random.choice(determine_flip) == 1:
+            embed = discord.Embed(title="Fun",
+                                  description=f"{ctx.author.mention} Flipped coin, we got **Heads**!")
+            await ctx.send(embed=embed)
+
+        else:
+            embed = discord.Embed(title="Fun",
+                                  description=f"{ctx.author.mention} Flipped coin, we got **Tails**!")
+            await ctx.send(embed=embed)
 
 
 def setup(bot):

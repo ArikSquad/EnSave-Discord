@@ -71,11 +71,12 @@ async def on_guild_remove(guild):
                       "rolldice", 'dice', "8Ball", '8ba', 'eightball', 'slot', 'bet',
                       'slots', 'tictactoe', 'invite', 'ping', 'latency', "supportserver",
                       "feedbackserver", "discord", 'server', 'github', 'sourcecode',
-                      'cookie', 'password', 'hello', 'slap', 'say', 'tell'])
+                      'cookie', 'password', 'hello', 'slap', 'say', 'tell', 'coinflip',
+                      'av', 'doggo', 'dog'])
 async def nocommand(ctx):
     embed = discord.Embed(title=f"Slash Commands.", description="We stopped supporting game commands without slash."
                                                                 " Please use slash commands.",
-                          color=ctx.author.color())
+                          color=ctx.author.color)
 
     await ctx.send(embed=embed)
 
