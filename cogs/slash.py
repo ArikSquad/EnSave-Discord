@@ -50,7 +50,7 @@ class Slash(commands.Cog, description="Slash Commands"):
         if nbytes not in range(3, 1401):
             return await ctx.send(embed=embed1)
         if hasattr(ctx, "guild") and ctx.guild is not None:
-            await ctx.send(embed=embed2)
+            await ctx.reply(embed=embed2)
         await ctx.author.send(embed=embed3)
 
     @cog_ext.cog_slash(name="rps", guild_ids=guild_ids, description="RockPaperScissors!")
@@ -175,12 +175,9 @@ class Slash(commands.Cog, description="Slash Commands"):
 
     @cog_ext.cog_slash(name=config.misc['sayCommandName'], guild_ids=guild_ids)
     async def say(self, ctx, *, text):
-        f"""{config.misc['sayCommandDescription']}"""
-        msg = discord.Embed(title="Misc",
-                            description=f'' + ctx.message.author.mention + ': ' + text,
-                            color=discord.Color.green())
-        async with ctx.typing():
-            await asyncio.sleep(2)
+        f"""Says what you want it to say"""
+        msg = discord.Embed(description=text,
+                            color=ctx.author.color)
         await ctx.send(embed=msg)
 
     @cog_ext.cog_slash(name="Hello", guild_ids=guild_ids)

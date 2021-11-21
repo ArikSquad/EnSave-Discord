@@ -78,7 +78,7 @@ async def nocommand(ctx):
                                                                 " Please use slash commands.",
                           color=ctx.author.color)
 
-    await ctx.send(embed=embed)
+    await ctx.reply(embed=embed)
 
 
 @bot.command(help="Change the prefix.", name="ChangePrefix")
