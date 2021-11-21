@@ -6,7 +6,7 @@ class Moderation(commands.Cog, name="Moderation", description="Moderation Comman
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='Kick', pass_context=True)
+    @commands.command(name='Kick')
     @commands.has_permissions(kick_members=True)
     async def kick(self, context, member: discord.Member, *, reason="Not specified"):
         """

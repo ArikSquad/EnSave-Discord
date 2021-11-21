@@ -189,7 +189,7 @@ class Slash(commands.Cog, description="Slash Commands"):
         await ctx.send(embed=msg)
 
     @cog_ext.cog_slash(name="Invite", guild_ids=guild_ids)
-    async def invite(self, context):
+    async def invite(self, ctx):
         """
         Get the invite link of the bot to be able to invite it.
         """
@@ -201,11 +201,8 @@ class Slash(commands.Cog, description="Slash Commands"):
                         f"http%3A%2F%2Fdiscord.mikart.eu%2F&scope=bot%20applications.commands).",
             color=0xD75BF4
         )
-        try:
-            await context.author.send(embed=embed)
-            await context.send("I sent you a private message!")
-        except discord.Forbidden:
-            await context.send(embed=embed)
+        await ctx.author.send(embed=embed)
+        await ctx.send(embed=embed)
 
     @cog_ext.cog_slash(name="Hangman", guild_ids=guild_ids)
     async def hangman(self, ctx):
