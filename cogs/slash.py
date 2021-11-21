@@ -281,8 +281,12 @@ class Slash(commands.Cog, description="Slash Commands"):
         if not member:
             member = ctx.message.author
 
-        a = member.avatar_url
-        ctx.send(a)
+        embed = discord.Embed(
+            title=member.display_name,
+            color=ctx.author.color
+        )
+        embed.set_image(url=member.avatar_url)
+        await ctx.send(embed=embed)
 
     @cog_ext.cog_slash(name="Coinflip", guild_ids=guild_ids)
     async def coinflip(self, ctx):
@@ -291,12 +295,14 @@ class Slash(commands.Cog, description="Slash Commands"):
         determine_flip = [1, 0]
         if random.choice(determine_flip) == 1:
             embed = discord.Embed(title="Fun",
-                                  description=f"{ctx.author.mention} Flipped coin, we got **Heads**!")
+                                  description=f"{ctx.author.mention} Flipped coin, we got **Heads**!",
+                                  color=ctx.author.color)
             await ctx.send(embed=embed)
 
         else:
             embed = discord.Embed(title="Fun",
-                                  description=f"{ctx.author.mention} Flipped coin, we got **Tails**!")
+                                  description=f"{ctx.author.mention} Flipped coin, we got **Tails**!",
+                                  color=ctx.author.color)
             await ctx.send(embed=embed)
 
 
