@@ -32,10 +32,10 @@ def get_prefix(ctx, message):
 
 
 bot = commands.Bot(
-            command_prefix=get_prefix, case_insensitive=True,
-            description="This is a discord utility bot. Thanks for using this bot",
-            intents=discord.Intents.all()
-        )
+    command_prefix=get_prefix, case_insensitive=True,
+    description="This is a discord utility bot. Thanks for using this bot",
+    intents=discord.Intents.all()
+)
 slash = SlashCommand(bot, sync_commands=True)
 
 menu = DefaultMenu(
@@ -43,7 +43,7 @@ menu = DefaultMenu(
     active_time=5,
     delete_after_timeout=True,
 )
-bot.help_command = PrettyHelp(navigation=menu, color=discord.Colour.green(), no_category="Other",)
+bot.help_command = PrettyHelp(navigation=menu, color=discord.Colour.green(), no_category="Other", )
 
 
 @bot.event
@@ -64,6 +64,20 @@ async def on_guild_remove(guild):
     prefixes.pop(str(guild.id))
     with open('db/prefixes.json', 'w') as f:
         json.dump(prefixes, f, indent=4)
+
+
+@bot.command(name='none',
+             aliases=['ttt', 'rockpaperscrissors', 'rps', "rollingdice", "diceroll",
+                      "rolldice", 'dice', "8Ball", '8ba', 'eightball', 'slot', 'bet',
+                      'slots', 'tictactoe', 'invite', 'ping', 'latency', "supportserver",
+                      "feedbackserver", "discord", 'server', 'github', 'sourcecode',
+                      'cookie', 'password', 'hello', 'slap', 'say', 'tell'])
+async def nocommand(ctx):
+    embed = discord.Embed(title=f"Slash Commands.", description="We stopped supporting game commands without slash."
+                                                                " Please use slash commands.",
+                          color=ctx.author.color())
+
+    await ctx.send(embed=embed)
 
 
 @bot.command(help="Change the prefix.", name="ChangePrefix")

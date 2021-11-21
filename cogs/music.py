@@ -278,7 +278,7 @@ class Player(wavelink.Player):
         await self.play(self.queue.current_track)
 
 
-class Music(commands.Cog, wavelink.WavelinkMixin):
+class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
     def __init__(self, bot):
         self.bot = bot
         self.bot.wavelink = wavelink.Client(bot=bot)

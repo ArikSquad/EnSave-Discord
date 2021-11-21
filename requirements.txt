@@ -1,10 +1,8 @@
-discord~=1.7.3
-aiohttp~=3.7.4.post0
-asyncio~=3.4.3
-python-dotenv~=0.19.0
-pyparsing~=2.4.7
-discord-py-slash-command
+asyncio>=3.4.3
+aiohttp>=3.8.1
+discord>=1.7.3
+wavelink>=0.9.10
+pyparsing>=3.0.6
+python-dotenv>=0.19.2
 discord-pretty-help
-discord-components
-requests~=2.26.0
-wavelink~=0.9.10
+discord-py-slash-command

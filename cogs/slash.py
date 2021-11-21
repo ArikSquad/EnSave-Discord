@@ -2,6 +2,7 @@ import asyncio
 import datetime
 import random
 import secrets
+import time
 
 import aiohttp
 import discord
@@ -9,7 +10,7 @@ from discord.ext import commands
 from discord_slash import cog_ext, SlashContext
 
 from db import config
-from game import tictactoe
+from game import tictactoe, hangman
 
 guild_ids = [770634445370687519]
 
@@ -126,8 +127,8 @@ class Slash(commands.Cog, description="Slash Commands"):
         except asyncio.TimeoutError:
             await ctx.send("No one got the cookie :(")
         else:
-            time = round((datetime.datetime.utcnow() - start).total_seconds() - self.bot.latency, 3)
-            await m.edit(embed=discord.Embed(title=f"**{user.display_name}** got the cookie in **{time}** seconds"))
+            timevar = round((datetime.datetime.utcnow() - start).total_seconds() - self.bot.latency, 3)
+            await m.edit(embed=discord.Embed(title=f"**{user.display_name}** got the cookie in **{timevar}** seconds"))
 
     @cog_ext.cog_slash(name="8ball", guild_ids=guild_ids)
     @commands.cooldown(rate=1, per=10.0, type=commands.BucketType.user)
@@ -189,6 +190,99 @@ class Slash(commands.Cog, description="Slash Commands"):
                             description=f"Hello {ctx.author.name}",
                             color=discord.Color.green())
         await ctx.send(embed=msg)
+
+    @cog_ext.cog_slash(name="Invite", guild_ids=guild_ids)
+    async def invite(self, context):
+        """
+        Get the invite link of the bot to be able to invite it.
+        """
+        embed = discord.Embed(
+            title="Info",
+            description=f"Invite me by clicking"
+                        f" [here](https://discord.com/api/oauth2/authorize?"
+                        f"client_id=812808865728954399&permissions=8&redirect_uri="
+                        f"http%3A%2F%2Fdiscord.mikart.eu%2F&scope=bot%20applications.commands).",
+            color=0xD75BF4
+        )
+        try:
+            await context.author.send(embed=embed)
+            await context.send("I sent you a private message!")
+        except discord.Forbidden:
+            await context.send(embed=embed)
+
+    @cog_ext.cog_slash(name="Hangman", guild_ids=guild_ids)
+    async def hangman(self, ctx):
+        """Play Hangman"""
+        await hangman.play(self.bot, ctx)
+
+    @cog_ext.cog_slash(name="Dice", guild_ids=guild_ids)
+    @commands.cooldown(rate=1, per=10.0, type=commands.BucketType.user)
+    async def rolldice(self, ctx):
+        """Roll dice!"""
+        embed1 = discord.Embed(title=f"Games", description="Rolled a {}!".format(random.randint(1, 6)),
+                               color=discord.Color.green())
+        await ctx.send(embed=embed1)
+
+    @cog_ext.cog_slash(name="Ping", guild_ids=guild_ids)
+    async def ping(self, ctx):
+        """Shows the latency of the bot."""
+        wait = discord.Embed(title="Info",
+                             description=f"Waiting the server to respond!",
+                             color=ctx.author.color())
+
+        before = time.monotonic()
+        message = await ctx.send(embed=wait)
+        ping = (time.monotonic() - before) * 1000
+
+        waited = discord.Embed(title="Info",
+                               description=f"Pong!  `{int(ping)}ms`",
+                               color=ctx.author.color())
+        await message.edit(embed=waited)
+        print(f'Ping {int(ping)}ms')
+
+    @cog_ext.cog_slash(name="Server", guild_ids=guild_ids)
+    async def server(self, ctx):
+        """ Get an invite to our support server! """
+
+        embed = discord.Embed(title="Info",
+                              description=f"**Here you go {ctx.author.name} 🍻**\n[Click Me](http://discord.mikart.eu/)",
+                              color=discord.Color.green())
+
+        embed2 = discord.Embed(title="Info",
+                               description=f"**{ctx.author.name}** This is the support server!",
+                               color=ctx.author.color())
+
+        if isinstance(ctx.channel, discord.DMChannel) or ctx.guild.id != 770634445370687519:
+            return await ctx.send(embed=embed)
+        await ctx.send(embed=embed2)
+
+    @cog_ext.cog_slash(name="Github", guild_ids=guild_ids)
+    async def _github(self, ctx):
+        """Returns an link for the github"""
+        embed1 = discord.Embed(title=f"Misc",
+                               description="Check the code from [Click Me]"
+                                           "(https://github.com/ariksquad/ensave-discord)",
+                               color=ctx.author.color)
+        await ctx.send(embed=embed1)
+
+    @cog_ext.cog_slash(name="Slap", guild_ids=guild_ids)
+    @commands.cooldown(1, 2, commands.BucketType.user)
+    async def slap(self, ctx, member: discord.User = None):
+        """Slaps someone you select"""
+        emb = discord.Embed(title="Games",
+                            description=f"{ctx.message.author.mention} slaps {member.mention} in the face!",
+                            color=0x3498db)
+
+        await ctx.send(embed=emb)
+
+    @cog_ext.cog_slash(name="Avatar", guild_ids=guild_ids)
+    async def avatar(self, ctx, *, member: discord.Member = None):
+        """Returns select user's avatar"""
+        if not member:
+            member = ctx.message.author
+
+        a = member.avatar_url
+        ctx.send(a)
 
 
 def setup(bot):
