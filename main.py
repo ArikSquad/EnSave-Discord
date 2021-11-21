@@ -67,6 +67,7 @@ async def on_guild_remove(guild):
                       'cookie', 'password', 'hello', 'slap', 'say', 'tell', 'coinflip',
                       'av', 'doggo', 'dog'])
 async def nocommand(ctx):
+    # a embed to tell that we stopped using normal commands.
     embed = discord.Embed(title=f"Slash Commands.", description="We stopped supporting commands without slash."
                                                                 " Please use slash commands. But keep in mind that we"
                                                                 " haven't made Music"
