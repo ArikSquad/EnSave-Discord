@@ -283,7 +283,7 @@ class Slash(commands.Cog, description="Slash Commands"):
 
         embed = discord.Embed(
             title=member.display_name,
-            color=ctx.author.color
+            color=member.color
         )
         embed.set_image(url=member.avatar_url)
         await ctx.send(embed=embed)
