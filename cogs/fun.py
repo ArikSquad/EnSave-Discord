@@ -21,9 +21,15 @@ class Fun(commands.Cog, description="Technical and Fun Commands"):
                         'uploads/2018/02/thank-you-meme-puppy.jpg?fit=498%2C462&ssl=1')
                     return
 
-    @message_command(name='resend', guild_ids="770634445370687519")
-    async def resend(self, inter):
-        await inter.respond(f'{inter.message.content}')
+    @message_command(name="Reverse")
+    async def reverse(self, inter: ContextMenuInteraction):
+        # Message commands always have only this ^ argument
+        if inter.message.content:
+            # Here we will send a reversed message to the chat
+            await inter.respond(inter.message.content[::-1])
+        else:
+            # Here we will explain that the message isn't valid
+            await inter.respond("There's no content", ephemeral=True)
 
 
 def setup(bot):
