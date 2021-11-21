@@ -31,19 +31,12 @@ def get_prefix(ctx, message):
             json.dump(prefixes, f, indent=4)
 
 
-bot = commands.Bot(
-    command_prefix=get_prefix, case_insensitive=True,
-    description="This is a discord utility bot. Thanks for using this bot",
-    intents=discord.Intents.all()
-)
+bot = commands.Bot(command_prefix=get_prefix, case_insensitive=True,
+                   description="This is a discord utility bot. Thanks for using this bot",
+                   intents=discord.Intents.all())
 slash = SlashCommand(bot, sync_commands=True)
-
-menu = DefaultMenu(
-    '◀️', '▶️', '❌',
-    active_time=5,
-    delete_after_timeout=True,
-)
-bot.help_command = PrettyHelp(navigation=menu, color=discord.Colour.green(), no_category="Other", )
+menu = DefaultMenu('◀️', '▶️', '❌', active_time=5, delete_after_timeout=True)
+bot.help_command = PrettyHelp(navigation=menu, color=discord.Colour.green(), no_category="Other")
 
 
 @bot.event
