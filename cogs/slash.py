@@ -143,8 +143,8 @@ class Slash(commands.Cog, description="Slash Commands"):
 
         answer = random.choice(ballresponse)
 
-        embed1 = discord.Embed(title=f"Games", description=f"🎱 **Question:** {question}\n**Answer:** {answer}",
-                               color=discord.Color.green())
+        embed1 = discord.Embed(title=f"{question}", description=f":8ball: {answer}",
+                               color=ctx.author.color)
 
         await ctx.send(embed=embed1)
 
