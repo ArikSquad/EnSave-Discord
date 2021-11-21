@@ -6,3 +6,4 @@ pyparsing>=3.0.6
 python-dotenv>=0.19.2
 discord-pretty-help
 discord-py-slash-command
+dislash.py
