@@ -113,7 +113,6 @@ async def on_ready():
     DiscordComponents(bot)
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,
                                                         name=f'{len(bot.guilds)} guilds'))
-
     print("Logging in...")
     print(f'{ColoredText.WARNING}{bot.user} has connected to Discord!{ColoredText.END}')
     print(f"Name: {ColoredText.CYAN}{bot.user.name}{ColoredText.END}")
