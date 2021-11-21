@@ -84,9 +84,11 @@ async def changeprefix(ctx, prefix):
                              description=f"Changed the prefix to: " + prefix,
                              color=discord.Color.gold())
     await ctx.send(embed=prefixss)
+    # Opens the prefixes.json to read the data in it
     with open('db/prefixes.json', 'r') as f:
         prefixes = json.load(f)
     prefixes[str(ctx.guild.id)] = prefix
+    # writes prefixes in prefixes.json
     with open('db/prefixes.json', 'w') as f:
         json.dump(prefixes, f, indent=4)
     print(f'Changed prefix in {ctx.guild} to {prefix}. Command was ran user {ctx.message.author}.')
