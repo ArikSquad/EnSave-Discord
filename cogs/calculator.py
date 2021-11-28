@@ -1,3 +1,10 @@
+# -----------------------------------------------------------
+# This is a discord bot by ArikSquad and you are viewing the source code of it.
+#
+# This file is not protected by any license
+#
+# -----------------------------------------------------------
+
 from __future__ import division
 
 import math

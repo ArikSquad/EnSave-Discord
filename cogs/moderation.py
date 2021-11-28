@@ -1,3 +1,11 @@
+# -----------------------------------------------------------
+# This is a discord bot by ArikSquad and you are viewing the source code of it.
+#
+# (C) 2021 MikArt
+# Released under the CC BY-NC 4.0 (BY-NC 4.0)
+#
+# -----------------------------------------------------------
+
 import discord
 from discord.ext import commands
 
@@ -21,7 +29,7 @@ class Moderation(commands.Cog, name="Moderation", description="Moderation Comman
             await context.send(embed=embed)
         else:
             try:
-                await member.kick(reason=reason)
+                await member.kick(reason=reason)  # kicks the member with reason
                 embed = discord.Embed(
                     title="User Kicked!",
                     description=f"**{member}** was kicked by **{context.message.author}**!",

@@ -1,3 +1,11 @@
+# -----------------------------------------------------------
+# This is a discord bot by ArikSquad and you are viewing the source code of it.
+#
+# (C) 2021 MikArt
+# Released under the CC BY-NC 4.0 (BY-NC 4.0)
+#
+# -----------------------------------------------------------
+
 import asyncio
 import datetime
 import random
@@ -282,6 +290,7 @@ class Slash(commands.Cog, description="Slash Commands"):
         embed.set_image(url=member.avatar_url)
         await ctx.send(embed=embed)
 
+    # a slash command for coinflip
     @cog_ext.cog_slash(name="Coinflip", guild_ids=guild_ids)
     async def coinflip(self, ctx):
         """Flips a coin"""
@@ -298,6 +307,95 @@ class Slash(commands.Cog, description="Slash Commands"):
                                   description=f"{ctx.author.mention} Flipped coin, we got **Tails**!",
                                   color=ctx.author.color)
             await ctx.send(embed=embed)
+
+    @cog_ext.cog_slash(name="clear", guild_ids=guild_ids, description="Purge commands")
+    @commands.has_permissions(manage_messages=True, manage_channels=True)
+    async def purge(self, context, amount):
+        """
+        Delete a number of messages.
+        """
+        try:
+            amount = int(amount)
+        except:
+            embed = discord.Embed(
+                title="Error!",
+                description=f"`{amount}` is not a valid number.",
+                color=0xE02B2B
+            )
+            await context.send(embed=embed)
+            return
+        if amount < 1:
+            embed = discord.Embed(
+                title="Error!",
+                description=f"`{amount}` is not a valid number.",
+                color=0xE02B2B
+            )
+            await context.send(embed=embed)
+            return
+        purged_messages = await context.message.channel.purge(limit=amount)
+        embed = discord.Embed(
+            title="Chat Cleared!",
+            description=f"**{context.message.author}** cleared **{len(purged_messages)}** messages!",
+            color=0x42F56C
+        )
+        await context.send(embed=embed)
+
+    @cog_ext.cog_slash(name="warn", guild_ids=guild_ids, description="Warn user")
+    @commands.has_permissions(manage_messages=True)
+    async def warn(self, context, member: discord.Member, *, reason="Not specified"):
+        """
+        Warns a user in his private messages.
+        """
+        embed = discord.Embed(
+            title="User Warned!",
+            description=f"**{member}** was warned by **{context.message.author}**!",
+            color=0x42F56C
+        )
+        embed.add_field(
+            name="Reason:",
+            value=reason
+        )
+        await context.send(embed=embed)
+        try:
+            await member.send(f"You were warned by **{context.message.author}**!\nReason: {reason}")
+        except:
+            pass
+
+    @cog_ext.cog_slash(name="ban", guild_ids=guild_ids, description="Ban user")
+    @commands.has_permissions(ban_members=True)
+    async def ban(self, context, member: discord.Member, *, reason="Not specified"):
+        """
+        Bans a user from the server.
+        """
+        try:
+            if member.guild_permissions.administrator:
+                embed = discord.Embed(
+                    title="Error!",
+                    description="User has Admin permissions.",
+                    color=0xE02B2B
+                )
+                await context.send(embed=embed)
+            else:
+                await member.ban(reason=reason)
+                embed = discord.Embed(
+                    title="User Banned!",
+                    description=f"**{member}** was banned by **{context.message.author}**!",
+                    color=0x42F56C
+                )
+                embed.add_field(
+                    name="Reason:",
+                    value=reason
+                )
+                await context.send(embed=embed)
+                await member.send(f"You were banned by **{context.message.author}**!\nReason: {reason}")
+        except:
+            embed = discord.Embed(
+                title="Error!",
+                description="An error occurred while trying to ban the user. "
+                            "Make sure my role is above the role of the user you want to ban.",
+                color=0xE02B2B
+            )
+            await context.send(embed=embed)
 
 
 def setup(bot):

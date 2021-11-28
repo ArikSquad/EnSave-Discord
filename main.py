@@ -1,3 +1,11 @@
+# -----------------------------------------------------------
+# This is a discord bot by ArikSquad and you are viewing the source code of it.
+#
+# (C) 2021 MikArt
+# Released under the CC BY-NC 4.0 (BY-NC 4.0)
+#
+# -----------------------------------------------------------
+
 import json
 import logging
 import os
@@ -9,11 +17,17 @@ from discord_slash import SlashCommand
 from dotenv import load_dotenv
 from pretty_help import DefaultMenu, PrettyHelp
 
+# shows more logging
 logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(level=logging.INFO)
+
+# loads dotenv and gets token in a .env file
+# Example: TOKEN=(yourtoken)
 load_dotenv()
 token = os.getenv('token')
 
 
+# Gets prefix in db/prefixes.json. PyUnusedLocal for the ctx.
 # noinspection PyUnusedLocal
 def get_prefix(ctx, message):
     try:
@@ -31,6 +45,7 @@ def get_prefix(ctx, message):
             json.dump(prefixes, f, indent=4)
 
 
+# Selects all intents and prefix,case insensitive, description.
 bot = commands.Bot(command_prefix=get_prefix, case_insensitive=True,
                    description="This is a discord utility bot. Thanks for using this bot",
                    intents=discord.Intents.all())
@@ -39,6 +54,7 @@ menu = DefaultMenu('◀️', '▶️', '❌', active_time=5, delete_after_timeou
 bot.help_command = PrettyHelp(navigation=menu, color=discord.Colour.green(), no_category="Other")
 
 
+# when bot joins a server
 @bot.event
 async def on_guild_join(guild):
     with open('db/prefixes.json', 'r') as f:
@@ -49,7 +65,7 @@ async def on_guild_join(guild):
     with open('db/prefixes.json', 'w') as f:
         json.dump(prefixes, f, indent=4)
 
-
+# when bot leaves a server
 @bot.event
 async def on_guild_remove(guild):
     with open('db/prefixes.json', 'r') as f:
@@ -59,6 +75,7 @@ async def on_guild_remove(guild):
         json.dump(prefixes, f, indent=4)
 
 
+# all the commands we stopped supporting.
 @bot.command(name='none',
              aliases=['ttt', 'rockpaperscrissors', 'rps', "rollingdice", "diceroll",
                       "rolldice", 'dice', "8Ball", '8ba', 'eightball', 'slot', 'bet',
@@ -67,7 +84,6 @@ async def on_guild_remove(guild):
                       'cookie', 'password', 'hello', 'slap', 'say', 'tell', 'coinflip',
                       'av', 'doggo', 'dog'])
 async def nocommand(ctx):
-    # a embed to tell that we stopped using normal commands.
     embed = discord.Embed(title=f"Slash Commands.", description="We stopped supporting commands without slash."
                                                                 " Please use slash commands. But keep in mind that we"
                                                                 " haven't made Music"
@@ -77,32 +93,46 @@ async def nocommand(ctx):
     await ctx.reply(embed=embed)
 
 
+# a command to change prefix
 @bot.command(help="Change the prefix.", name="ChangePrefix")
 @commands.has_permissions(administrator=True)
 async def changeprefix(ctx, prefix):
+
     prefixss = discord.Embed(title="Moderation",
                              description=f"Changed the prefix to: " + prefix,
                              color=discord.Color.gold())
     await ctx.send(embed=prefixss)
+
     # Opens the prefixes.json to read the data in it
     with open('db/prefixes.json', 'r') as f:
         prefixes = json.load(f)
     prefixes[str(ctx.guild.id)] = prefix
+
     # writes prefixes in prefixes.json
     with open('db/prefixes.json', 'w') as f:
         json.dump(prefixes, f, indent=4)
+
     print(f'Changed prefix in {ctx.guild} to {prefix}. Command was ran user {ctx.message.author}.')
 
 
 class ColoredText:
+
     HEADER = '\033[95m'
+
     BLUE = '\033[94m'
+
     CYAN = '\033[96m'
+
     GREEN = '\033[92m'
+
     WARNING = '\033[93m'
+
     FAIL = '\033[91m'
+
     END = '\033[0m'
+
     BOLD = '\033[1m'
+
     UNDERLINE = '\033[4m'
 
 
@@ -111,6 +141,8 @@ async def on_ready():
     DiscordComponents(bot)
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,
                                                         name=f'{len(bot.guilds)} guilds'))
+
+    # Print the information about the bot.
     print("Logging in...")
     print(f'{ColoredText.WARNING}{bot.user} has connected to Discord!{ColoredText.END}')
     print(f"Name: {ColoredText.CYAN}{bot.user.name}{ColoredText.END}")
@@ -119,11 +151,13 @@ async def on_ready():
     print(f"Connected to {ColoredText.GREEN}{len(bot.guilds)} guilds{ColoredText.END}")
 
 
+# Load all the cogs.
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         loader = filename[:-3]
         bot.load_extension(f'cogs.{loader}')
         print(f'{ColoredText.HEADER}{loader.capitalize()} has been loaded{ColoredText.END}')
 
+# run the bot with token
 if __name__ == "__main__":
     bot.run(token, reconnect=True)

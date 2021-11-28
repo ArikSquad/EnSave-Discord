@@ -1,2 +1,7 @@
-# an empty line to appreciate the coders who actually have time to code something cool.
-# but I am not one of those so don't even try.
+# -----------------------------------------------------------
+# This is a discord bot by ArikSquad and you are viewing the source code of it.
+#
+# (C) 2021 MikArt
+# Released under the CC BY-NC 4.0 (BY-NC 4.0)
+#
+# -----------------------------------------------------------
