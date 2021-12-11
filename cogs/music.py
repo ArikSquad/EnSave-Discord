@@ -800,7 +800,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         elif isinstance(exc, EQGainOutOfBounds):
             await ctx.send(embed=embed2)
 
-    @commands.command(name="playing", aliases=["np"])
+    @commands.command(name="playing", aliases=["np", "info", "musicinfo"])
     async def playing_command(self, ctx):
         player = self.get_player(ctx)
 
@@ -815,7 +815,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed.set_author(name="Playback Information")
         embed.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
         embed.add_field(name="Track title",
-                        value=f"[player.queue.current_track.title]"
+                        value=f"[{player.queue.current_track.title}]"
                               f"(https://youtube.com/watch?v={player.current.identifier})",
                         inline=False)
 

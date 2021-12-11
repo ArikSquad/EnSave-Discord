@@ -63,6 +63,7 @@ class ErrorHandler(commands.Cog):
         commands.DisabledCommand: 'This command is disabled and cannot be used',
         commands.CheckFailure: '{err}',
         commands.CommandOnCooldown: '{err}',
+        commands.errors.CommandOnCooldown: '{err}',
         commands.MissingRequiredArgument: 'You are missing a required argument! '
                                           '(See `{ctx.prefix}help {ctx.command.qualified_name}` '
                                           'for info on how to use this command).',
