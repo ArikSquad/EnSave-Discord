@@ -550,7 +550,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             )
             await ctx.send(embed=embed)
 
-    @commands.command(name="repeat")
+    @commands.command(name="repeat", aliases=["loop"])
     async def repeat_command(self, ctx, mode: str):
         if mode not in ("none", "1", "all"):
             raise InvalidRepeatMode
@@ -605,7 +605,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
 
     # Requests -----------------------------------------------------------------
 
-    @commands.group(name="volume", invoke_without_command=True)
+    @commands.group(name="volume", aliases=["vol"], invoke_without_command=True)
     async def volume_group(self, ctx, volume: int):
         player = self.get_player(ctx)
 
@@ -814,7 +814,11 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         )
         embed.set_author(name="Playback Information")
         embed.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
-        embed.add_field(name="Track title", value=player.queue.current_track.title, inline=False)
+        embed.add_field(name="Track title",
+                        value=f"[player.queue.current_track.title]"
+                              f"(https://youtube.com/watch?v={player.current.identifier})",
+                        inline=False)
+
         embed.add_field(name="Artist", value=player.queue.current_track.author, inline=False)
 
         position = divmod(player.position, 60000)
