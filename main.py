@@ -13,7 +13,8 @@ import os
 import discord
 from discord.ext import commands
 from discord_components import DiscordComponents
-from discord_slash import SlashCommand
+from discord_slash import SlashCommand as SlashComma
+from dislash import *
 from dotenv import load_dotenv
 from pretty_help import DefaultMenu, PrettyHelp
 
@@ -52,12 +53,16 @@ bot = commands.Bot(command_prefix=get_prefix,
                    intents=discord.Intents.all())
 
 # The variable for slash commands.
-slash = SlashCommand(bot, sync_commands=True)
+slash = SlashComma(bot, sync_commands=True)
 
 # Variable for the help menus
 menu = DefaultMenu('◀️', '▶️', '❌', active_time=5, delete_after_timeout=True)
 
+# Makes the help menu
 bot.help_command = PrettyHelp(navigation=menu, color=discord.Colour.green(), no_category="Other")
+
+# Interaction Client Variable
+interClient = InteractionClient(bot)
 
 
 # Ran when bot joins the server.
@@ -70,6 +75,7 @@ async def on_guild_join(guild):
 
     with open('db/prefixes.json', 'w') as f:
         json.dump(prefixes, f, indent=4)
+
 
 # Ran when bot leaves server.
 @bot.event
@@ -97,6 +103,11 @@ async def nocommand(ctx):
                           color=ctx.author.color)
 
     await ctx.reply(embed=embed)
+
+
+@interClient.message_command(name='resend', guild_ids=[770634445370687519])
+async def resend(inter):
+    await inter.respond(f'{inter.message.content}')
 
 
 # Create command to change prefix
@@ -144,6 +155,7 @@ class ColoredText:
     UNDERLINE = '\033[4m'
 
 
+# This will be ran after the bot is ready.
 @bot.event
 async def on_ready():
     DiscordComponents(bot)
