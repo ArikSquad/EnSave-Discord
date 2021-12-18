@@ -21,13 +21,13 @@ from pretty_help import DefaultMenu, PrettyHelp
 logging.basicConfig(level=logging.WARNING)
 logging.basicConfig(level=logging.INFO)
 
-# loads dotenv and gets token in a .env file
-# Example: TOKEN=(yourtoken)
+# To change the token create a file named .env and write the token.
+# Example usage: TOKEN=(yourtoken)
 load_dotenv()
 token = os.getenv('token')
 
 
-# Gets prefix in db/prefixes.json. PyUnusedLocal for the ctx.
+# Gets prefix in db/prefixes.json. PyUnusedLocal for the ctx warning.
 # noinspection PyUnusedLocal
 def get_prefix(ctx, message):
     try:
@@ -46,15 +46,21 @@ def get_prefix(ctx, message):
 
 
 # Selects all intents and prefix,case insensitive, description.
-bot = commands.Bot(command_prefix=get_prefix, case_insensitive=True,
-                   description="This is a discord utility bot. Thanks for using this bot",
+bot = commands.Bot(command_prefix=get_prefix,
+                   case_insensitive=True,
+                   description="Utilies Bot.",
                    intents=discord.Intents.all())
+
+# The variable for slash commands.
 slash = SlashCommand(bot, sync_commands=True)
+
+# Variable for the help menus
 menu = DefaultMenu('◀️', '▶️', '❌', active_time=5, delete_after_timeout=True)
+
 bot.help_command = PrettyHelp(navigation=menu, color=discord.Colour.green(), no_category="Other")
 
 
-# when bot joins a server
+# Ran when bot joins the server.
 @bot.event
 async def on_guild_join(guild):
     with open('db/prefixes.json', 'r') as f:
@@ -65,7 +71,7 @@ async def on_guild_join(guild):
     with open('db/prefixes.json', 'w') as f:
         json.dump(prefixes, f, indent=4)
 
-# when bot leaves a server
+# Ran when bot leaves server.
 @bot.event
 async def on_guild_remove(guild):
     with open('db/prefixes.json', 'r') as f:
@@ -75,7 +81,7 @@ async def on_guild_remove(guild):
         json.dump(prefixes, f, indent=4)
 
 
-# all the commands we stopped supporting.
+# Sends a message that these commands only support slash commands.
 @bot.command(name='none',
              aliases=['ttt', 'rockpaperscrissors', 'rps', "rollingdice", "diceroll",
                       "rolldice", 'dice', "8Ball", '8ba', 'eightball', 'slot', 'bet',
@@ -93,7 +99,7 @@ async def nocommand(ctx):
     await ctx.reply(embed=embed)
 
 
-# a command to change prefix
+# Create command to change prefix
 @bot.command(help="Change the prefix.", name="ChangePrefix")
 @commands.has_permissions(administrator=True)
 async def changeprefix(ctx, prefix):
@@ -115,12 +121,14 @@ async def changeprefix(ctx, prefix):
     print(f'Changed prefix in {ctx.guild} to {prefix}. Command was ran user {ctx.message.author}.')
 
 
+# Class to choose a print color
 class ColoredText:
 
     HEADER = '\033[95m'
 
     BLUE = '\033[94m'
 
+    # My personal favourite
     CYAN = '\033[96m'
 
     GREEN = '\033[92m'
@@ -139,6 +147,8 @@ class ColoredText:
 @bot.event
 async def on_ready():
     DiscordComponents(bot)
+
+    # Change the presence.
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,
                                                         name=f'{len(bot.guilds)} guilds'))
 
@@ -158,6 +168,7 @@ for filename in os.listdir('./cogs'):
         bot.load_extension(f'cogs.{loader}')
         print(f'{ColoredText.HEADER}{loader.capitalize()} has been loaded{ColoredText.END}')
 
-# run the bot with token
+# Run the bot with token (.env file)
 if __name__ == "__main__":
     bot.run(token, reconnect=True)
+    # reconnect=True is for it to reconnect when lost connection.
