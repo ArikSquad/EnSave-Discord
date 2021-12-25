@@ -316,7 +316,7 @@ class Slash(commands.Cog, description="Slash Commands"):
         """
         try:
             amount = int(amount)
-        except:
+        except ValueError:
             embed = discord.Embed(
                 title="Error!",
                 description=f"`{amount}` is not a valid number.",
@@ -352,7 +352,7 @@ class Slash(commands.Cog, description="Slash Commands"):
             color=0x42F56C
         )
         embed.add_field(
-            name="Reason:",
+            name="Reason: ",
             value=reason
         )
         await context.send(embed=embed)
