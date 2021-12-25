@@ -314,7 +314,6 @@ class Slash(commands.Cog, description="Slash Commands"):
         """
         Delete a number of messages.
         """
-
         try:
             amount = int(amount)
         except:
@@ -357,10 +356,7 @@ class Slash(commands.Cog, description="Slash Commands"):
             value=reason
         )
         await context.send(embed=embed)
-        try:
-            await member.send(f"You were warned by **{context.message.author}**!\nReason: {reason}")
-        except:
-            pass
+        await member.send(f"You were warned by **{context.message.author}**!\nReason: {reason}")
 
 
 def setup(bot):
