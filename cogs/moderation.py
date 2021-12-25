@@ -130,10 +130,7 @@ class Moderation(commands.Cog, name="Moderation", description="Moderation Comman
             value=reason
         )
         await context.send(embed=embed)
-        try:
-            await member.send(f"You were warned by **{context.message.author}**!\nReason: {reason}")
-        except:
-            pass
+        await member.send(f"You were warned by **{context.message.author}**!\nReason: {reason}")
 
     @commands.command(name="Purge", aliases=["clear", "vanish"])
     @commands.has_permissions(manage_messages=True, manage_channels=True)
