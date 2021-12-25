@@ -23,7 +23,7 @@ logging.basicConfig(level=logging.WARNING)
 logging.basicConfig(level=logging.INFO)
 
 # To change the token create a file named .env and write the token.
-# Example usage: TOKEN=(yourtoken)
+# Example usage: TOKEN='(your token)'
 load_dotenv()
 token = os.getenv('token')
 

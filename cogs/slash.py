@@ -314,6 +314,7 @@ class Slash(commands.Cog, description="Slash Commands"):
         """
         Delete a number of messages.
         """
+
         try:
             amount = int(amount)
         except:
@@ -360,42 +361,6 @@ class Slash(commands.Cog, description="Slash Commands"):
             await member.send(f"You were warned by **{context.message.author}**!\nReason: {reason}")
         except:
             pass
-
-    @cog_ext.cog_slash(name="ban", guild_ids=guild_ids, description="Ban user")
-    @commands.has_permissions(ban_members=True)
-    async def ban(self, context, member: discord.Member, *, reason="Not specified"):
-        """
-        Bans a user from the server.
-        """
-        try:
-            if member.guild_permissions.administrator:
-                embed = discord.Embed(
-                    title="Error!",
-                    description="User has Admin permissions.",
-                    color=0xE02B2B
-                )
-                await context.send(embed=embed)
-            else:
-                await member.ban(reason=reason)
-                embed = discord.Embed(
-                    title="User Banned!",
-                    description=f"**{member}** was banned by **{context.message.author}**!",
-                    color=0x42F56C
-                )
-                embed.add_field(
-                    name="Reason:",
-                    value=reason
-                )
-                await context.send(embed=embed)
-                await member.send(f"You were banned by **{context.message.author}**!\nReason: {reason}")
-        except:
-            embed = discord.Embed(
-                title="Error!",
-                description="An error occurred while trying to ban the user. "
-                            "Make sure my role is above the role of the user you want to ban.",
-                color=0xE02B2B
-            )
-            await context.send(embed=embed)
 
 
 def setup(bot):
