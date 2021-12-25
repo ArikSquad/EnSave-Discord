@@ -310,7 +310,7 @@ class Slash(commands.Cog, description="Slash Commands"):
 
     @cog_ext.cog_slash(name="clear", guild_ids=guild_ids, description="Purge commands")
     @commands.has_permissions(manage_messages=True, manage_channels=True)
-    async def purge(self, context, amount):
+    async def purge(self, ctx, amount):
         """
         Delete a number of messages.
         """
@@ -322,7 +322,7 @@ class Slash(commands.Cog, description="Slash Commands"):
                 description=f"`{amount}` is not a valid number.",
                 color=0xE02B2B
             )
-            await context.send(embed=embed)
+            await ctx.send(embed=embed)
             return
         if amount < 1:
             embed = discord.Embed(
@@ -330,15 +330,15 @@ class Slash(commands.Cog, description="Slash Commands"):
                 description=f"`{amount}` is not a valid number.",
                 color=0xE02B2B
             )
-            await context.send(embed=embed)
+            await ctx.send(embed=embed)
             return
-        purged_messages = await context.message.channel.purge(limit=amount)
+        purged_messages = await ctx.message.channel.purge(limit=amount)
         embed = discord.Embed(
             title="Chat Cleared!",
-            description=f"**{context.message.author}** cleared **{len(purged_messages)}** messages!",
+            description=f"**{ctx.message.author}** cleared **{len(purged_messages)}** messages!",
             color=0x42F56C
         )
-        await context.send(embed=embed)
+        await ctx.send(embed=embed)
 
     @cog_ext.cog_slash(name="warn", guild_ids=guild_ids, description="Warn user")
     @commands.has_permissions(manage_messages=True)
