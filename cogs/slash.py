@@ -117,7 +117,7 @@ class Slash(commands.Cog, description="Slash Commands"):
     async def cookie(self, ctx):
         """Who can catch the cookie first?"""
 
-        m = await ctx.send(embed=discord.Embed(title="🍪 Cookie is coming..."))
+        m = await ctx.send(embed=discord.Embed(title="🍪 Cookie is thinking..."))
         await asyncio.sleep(3)
         for i in range(3, 0, -1):
             await m.edit(embed=discord.Embed(title=f"🍪 Cookie is coming in **{i}**"))
@@ -126,15 +126,16 @@ class Slash(commands.Cog, description="Slash Commands"):
         start = datetime.datetime.utcnow()
         await m.add_reaction("🍪")
         try:
-            # Now we wait for the reaction
-            _, user = await self.bot.wait_for(
+            reaction, user = await self.bot.wait_for(
                 "reaction_add",
                 check=lambda r, u: str(r.emoji) == "🍪" and r.message == m and not u.bot,
                 timeout=10,
             )
         except asyncio.TimeoutError:
+
             await ctx.send("No one got the cookie :(")
         else:
+
             timevar = round((datetime.datetime.utcnow() - start).total_seconds() - self.bot.latency, 3)
             await m.edit(embed=discord.Embed(title=f"**{user.display_name}** got the cookie in **{timevar}** seconds"))
 

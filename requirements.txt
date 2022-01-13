@@ -7,3 +7,5 @@ python-dotenv>=0.19.2
 discord-pretty-help
 discord-py-slash-command
 dislash.py
+Pynacl
+validators>=0.18.2

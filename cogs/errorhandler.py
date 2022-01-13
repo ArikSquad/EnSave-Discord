@@ -10,6 +10,8 @@ from datetime import datetime
 import discord
 from discord.ext import commands
 
+from cogs import music
+
 
 class ErrorHandler(commands.Cog):
     def __init__(self, bot):
@@ -70,6 +72,8 @@ class ErrorHandler(commands.Cog):
         commands.BadArgument: 'Invalid argument given! (See `{ctx.prefix}help {ctx.command.qualified_name}` '
                               'for info on how to use this command).',
         commands.CommandNotFound: None,
+        commands.UserInputError: 'Invalid command usage! (See `{ctx.prefix}help {ctx.command.qualified_name}` ',
+        music.InvalidRepeatMode: ' Invalid repeat mode! (Current: 1, Queue: all, None: none)',
 
     }
 
