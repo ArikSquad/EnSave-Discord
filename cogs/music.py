@@ -348,7 +348,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         elif isinstance(obj, discord.Guild):
             return self.bot.wavelink.get_player(obj.id, cls=Player)
 
-    @commands.command(name="connect", aliases=["join"])
+    @commands.command(name="connect", aliases=["join"], help="Connect to a voice channel")
     async def connect_command(self, ctx, *, channel: t.Optional[discord.VoiceChannel]):
         player = self.get_player(ctx)
         channel = await player.connect(ctx, channel)
@@ -376,7 +376,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             )
             await ctx.send(embed=embed2)
 
-    @commands.command(name="disconnect", aliases=["leave"])
+    @commands.command(name="disconnect", aliases=["leave"], help="Disconnects from the voice channel.")
     async def disconnect_command(self, ctx):
         player = self.get_player(ctx)
         await player.teardown()
@@ -387,7 +387,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         )
         await ctx.send(embed=embed)
 
-    @commands.command(name="play")
+    @commands.command(name="play", help="Play a song.")
     async def play_command(self, ctx, *, query: t.Optional[str]):
         player = self.get_player(ctx)
 
@@ -442,7 +442,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             )
             await ctx.send(embed=embed2)
 
-    @commands.command(name="pause")
+    @commands.command(name="pause", help="Pauses playback.")
     async def pause_command(self, ctx):
         player = self.get_player(ctx)
 
@@ -469,7 +469,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             embed.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
             await ctx.send(embed=embed)
 
-    @commands.command(name="stop")
+    @commands.command(name="stop", help="Stops playback.")
     async def stop_command(self, ctx):
         player = self.get_player(ctx)
         player.queue.empty()
@@ -482,7 +482,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
 
-    @commands.command(name="next", aliases=["skip"])
+    @commands.command(name="next", aliases=["skip"], help="Skips to the next song.")
     async def next_command(self, ctx):
         player = self.get_player(ctx)
 
@@ -514,7 +514,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             )
             await ctx.send(embed=embed2)
 
-    @commands.command(name="previous")
+    @commands.command(name="previous", help="Plays the previous song.")
     async def previous_command(self, ctx):
         player = self.get_player(ctx)
 
@@ -547,7 +547,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             )
             await ctx.send(embed=embed2)
 
-    @commands.command(name="shuffle")
+    @commands.command(name="shuffle", help="Shuffles the queue.")
     async def shuffle_command(self, ctx):
         player = self.get_player(ctx)
         player.queue.shuffle()
@@ -568,7 +568,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             )
             await ctx.send(embed=embed)
 
-    @commands.command(name="repeat", aliases=["loop"], description="Repeat the current track.")
+    @commands.command(name="repeat", aliases=["loop"], help="Repeats the songs.")
     async def repeat_command(self, ctx, mode: str):
         if mode not in ("none", "1", "all"):
             raise InvalidRepeatMode
@@ -582,7 +582,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         )
         await ctx.send(embed=embed)
 
-    @commands.command(name="queue")
+    @commands.command(name="queue", help="Shows the current queue.")
     async def queue_command(self, ctx, show: t.Optional[int] = 10):
         player = self.get_player(ctx)
 
@@ -623,7 +623,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
 
     # Requests -----------------------------------------------------------------
 
-    @commands.group(name="volume", aliases=["vol"], invoke_without_command=True)
+    @commands.group(name="volume", aliases=["vol"], invoke_without_command=True, help="Adjusts the volume.")
     async def volume_group(self, ctx, volume: int):
         player = self.get_player(ctx)
 
@@ -708,7 +708,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             )
             await ctx.send(embed=embed)
 
-    @commands.command(name="lyrics")
+    @commands.command(name="lyrics", help="Gets the lyrics of the current track.")
     async def lyrics_command(self, ctx, name: t.Optional[str]):
         player = self.get_player(ctx)
         name = name or player.queue.current_track.title
@@ -752,7 +752,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             embed2.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
             await ctx.send(embed=embed2)
 
-    @commands.command(name="eq")
+    @commands.command(name="eq", aliases=["equaliser"], help="Adjust the EQ settings.",)
     async def eq_command(self, ctx, preset: str):
         player = self.get_player(ctx)
 
@@ -778,7 +778,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             )
             await ctx.send(embed=embed)
 
-    @commands.command(name="adveq", aliases=["aeq"])
+    @commands.command(name="adveq", aliases=["aeq"], help="Adjust the advanced EQ settings.",)
     async def adveq_command(self, ctx, band: int, gain: float):
         player = self.get_player(ctx)
 
@@ -821,7 +821,8 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         elif isinstance(exc, EQGainOutOfBounds):
             await ctx.send(embed=embed2)
 
-    @commands.command(name="playing", aliases=["np", "info", "musicinfo"])
+    @commands.command(name="playing", aliases=["np", "info", "musicinfo"],
+                      help="Get information about the current song.",)
     async def playing_command(self, ctx):
         player = self.get_player(ctx)
 
@@ -862,7 +863,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         if isinstance(exc, PlayerIsAlreadyPaused):
             await ctx.send(embed=embed)
 
-    @commands.command(name="skipto", aliases=["playindex"])
+    @commands.command(name="skipto", aliases=["playindex"], help="Skip to a specific track in the queue.",)
     async def skipto_command(self, ctx, index: int):
         player = self.get_player(ctx)
 
@@ -898,7 +899,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         elif isinstance(exc, NoMoreTracks):
             await ctx.send(embed=embed2)
 
-    @commands.command(name="restart")
+    @commands.command(name="restart", help="Restart the current track.",)
     async def restart_command(self, ctx):
         player = self.get_player(ctx)
 
@@ -923,7 +924,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             )
             await ctx.send(embed=embed)
 
-    @commands.command(name="seek")
+    @commands.command(name="seek", help="Seek to a specific time in the current track.",)
     async def seek_command(self, ctx, position: str):
         player = self.get_player(ctx)
 
