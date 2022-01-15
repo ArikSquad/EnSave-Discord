@@ -391,12 +391,9 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
     async def play_command(self, ctx, *, query: t.Optional[str]):
         player = self.get_player(ctx)
 
-        if not player.is_connected:
-            await player.connect(ctx)
-
         if validators.url(query) is True:
             embed3 = discord.Embed(
-                description="We are sorry, but we don't support URLS",
+                description="We are sorry, but we don't support URLS.",
                 colour=ctx.author.colour,
                 timestamp=timestamp_embed()
             )
@@ -404,25 +401,29 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
 
             await ctx.send(embed=embed3)
         else:
-            if query is None:
-                if player.queue.is_empty:
-                    raise QueueIsEmpty
 
-                await player.set_pause(False)
-                embed2 = discord.Embed(
-                    description="Playback resumed.",
-                    colour=ctx.author.colour,
-                    timestamp=timestamp_embed()
-                )
-                embed2.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
-                await ctx.send(embed=embed2)
+            if not player.is_connected:
+                await player.connect(ctx)
 
-            else:
-                query = query.strip("<>")
-                if not re.match(URL_REGEX, query):
-                    query = f"ytsearch:{query}"
+                if query is None:
+                    if player.queue.is_empty:
+                        raise QueueIsEmpty
 
-                await player.add_tracks(ctx, await self.bot.wavelink.get_tracks(query))
+                    await player.set_pause(False)
+                    embed2 = discord.Embed(
+                        description="Playback resumed.",
+                        colour=ctx.author.colour,
+                        timestamp=timestamp_embed()
+                    )
+                    embed2.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
+                    await ctx.send(embed=embed2)
+
+                else:
+                    query = query.strip("<>")
+                    if not re.match(URL_REGEX, query):
+                        query = f"ytsearch:{query}"
+
+                    await player.add_tracks(ctx, await self.bot.wavelink.get_tracks(query))
 
     @play_command.error
     async def play_command_error(self, ctx, exc):
