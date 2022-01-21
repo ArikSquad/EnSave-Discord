@@ -5,13 +5,12 @@
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
 # -----------------------------------------------------------
-import asyncio
 import json
 import logging
 import os
 
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord_components import DiscordComponents
 from discord_slash import SlashCommand as SlashComma
 from dislash import *
@@ -152,12 +151,10 @@ class ColoredText:
     UNDERLINE = '\033[4m'
 
 
-# This def is for getting the guild servers.
+@tasks.loop(seconds=10)
 async def update_presence():
-    while True:
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,
-                                                            name=f'{bot.guilds} guilds'))
-        await asyncio.sleep(10)
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,
+                                                        name=f'{len(bot.guilds)} guilds', status=discord.Status.idle))
 
 
 # This will be run, after the bot is ready.
@@ -165,8 +162,8 @@ async def update_presence():
 async def on_ready():
     DiscordComponents(bot)
 
-    # Change the presence.
-    bot.loop.create_task(update_presence())
+    # Update the presence.
+    update_presence.start()
 
     # Print the information about the bot.
     print("Logging in...")
