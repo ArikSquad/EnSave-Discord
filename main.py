@@ -46,10 +46,10 @@ def get_prefix(ctx, message):
             json.dump(prefixes, f, indent=4)
 
 
-# Selects all intents and prefix,case insensitive, description.
+# Selects all intents and prefix, case-insensitive, description.
 bot = commands.Bot(command_prefix=get_prefix,
                    case_insensitive=True,
-                   description="Utilies Bot.",
+                   description="Utilities Bot.",
                    intents=discord.Intents.all())
 
 # The variable for slash commands.
@@ -112,12 +112,11 @@ async def resend(inter):
 # Create command to change prefix
 @bot.command(help="Change the prefix.", name="prefix")
 @commands.has_permissions(administrator=True)
-async def changeprefix(ctx, prefix):
-
-    prefixss = discord.Embed(title="Moderation",
-                             description=f"Changed the prefix to: " + prefix,
-                             color=discord.Color.gold())
-    await ctx.send(embed=prefixss)
+async def change_prefix(ctx, prefix):
+    embed = discord.Embed(title="Moderation",
+                          description=f"Changed the prefix to: " + prefix,
+                          color=discord.Color.gold())
+    await ctx.send(embed=embed)
 
     # Opens the prefixes.json to read the data in it
     with open('db/prefixes.json', 'r') as f:
@@ -133,7 +132,6 @@ async def changeprefix(ctx, prefix):
 
 # Class to choose a print color
 class ColoredText:
-
     HEADER = '\033[95m'
 
     BLUE = '\033[94m'
