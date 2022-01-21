@@ -53,20 +53,18 @@ This is an open-source discord bot developed by [ArikSquad](http://github.com/Ar
 ```
 git clone https://github.com/ArikSquad/EnSave-Discord.git
 ```
-2. Then unzip it!
-You can use [7zip](https://www.7-zip.org/) to unzip the file.
   
-3. Open Command Prompt or Terminal. Here is an example if you have it on your desktop: 
+2. Open Command Prompt or Terminal. Here is an example if you have it on your desktop: 
   ```
   cd Desktop/EnSave-Discord
   ```
  
-4. Then install requirements in your shell.
+3. Then install requirements in your shell.
 ```
 pip install -r requirements.txt
 ```
 
-5. After that you can just run the main.py, and you are good to go!
+4. After that you can just run the main.py, and you are good to go!
 
 
 ## Reporting a Vulnerability
