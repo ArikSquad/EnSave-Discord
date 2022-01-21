@@ -152,14 +152,19 @@ class ColoredText:
     UNDERLINE = '\033[4m'
 
 
-# This will be ran after the bot is ready.
+# This def is for getting the guild servers.
+def get_guild():
+    return bot.guilds
+
+
+# This will be run, after the bot is ready.
 @bot.event
 async def on_ready():
     DiscordComponents(bot)
 
     # Change the presence.
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,
-                                                        name=f'{len(bot.guilds)} guilds'))
+                                                        name=f'{get_guild()} guilds'))
 
     # Print the information about the bot.
     print("Logging in...")
