@@ -94,14 +94,13 @@ async def on_guild_remove(guild):
                       'slots', 'tictactoe', 'invite', 'ping', 'latency', "supportserver",
                       "feedbackserver", "discord", 'server', 'github', 'sourcecode',
                       'cookie', 'password', 'hello', 'slap', 'say', 'tell', 'coinflip',
-                      'av', 'doggo', 'dog'])
-async def nocommand(ctx):
-    embed = discord.Embed(title=f"Slash Commands.", description="We stopped supporting commands without slash."
-                                                                " Please use slash commands. But keep in mind that we"
-                                                                " haven't made Music"
-                                                                " commands to work with slash commands.",
+                      'av', 'doggo', 'dog'], hidden=True)
+async def old_dated(ctx):
+    embed = discord.Embed(title=f"Slash Commands.", description="We stopped supporting commands without slash. "
+                                                                "Please use slash commands. But keep in mind that we "
+                                                                "haven't made Music yet. So you can't use the music "
+                                                                "commands yet with slash commands.",
                           color=ctx.author.color)
-
     await ctx.reply(embed=embed)
 
 
@@ -111,7 +110,7 @@ async def resend(inter):
 
 
 # Create command to change prefix
-@bot.command(help="Change the prefix.", name="ChangePrefix")
+@bot.command(help="Change the prefix.", name="prefix")
 @commands.has_permissions(administrator=True)
 async def changeprefix(ctx, prefix):
 
