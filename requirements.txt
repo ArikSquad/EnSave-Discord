@@ -1,8 +1,8 @@
 asyncio>=3.4.3
-aiohttp>=3.7.4
+aiohttp
 discord>=1.7.3
 wavelink>=0.9.10
-pyparsing>=3.0.6
+pyparsing
 python-dotenv>=0.19.2
 discord-pretty-help
 discord-py-slash-command
