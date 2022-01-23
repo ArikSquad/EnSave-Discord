@@ -10,7 +10,7 @@ import logging
 import os
 
 import discord
-from discord.ext import commands, tasks
+from discord.ext import commands
 from discord_components import DiscordComponents
 from discord_slash import SlashCommand as SlashComma
 from dislash import *
@@ -150,20 +150,14 @@ class ColoredText:
 
     UNDERLINE = '\033[4m'
 
-
-@tasks.loop(seconds=10)
-async def update_presence():
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,
-                                                        name=f'{len(bot.guilds)} guilds', status=discord.Status.idle))
-
-
 # This will be run, after the bot is ready.
 @bot.event
 async def on_ready():
     DiscordComponents(bot)
 
     # Update the presence.
-    update_presence.start()
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,
+                                                        name=f'fast updates', status=discord.Status.idle))
 
     # Print the information about the bot.
     print("Logging in...")
