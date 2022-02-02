@@ -45,11 +45,18 @@ def get_prefix(ctx, message):
             json.dump(prefixes, f, indent=4)
 
 
+# The activity variable
+activity = discord.Activity(type=discord.ActivityType.watching,
+                            name=f'fast updates', status=discord.Status.idle)
+
 # Selects all intents and prefix, case-insensitive, description.
 bot = commands.Bot(command_prefix=get_prefix,
                    case_insensitive=True,
                    description="Utilities Bot.",
+                   activity=activity,
+                   status=discord.Status.idle,
                    intents=discord.Intents.all())
+
 
 # The variable for slash commands.
 slash = SlashComma(bot, sync_commands=True)
@@ -150,14 +157,11 @@ class ColoredText:
 
     UNDERLINE = '\033[4m'
 
+
 # This will be run, after the bot is ready.
 @bot.event
 async def on_ready():
     DiscordComponents(bot)
-
-    # Update the presence.
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching,
-                                                        name=f'fast updates', status=discord.Status.idle))
 
     # Print the information about the bot.
     print("Logging in...")
