@@ -220,12 +220,13 @@ class Player(wavelink.Player):
             self.queue.add(*tracks.tracks)
         elif len(tracks) == 1:
             self.queue.add(tracks[0])
-            embed = discord.Embed(
+            embed1 = discord.Embed(
                 description=f"Added {tracks[0].title} to the queue.",
                 colour=ctx.author.colour,
                 timestamp=timestamp_embed()
             )
-            await ctx.send(embed=embed)
+            embed1.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
+            await ctx.send(embed=embed1)
         else:
             if (track := await self.choose_track(ctx, tracks)) is not None:
                 self.queue.add(track)
@@ -234,6 +235,7 @@ class Player(wavelink.Player):
                     colour=ctx.author.colour,
                     timestamp=timestamp_embed()
                 )
+                embed2.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
                 await ctx.send(embed=embed2)
 
         if not self.is_playing and not self.queue.is_empty:
@@ -387,6 +389,23 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         )
         await ctx.send(embed=embed)
 
+    @commands.command(name="weekly", aliases=["weeklysong", "daily", "featuredsong", "gamingsong", "featured"], help="Play the weekly song.")
+    async def weekly_command(self, ctx):
+        player = self.get_player(ctx)
+        olderage = True
+
+        if not player.is_connected:
+            await player.connect(ctx)
+
+        await player.add_tracks(ctx, await self.bot.wavelink.get_tracks("https://www.youtube.com/watch?v=wYZux3BMc5k"))
+        if olderage:
+            embed = discord.Embed(
+                description="This song is 13+.",
+                colour=ctx.author.colour,
+                timestamp=timestamp_embed()
+            )
+            await ctx.send(embed=embed)
+
     @commands.command(name="play", help="Play a song.")
     async def play_command(self, ctx, *, query: t.Optional[str]):
         player = self.get_player(ctx)
@@ -401,29 +420,28 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
 
             await ctx.send(embed=embed3)
         else:
-
             if not player.is_connected:
                 await player.connect(ctx)
 
-                if query is None:
-                    if player.queue.is_empty:
-                        raise QueueIsEmpty
+            if query is None:
+                if player.queue.is_empty:
+                    raise QueueIsEmpty
 
-                    await player.set_pause(False)
-                    embed2 = discord.Embed(
-                        description="Playback resumed.",
-                        colour=ctx.author.colour,
-                        timestamp=timestamp_embed()
-                    )
-                    embed2.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
-                    await ctx.send(embed=embed2)
+                await player.set_pause(False)
+                embed2 = discord.Embed(
+                    description="Playback resumed.",
+                    colour=ctx.author.colour,
+                    timestamp=timestamp_embed()
+                )
+                embed2.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
+                await ctx.send(embed=embed2)
 
-                else:
-                    query = query.strip("<>")
-                    if not re.match(URL_REGEX, query):
-                        query = f"ytsearch:{query}"
+            else:
+                query = query.strip("<>")
+                if not re.match(URL_REGEX, query):
+                    query = f"ytsearch:{query}"
 
-                    await player.add_tracks(ctx, await self.bot.wavelink.get_tracks(query))
+                await player.add_tracks(ctx, await self.bot.wavelink.get_tracks(query))
 
     @play_command.error
     async def play_command_error(self, ctx, exc):
