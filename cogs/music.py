@@ -389,15 +389,16 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         )
         await ctx.send(embed=embed)
 
-    @commands.command(name="weekly", aliases=["weeklysong", "daily", "featuredsong", "gamingsong", "featured"], help="Play the weekly song.")
+    @commands.command(name="weekly", aliases=["weeklysong", "daily", "featuredsong", "gamingsong", "featured"],
+                      help="Play the weekly song.")
     async def weekly_command(self, ctx):
         player = self.get_player(ctx)
         olderage = True
 
         if not player.is_connected:
             await player.connect(ctx)
-
         await player.add_tracks(ctx, await self.bot.wavelink.get_tracks("https://www.youtube.com/watch?v=wYZux3BMc5k"))
+
         if olderage:
             embed = discord.Embed(
                 description="This song is 13+.",
@@ -406,8 +407,19 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             )
             await ctx.send(embed=embed)
 
+    @commands.command(name="resume", aliases=["unpause"], help="Resume the player.")
+    async def resume_command(self, ctx):
+        player = self.get_player(ctx)
+        await player.set_pause(False)
+        embed = discord.Embed(
+            description="Playback resumed.",
+            colour=ctx.author.colour,
+            timestamp=timestamp_embed()
+        )
+        await ctx.send(embed=embed)
+
     @commands.command(name="play", help="Play a song.")
-    async def play_command(self, ctx, *, query: t.Optional[str]):
+    async def play_command(self, ctx, *, query: str):
         player = self.get_player(ctx)
 
         if validators.url(query) is True:
@@ -423,25 +435,34 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             if not player.is_connected:
                 await player.connect(ctx)
 
-            if query is None:
-                if player.queue.is_empty:
-                    raise QueueIsEmpty
+            query = query.strip("<>")
+            if not re.match(URL_REGEX, query):
+                query = f"ytsearch:{query}"
 
-                await player.set_pause(False)
-                embed2 = discord.Embed(
-                    description="Playback resumed.",
-                    colour=ctx.author.colour,
-                    timestamp=timestamp_embed()
-                )
-                embed2.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
-                await ctx.send(embed=embed2)
+            await player.add_tracks(ctx, await self.bot.wavelink.get_tracks(query))
 
-            else:
-                query = query.strip("<>")
-                if not re.match(URL_REGEX, query):
-                    query = f"ytsearch:{query}"
+    @commands.command(name="soundcloud", aliases=["sc"], help="Play a song.")
+    async def soundcloud_command(self, ctx, *, query: str):
+        player = self.get_player(ctx)
 
-                await player.add_tracks(ctx, await self.bot.wavelink.get_tracks(query))
+        if validators.url(query) is True:
+            embed3 = discord.Embed(
+                description="We are sorry, but we don't support URLS.",
+                colour=ctx.author.colour,
+                timestamp=timestamp_embed()
+            )
+            embed3.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
+
+            await ctx.send(embed=embed3)
+        else:
+            if not player.is_connected:
+                await player.connect(ctx)
+
+            query = query.strip("<>")
+            if not re.match(URL_REGEX, query):
+                query = f"scsearch:{query}"
+
+            await player.add_tracks(ctx, await self.bot.wavelink.get_tracks(query))
 
     @play_command.error
     async def play_command_error(self, ctx, exc):
@@ -770,7 +791,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             embed2.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
             await ctx.send(embed=embed2)
 
-    @commands.command(name="eq", aliases=["equaliser"], help="Adjust the EQ settings.",)
+    @commands.command(name="eq", aliases=["equaliser"], help="Adjust the EQ settings.", )
     async def eq_command(self, ctx, preset: str):
         player = self.get_player(ctx)
 
@@ -796,7 +817,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             )
             await ctx.send(embed=embed)
 
-    @commands.command(name="adveq", aliases=["aeq"], help="Adjust the advanced EQ settings.",)
+    @commands.command(name="adveq", aliases=["aeq"], help="Adjust the advanced EQ settings.", )
     async def adveq_command(self, ctx, band: int, gain: float):
         player = self.get_player(ctx)
 
@@ -840,7 +861,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             await ctx.send(embed=embed2)
 
     @commands.command(name="playing", aliases=["np", "info", "musicinfo"],
-                      help="Get information about the current song.",)
+                      help="Get information about the current song.", )
     async def playing_command(self, ctx):
         player = self.get_player(ctx)
 
@@ -854,11 +875,15 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         )
         embed.set_author(name="Playback Information")
         embed.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
-        embed.add_field(name="Track title",
-                        value=f"[{player.queue.current_track.title}]"
-                              f"(https://youtube.com/watch?v={player.current.identifier})",
-                        inline=False)
-
+        if str(player.current.identifier).startswith("O:https://api-v2.soundcloud.com"):
+            embed.add_field(name="Track title",
+                            value=player.queue.current_track.title,
+                            inline=False)
+        else:
+            embed.add_field(name="Track title",
+                            value=f"[{player.queue.current_track.title}]"
+                                  f"(https://youtube.com/watch?v={player.current.identifier})",
+                            inline=False)
         embed.add_field(name="Artist", value=player.queue.current_track.author, inline=False)
 
         position = divmod(player.position, 60000)
@@ -881,7 +906,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         if isinstance(exc, PlayerIsAlreadyPaused):
             await ctx.send(embed=embed)
 
-    @commands.command(name="skipto", aliases=["playindex"], help="Skip to a specific track in the queue.",)
+    @commands.command(name="skipto", aliases=["playindex"], help="Skip to a specific track in the queue.", )
     async def skipto_command(self, ctx, index: int):
         player = self.get_player(ctx)
 
@@ -917,7 +942,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         elif isinstance(exc, NoMoreTracks):
             await ctx.send(embed=embed2)
 
-    @commands.command(name="restart", help="Restart the current track.",)
+    @commands.command(name="restart", help="Restart the current track.", )
     async def restart_command(self, ctx):
         player = self.get_player(ctx)
 
@@ -942,7 +967,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             )
             await ctx.send(embed=embed)
 
-    @commands.command(name="seek", help="Seek to a specific time in the current track.",)
+    @commands.command(name="seek", help="Seek to a specific time in the current track.", )
     async def seek_command(self, ctx, position: str):
         player = self.get_player(ctx)
 
