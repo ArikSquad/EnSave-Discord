@@ -13,13 +13,11 @@ import discord
 from discord.ext import commands
 from discord_components import DiscordComponents
 from discord_slash import SlashCommand as SlashComma
-from dislash import *
 from dotenv import load_dotenv
 from pretty_help import DefaultMenu, PrettyHelp
 
-# shows more logging
-logging.basicConfig(level=logging.WARNING)
-logging.basicConfig(level=logging.INFO)
+# Save logs to file with only hours, minutes and seconds
+logging.basicConfig(filename=f'logs/latest.log'),
 
 # To change the token create a file named .env and write the token.
 # Example usage: TOKEN='(your token)'
@@ -67,9 +65,6 @@ menu = DefaultMenu('◀️', '▶️', '❌', active_time=5, delete_after_timeou
 # Makes the help menu
 bot.help_command = PrettyHelp(navigation=menu, color=discord.Colour.green(), no_category="Other")
 
-# Interaction Client Variable
-interClient = InteractionClient(bot)
-
 
 # Ran when bot joins the server.
 @bot.event
@@ -108,11 +103,6 @@ async def old_dated(ctx):
                                                                 "commands yet with slash commands.",
                           color=ctx.author.color)
     await ctx.reply(embed=embed)
-
-
-@interClient.message_command(name='resend', guild_ids=[770634445370687519])
-async def resend(inter):
-    await inter.respond(f'{inter.message.content}')
 
 
 # Create command to change prefix

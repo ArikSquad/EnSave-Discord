@@ -245,7 +245,7 @@ class Slash(commands.Cog, description="Slash Commands"):
 
     @cog_ext.cog_slash(name="Server", guild_ids=guild_ids)
     async def server(self, ctx):
-        """ Get an invite to our support server! """
+        """ Get an invitation to our support server! """
 
         embed = discord.Embed(title="Info",
                               description=f"**Here you go {ctx.author.name} 🍻**\n[Click Me](http://discord.mikart.eu/)",
@@ -261,7 +261,7 @@ class Slash(commands.Cog, description="Slash Commands"):
 
     @cog_ext.cog_slash(name="Github", guild_ids=guild_ids)
     async def _github(self, ctx):
-        """Returns an link for the github"""
+        """Returns a link for the GitHub"""
         embed1 = discord.Embed(title=f"Misc",
                                description="Check the code from [Click Me]"
                                            "(https://github.com/ariksquad/ensave-discord)",

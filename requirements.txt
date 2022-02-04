@@ -1,11 +1,10 @@
-asyncio>=3.4.3
+asyncio
 aiohttp
-discord>=1.7.3
-wavelink>=0.9.10
+discord
+wavelink
 pyparsing
-python-dotenv>=0.19.2
+python-dotenv
 discord-pretty-help
 discord-py-slash-command
-dislash.py
 Pynacl
-validators>=0.18.2
+validators
