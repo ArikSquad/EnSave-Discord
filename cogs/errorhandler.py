@@ -10,8 +10,6 @@ from datetime import datetime
 import discord
 from discord.ext import commands
 
-from cogs import music
-
 
 class ErrorHandler(commands.Cog):
     def __init__(self, bot):
@@ -73,8 +71,7 @@ class ErrorHandler(commands.Cog):
                               'for info on how to use this command).',
         commands.CommandNotFound: None,
         commands.UserInputError: 'Invalid command usage! (See `{ctx.prefix}help {ctx.command.qualified_name}` ',
-        music.InvalidRepeatMode: ' Invalid repeat mode! (Current: 1, Queue: all, None: none)',
-
+        commands.CommandInvokeError: 'This error is unknown.'
     }
 
     @commands.Cog.listener()
@@ -84,10 +81,8 @@ class ErrorHandler(commands.Cog):
         """
 
         classname = error.__class__
-
         if classname in self._error_messages.keys():
             msg = self._error_messages.get(classname, None)
-
             if isinstance(msg, str):
                 await ctx.send(msg.format(ctx=ctx, err=error))
         else:
