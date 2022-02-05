@@ -64,14 +64,14 @@ git clone https://github.com/ArikSquad/EnSave-Discord.git
 pip install -r requirements.txt
 ```
 
-5. If you want to use Music commands you need to follow <a href="https://github.com/PythonistaGuild/Wavelink#installation">this</a> guide
+5. If you want to use Music commands you need to follow [this](https://github.com/PythonistaGuild/Wavelink#lavalink-installation) guide
 
 6. After that you can just run the main.py, and you are good to go!
 
 
 ## Reporting a Vulnerability
 
-If you found any vulnerabilities please open an issue at the <a href="https://github.com/ArikSquad/EnSave-Discord/issues">Issues</a> tab.
+If you found any vulnerabilities please open an issue at the [Issues](https://github.com/ArikSquad/EnSave-Discord/issues) tab.
  
 # License
 This work is licensed under the [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. You are allowed to fork the project and distribute it, if you give credit. You may not sell any code protected by the license. Not all source files are protected by this license - Some third party libraries may be under different copyright.
