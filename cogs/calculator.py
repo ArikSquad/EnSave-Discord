@@ -166,6 +166,7 @@ class Calculator(commands.Cog, description="Math commands"):
             color=discord.Colour.gold(),
             title=f"{formula} = {answer}"
         )
+        answers.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=answers)
 
 
