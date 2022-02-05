@@ -43,7 +43,7 @@ def get_prefix(ctx, message):
             json.dump(prefixes, f, indent=4)
 
 
-# The activity variable
+# Create the activity for Discord. Idle looks cool
 activity = discord.Activity(type=discord.ActivityType.watching,
                             name=f'fast updates', status=discord.Status.idle)
 
@@ -62,23 +62,24 @@ slash = SlashComma(bot, sync_commands=True)
 # Variable for the help menus
 menu = DefaultMenu('◀️', '▶️', '❌', active_time=5, delete_after_timeout=True)
 
-# Makes the help menu
+# Creates a bot help_command and a Pretty Menu.
 bot.help_command = PrettyHelp(navigation=menu, color=discord.Colour.green(), no_category="Other")
 
 
-# Ran when bot joins the server.
+# This event will be run after bot joins a guild.
 @bot.event
 async def on_guild_join(guild):
+    # Opens the prefixes.json to read the prefixes.
     with open('db/prefixes.json', 'r') as f:
         prefixes = json.load(f)
 
     prefixes[str(guild.id)] = '.'
-
+    # Opens the prefixes.json to write the prefixes.
     with open('db/prefixes.json', 'w') as f:
         json.dump(prefixes, f, indent=4)
 
 
-# Ran when bot leaves server.
+# This even will be run after the bot leaves a guild.
 @bot.event
 async def on_guild_remove(guild):
     with open('db/prefixes.json', 'r') as f:
@@ -95,7 +96,7 @@ async def on_guild_remove(guild):
                       'slots', 'tictactoe', 'invite', 'ping', 'latency', "supportserver",
                       "feedbackserver", "discord", 'server', 'github', 'sourcecode',
                       'cookie', 'password', 'hello', 'slap', 'say', 'tell', 'coinflip',
-                      'av', 'doggo', 'dog'], hidden=True)
+                      'av', 'doggo', 'dog', 'calc', 'calculator'], hidden=True)
 async def old_dated(ctx):
     embed = discord.Embed(title=f"Slash Commands.", description="We stopped supporting commands without slash. "
                                                                 "Please use slash commands. But keep in mind that we "
@@ -105,7 +106,7 @@ async def old_dated(ctx):
     await ctx.reply(embed=embed)
 
 
-# Create command to change prefix
+# A command to change the prefix
 @bot.command(help="Change the prefix.", name="prefix")
 @commands.has_permissions(administrator=True)
 async def change_prefix(ctx, prefix):
@@ -114,12 +115,12 @@ async def change_prefix(ctx, prefix):
                           color=discord.Color.gold())
     await ctx.send(embed=embed)
 
-    # Opens the prefixes.json to read the data in it
+    # Opens the prefixes.json to read the prefixes.
     with open('db/prefixes.json', 'r') as f:
         prefixes = json.load(f)
     prefixes[str(ctx.guild.id)] = prefix
 
-    # writes prefixes in prefixes.json
+    # Writes the prefixes back to the file
     with open('db/prefixes.json', 'w') as f:
         json.dump(prefixes, f, indent=4)
 
@@ -129,22 +130,14 @@ async def change_prefix(ctx, prefix):
 # Class to choose a print color
 class ColoredText:
     HEADER = '\033[95m'
-
     BLUE = '\033[94m'
-
     # My personal favourite
     CYAN = '\033[96m'
-
     GREEN = '\033[92m'
-
     WARNING = '\033[93m'
-
     FAIL = '\033[91m'
-
     END = '\033[0m'
-
     BOLD = '\033[1m'
-
     UNDERLINE = '\033[4m'
 
 
@@ -152,7 +145,6 @@ class ColoredText:
 @bot.event
 async def on_ready():
     DiscordComponents(bot)
-
     # Print the information about the bot.
     print("Logging in...")
     print(f'{ColoredText.WARNING}{bot.user} has connected to Discord!{ColoredText.END}')

@@ -158,10 +158,10 @@ class Calculator(commands.Cog, description="Math commands"):
             return await ctx.send(embed=execute_error)
 
         if int(answer) == answer:
-            # Check if it's a whole number and cast to int if so
+            # Check if it's a whole number and cast to int.
             answer = int(answer)
 
-        # Send answer
+        # Send the calculated answer
         answers = discord.Embed(
             color=discord.Colour.gold(),
             title=f"{formula} = {answer}"
