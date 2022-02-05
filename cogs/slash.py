@@ -199,7 +199,7 @@ class Slash(commands.Cog, description="Slash Commands"):
     @cog_ext.cog_slash(name="Invite", guild_ids=guild_ids)
     async def invite(self, ctx):
         """
-        Get the invite link of the bot to be able to invite it.
+        Get the invite link of the bot.
         """
         embed = discord.Embed(
             title="Info",
@@ -258,8 +258,8 @@ class Slash(commands.Cog, description="Slash Commands"):
             return await ctx.send(embed=embed)
         await ctx.send(embed=embed2)
 
-    @cog_ext.cog_slash(name="Github", guild_ids=guild_ids)
-    async def _github(self, ctx):
+    @cog_ext.cog_slash(name="GitHub", guild_ids=guild_ids)
+    async def github(self, ctx):
         """Returns a link for the GitHub"""
         embed1 = discord.Embed(title=f"Misc",
                                description="Check the code from [Click Me]"
@@ -310,7 +310,7 @@ class Slash(commands.Cog, description="Slash Commands"):
 
     @cog_ext.cog_slash(name="clear", guild_ids=guild_ids, description="Purge commands")
     @commands.has_permissions(manage_messages=True, manage_channels=True)
-    async def purge(self, ctx, amount):
+    async def clear(self, ctx, amount):
         """
         Delete a number of messages.
         """
@@ -339,25 +339,6 @@ class Slash(commands.Cog, description="Slash Commands"):
             color=0x42F56C
         )
         await ctx.send(embed=embed)
-
-    @cog_ext.cog_slash(name="warn", guild_ids=guild_ids, description="Warn user")
-    @commands.has_permissions(manage_messages=True)
-    async def warn(self, context, member: discord.Member, *, reason="Not specified"):
-        """
-        Warns a user in his private messages.
-        """
-        embed = discord.Embed(
-            title="User Warned!",
-            description=f"**{member}** was warned by **{context.message.author}**!",
-            color=0x42F56C
-        )
-        embed.add_field(
-            name="Reason: ",
-            value=reason
-        )
-        await context.send(embed=embed)
-        await member.send(f"You were warned by **{context.message.author}**!\nReason: {reason}")
-
 
 def setup(bot):
     bot.add_cog(Slash(bot))
