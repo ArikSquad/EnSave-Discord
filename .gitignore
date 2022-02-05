@@ -3,3 +3,4 @@
 venv
 .github
 .env
+/logs/latest.log
