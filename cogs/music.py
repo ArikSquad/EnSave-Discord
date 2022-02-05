@@ -442,7 +442,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
 
         if validators.url(query) is True:
             embed3 = discord.Embed(
-                description="We are sorry, but we don't support URLS.",
+                description="We don't support URLS.",
                 colour=ctx.author.colour,
                 timestamp=timestamp_embed()
             )
