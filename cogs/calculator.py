@@ -13,6 +13,7 @@ from datetime import datetime
 
 import discord
 from discord.ext import commands
+from discord_slash import cog_ext
 from pyparsing import (
     CaselessLiteral,
     Combine,
@@ -26,6 +27,8 @@ from pyparsing import (
     nums,
     oneOf
 )
+
+from cogs import slash
 
 
 class NumericStringParser(object):
@@ -141,21 +144,18 @@ class Calculator(commands.Cog, description="Math commands"):
         self.bot = bot
         self.nsp = NumericStringParser()
 
-    @commands.command(
-        aliases=["math", "calculator", "calculate"],
-        extras={"image": "https://i.imgur.com/P6PbUDi.png"},
-    )
-    async def calc(self, ctx, *, formula):
+    @cog_ext.cog_slash(name="calculator", guild_ids=slash.guild_ids)
+    async def calculator(self, ctx, *, formula):
         """Evaluate math expressions."""
         try:
             answer = self.nsp.eval(formula)
         except Exception as e:
-            exeuterror = discord.Embed(
+            execute_error = discord.Embed(
                 color=discord.Colour(0xff0000),
                 title=f"Could not parse formula. {e}",
                 timestamp=datetime.utcnow()
             )
-            return await ctx.send(embed=exeuterror)
+            return await ctx.send(embed=execute_error)
 
         if int(answer) == answer:
             # Check if it's a whole number and cast to int if so
