@@ -8,3 +8,4 @@ discord-pretty-help
 discord-py-slash-command
 Pynacl
 validators
+requests

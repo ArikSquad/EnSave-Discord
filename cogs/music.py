@@ -16,6 +16,7 @@ from enum import Enum
 
 import aiohttp
 import discord
+import requests
 import validators
 import wavelink
 from discord.ext import commands
@@ -393,19 +394,13 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
                       help="Play the weekly song.")
     async def weekly_command(self, ctx):
         player = self.get_player(ctx)
-        olderage = True
 
         if not player.is_connected:
             await player.connect(ctx)
-        await player.add_tracks(ctx, await self.bot.wavelink.get_tracks("https://www.youtube.com/watch?v=wYZux3BMc5k"))
 
-        if olderage:
-            embed = discord.Embed(
-                description="This song is 13+.",
-                colour=ctx.author.colour,
-                timestamp=timestamp_embed()
-            )
-            await ctx.send(embed=embed)
+        url = 'https://raw.githubusercontent.com/ArikSquad/EnSave-Discord/main/db/song.txt'
+        page = requests.get(url)
+        await player.add_tracks(ctx, await self.bot.wavelink.get_tracks(page.text))
 
     @commands.command(name="resume", aliases=["unpause"], help="Resume the player.")
     async def resume_command(self, ctx):
@@ -418,7 +413,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         )
         await ctx.send(embed=embed)
 
-    @commands.command(name="play", help="Play a song.")
+    @commands.command(name="play", aliases=["yt", "youtube"], help="Play a song.")
     async def play_command(self, ctx, *, query: str):
         player = self.get_player(ctx)
 
