@@ -164,4 +164,3 @@ for filename in os.listdir('./cogs'):
 # Run the bot with token (.env file)
 if __name__ == "__main__":
     bot.run(token, reconnect=True)
-    # reconnect=True is for it to reconnect when lost connection.
