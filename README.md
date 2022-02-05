@@ -64,7 +64,9 @@ git clone https://github.com/ArikSquad/EnSave-Discord.git
 pip install -r requirements.txt
 ```
 
-4. After that you can just run the main.py, and you are good to go!
+5. If you want to use Music commands you need to follow <a href="https://github.com/PythonistaGuild/Wavelink#installation">this</a> guide
+
+6. After that you can just run the main.py, and you are good to go!
 
 
 ## Reporting a Vulnerability
