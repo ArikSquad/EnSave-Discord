@@ -9,6 +9,8 @@ import traceback
 import discord
 from discord.ext import commands
 
+from utils import getter
+
 
 class ErrorHandler(commands.Cog):
     def __init__(self, bot):
@@ -93,7 +95,7 @@ class ErrorHandler(commands.Cog):
                 color=discord.Colour(0xff0000),
                 title=':rotating_light: An error occured while trying to execute that command, '
                       'Please contact ArikSquad#6222',
-                timestamp=get_timestamp()
+                timestamp=getter.get_time()
             )
 
             await ctx.send(embed=execute_error)
@@ -103,7 +105,7 @@ class ErrorHandler(commands.Cog):
             embed = discord.Embed(
                 color=discord.Colour(0xff0000),
                 title='Command execution failed',
-                timestamp=get_timestamp()
+                timestamp=getter.get_time()
             )
 
             embed.add_field(name='Command', value=ctx.command)
