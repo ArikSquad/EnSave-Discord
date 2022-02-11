@@ -28,7 +28,9 @@ from pyparsing import (
     oneOf
 )
 
-from cogs import slash
+from utils import getter
+
+guild_ids = getter.get_guild_ids()
 
 
 class NumericStringParser(object):
@@ -144,7 +146,7 @@ class Calculator(commands.Cog, description="Math commands"):
         self.bot = bot
         self.nsp = NumericStringParser()
 
-    @cog_ext.cog_slash(name="calculator", guild_ids=slash.guild_ids)
+    @cog_ext.cog_slash(name="calculator", guild_ids=guild_ids)
     async def calculator(self, ctx, *, formula):
         """Evaluate math expressions."""
         try:
