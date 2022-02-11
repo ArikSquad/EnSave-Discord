@@ -390,6 +390,11 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         )
         await ctx.send(embed=embed)
 
+    def get_weekly(self):
+        url = 'https://raw.githubusercontent.com/ArikSquad/EnSave-Discord/main/db/song.txt'
+        page = requests.get(url)
+        return page.text
+
     @commands.command(name="weekly", aliases=["weeklysong", "daily", "featuredsong", "gamingsong", "featured"],
                       help="Play the weekly song.")
     async def weekly_command(self, ctx):
@@ -398,9 +403,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         if not player.is_connected:
             await player.connect(ctx)
 
-        url = 'https://raw.githubusercontent.com/ArikSquad/EnSave-Discord/main/db/song.txt'
-        page = requests.get(url)
-        await player.add_tracks(ctx, await self.bot.wavelink.get_tracks(page.text))
+        await player.add_tracks(ctx, await self.bot.wavelink.get_tracks(self.get_weekly()))
 
     @commands.command(name="resume", aliases=["unpause"], help="Resume the player.")
     async def resume_command(self, ctx):
