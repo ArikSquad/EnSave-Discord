@@ -399,11 +399,12 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
                       help="Play the weekly song.")
     async def weekly_command(self, ctx):
         player = self.get_player(ctx)
+        weekly = self.get_weekly()
 
         if not player.is_connected:
             await player.connect(ctx)
 
-        await player.add_tracks(ctx, await self.bot.wavelink.get_tracks(self.get_weekly()))
+        await player.add_tracks(ctx, await self.bot.wavelink.get_tracks(weekly))
 
     @commands.command(name="resume", aliases=["unpause"], help="Resume the player.")
     async def resume_command(self, ctx):
