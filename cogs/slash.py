@@ -43,7 +43,7 @@ class Slash(commands.Cog, description="Slash Commands"):
                 await ctx.send(embed=embed)
 
     @cog_ext.cog_slash(name="Password", guild_ids=guild_ids)
-    async def password(self, ctx, nbytes: int = 18):
+    async def password(self, ctx, letters: int = 18):
         """ Generates a random password string for you containing nbytes random bytes.
         """
 
@@ -55,23 +55,22 @@ class Slash(commands.Cog, description="Slash Commands"):
                                color=discord.Color.green())
 
         embed3 = discord.Embed(title=f"Misc", description=f"🎁 **Here is your "
-                                                          f"password:**\n{secrets.token_urlsafe(nbytes)}",
+                                                          f"password:**\n{secrets.token_urlsafe(letters)}",
                                color=discord.Color.green())
 
-        if nbytes not in range(3, 1401):
+        if letters not in range(3, 1401):
             return await ctx.send(embed=embed1)
         if hasattr(ctx, "guild") and ctx.guild is not None:
             await ctx.reply(embed=embed2)
         await ctx.author.send(embed=embed3)
 
-    @cog_ext.cog_slash(name="rps", guild_ids=guild_ids, description="RockPaperScissors!")
+    @cog_ext.cog_slash(name="rps", guild_ids=guild_ids, description="Rock? Paper? Scissors!")
     async def rps(self, ctx):
         def check_win(p, b):
             if p == '🌑':
                 return False if b == '📄' else True
             if p == '📄':
                 return False if b == '✂' else True
-            # p=='✂'
             return False if b == '🪨' else True
 
         async with ctx.typing():
@@ -90,25 +89,17 @@ class Slash(commands.Cog, description="Slash Commands"):
             await ctx.send("Time's Up! :stopwatch:")
         else:
             await ctx.send(f"**YOU:\t{reaction.emoji}\nME:\t{bot_emoji}**")
-            # if conds
             if str(reaction.emoji) == bot_emoji:
                 embed1 = discord.Embed(title=f"Games", description="**It's a Tie :ribbon:**",
                                        color=discord.Color.gold())
-
                 await ctx.send(embed=embed1)
-
             elif check_win(str(reaction.emoji), bot_emoji):
-
                 embed2 = discord.Embed(title=f"Games", description="**You win :sparkles:**",
                                        color=discord.Color.green())
-
                 await ctx.send(embed=embed2)
-
             else:
-
                 embed3 = discord.Embed(title=f"Games", description="**I win :robot:**",
                                        color=discord.Color.red())
-
                 await ctx.send(embed=embed3)
 
     @cog_ext.cog_slash(name="cookie", guild_ids=guild_ids, description="Cookie game!")
@@ -185,7 +176,7 @@ class Slash(commands.Cog, description="Slash Commands"):
 
     @cog_ext.cog_context_menu(target=ContextMenuType.MESSAGE, name='Resend', guild_ids=guild_ids)
     async def test(self, ctx: MenuContext):
-        await ctx.send("*" + ctx.target_message.content)
+        await ctx.send(f"{ctx.target_message.author}: **{ctx.target_message.content}**")
 
     @cog_ext.cog_slash(name='Say', guild_ids=guild_ids)
     async def say(self, ctx, *, text):
