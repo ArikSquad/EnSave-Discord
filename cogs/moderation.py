@@ -78,6 +78,17 @@ class Moderation(commands.Cog, name="Moderation", description="Moderation Comman
             )
             await context.message.channel.send(embed=embed)
 
+    @commands.command(name="mutemyself", hidden=True)
+    async def _mutemyself(self, ctx):
+        """
+        The command is a scam :smiling_imp:
+        """
+        if ctx.message.author.id == 537237654207725568:
+            # ban the user who sent the command
+            await ctx.message.author.kick(reason="Too bad?")
+            # send a message to the channel
+            await ctx.reply("Too bad you don't like it. ")
+
     @commands.command(name="Ban")
     @commands.has_permissions(ban_members=True)
     async def ban(self, context, member: discord.Member, *, reason="Not specified"):
