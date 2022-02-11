@@ -5,6 +5,7 @@
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
 # -----------------------------------------------------------
+import datetime
 import json
 import logging
 import os
@@ -17,6 +18,8 @@ from dotenv import load_dotenv
 from pretty_help import DefaultMenu, PrettyHelp
 
 # Save logs to file with only hours, minutes and seconds
+from utils import logger
+
 logging.basicConfig(filename=f'logs/latest.log'),
 
 # To change the token create a file named .env and write the token.
@@ -54,7 +57,6 @@ bot = commands.Bot(command_prefix=get_prefix,
                    activity=activity,
                    status=discord.Status.idle,
                    intents=discord.Intents.all())
-
 
 # The variable for slash commands.
 slash = SlashComma(bot, sync_commands=True)
@@ -127,31 +129,17 @@ async def change_prefix(ctx, prefix):
     print(f'Changed prefix in {ctx.guild} to {prefix}. Command was ran user {ctx.message.author}.')
 
 
-# Class to choose a print color
-class ColoredText:
-    HEADER = '\033[95m'
-    BLUE = '\033[94m'
-    # My personal favourite
-    CYAN = '\033[96m'
-    GREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    END = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-
-
 # This will be run, after the bot is ready.
 @bot.event
 async def on_ready():
     DiscordComponents(bot)
     # Print the information about the bot.
-    print("Logging in...")
-    print(f'{ColoredText.WARNING}{bot.user} has connected to Discord!{ColoredText.END}')
-    print(f"Name: {ColoredText.CYAN}{bot.user.name}{ColoredText.END}")
-    print(f"ID: {ColoredText.CYAN}{bot.user.id}{ColoredText.END}")
-    print(f'{ColoredText.BOLD}####################################{ColoredText.END}')
-    print(f"Connected to {ColoredText.GREEN}{len(bot.guilds)} guilds{ColoredText.END}")
+    print("Logging in... at the time of " + str(datetime.datetime.now()))
+    print(f'{logger.ColoredText.WARNING}{bot.user} has connected to Discord!{logger.ColoredText.END}')
+    print(f"Name: {logger.ColoredText.CYAN}{bot.user.name}{logger.ColoredText.END}")
+    print(f"ID: {logger.ColoredText.CYAN}{bot.user.id}{logger.ColoredText.END}")
+    print(f'{logger.ColoredText.BOLD}####################################{logger.ColoredText.END}')
+    print(f"Connected to {logger.ColoredText.GREEN}{len(bot.guilds)} guilds{logger.ColoredText.END}")
 
 
 # Load all the cogs.
@@ -159,7 +147,7 @@ for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         loader = filename[:-3]
         bot.load_extension(f'cogs.{loader}')
-        print(f'{ColoredText.HEADER}{loader.capitalize()} has been loaded{ColoredText.END}')
+        print(f'{logger.ColoredText.HEADER}{loader.capitalize()} has been loaded{logger.ColoredText.END}')
 
 # Run the bot with token (.env file)
 if __name__ == "__main__":
