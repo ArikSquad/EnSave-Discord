@@ -36,7 +36,7 @@ OPTIONS = {
 }
 
 
-def timestamp_embed():
+def get_timestamp():
     return datetime.datetime.now()
 
 
@@ -224,7 +224,7 @@ class Player(wavelink.Player):
             embed1 = discord.Embed(
                 description=f"Added {tracks[0].title} to the queue.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             embed1.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
             await ctx.send(embed=embed1)
@@ -234,7 +234,7 @@ class Player(wavelink.Player):
                 embed2 = discord.Embed(
                     description=f"Added {track.title} to the queue.",
                     colour=ctx.author.colour,
-                    timestamp=timestamp_embed()
+                    timestamp=get_timestamp()
                 )
                 embed2.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
                 await ctx.send(embed=embed2)
@@ -259,7 +259,7 @@ class Player(wavelink.Player):
                 )
             ),
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         embed.set_author(name="Query Results")
         embed.set_footer(text=f"Invoked by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
@@ -321,7 +321,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             embed = discord.Embed(
                 description="Music commands are not available in DMs.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             await ctx.send(embed=embed)
             return False
@@ -358,7 +358,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed = discord.Embed(
             description=f"Connected to {channel.name}.",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         await ctx.send(embed=embed)
 
@@ -368,14 +368,14 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             embed = discord.Embed(
                 description="Already connected to a voice channel.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             await ctx.send(embed=embed)
         elif isinstance(exc, NoVoiceChannel):
             embed2 = discord.Embed(
                 description="No suitable voice channel was provided.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             await ctx.send(embed=embed2)
 
@@ -386,7 +386,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed = discord.Embed(
             description="Disconnected.",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         await ctx.send(embed=embed)
 
@@ -413,7 +413,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed = discord.Embed(
             description="Playback resumed.",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         await ctx.send(embed=embed)
 
@@ -425,7 +425,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             embed3 = discord.Embed(
                 description="We are sorry, but we don't support URLS.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             embed3.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
 
@@ -448,7 +448,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             embed3 = discord.Embed(
                 description="We don't support URLS.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             embed3.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
 
@@ -469,14 +469,14 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             embed = discord.Embed(
                 description="No songs to play as the queue is empty.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             await ctx.send(embed=embed)
         elif isinstance(exc, NoVoiceChannel):
             embed2 = discord.Embed(
                 description="No suitable voice channel was provided.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             await ctx.send(embed=embed2)
 
@@ -491,7 +491,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed = discord.Embed(
             description="Playback paused.",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         embed.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
@@ -502,7 +502,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             embed = discord.Embed(
                 description="Already paused.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             embed.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
             await ctx.send(embed=embed)
@@ -515,7 +515,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed = discord.Embed(
             description="Playback stopped.",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         embed.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
@@ -531,7 +531,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed = discord.Embed(
             description="Playing next track in queue.",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         await ctx.send(embed=embed)
 
@@ -541,14 +541,14 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             embed = discord.Embed(
                 description="This could not be executed as the queue is currently empty.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             await ctx.send(embed=embed)
         elif isinstance(exc, NoMoreTracks):
             embed2 = discord.Embed(
                 description="There are no more tracks in the queue.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             await ctx.send(embed=embed2)
 
@@ -564,7 +564,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed = discord.Embed(
             description="Playing previous track in queue.",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         await ctx.send(embed=embed)
 
@@ -574,14 +574,14 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             embed = discord.Embed(
                 description="This could not be executed as the queue is currently empty.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             await ctx.send(embed=embed)
         elif isinstance(exc, NoPreviousTracks):
             embed2 = discord.Embed(
                 description="There are no previous tracks in the queue.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             await ctx.send(embed=embed2)
 
@@ -592,7 +592,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed = discord.Embed(
             description="Queue shuffled.",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         await ctx.send(embed=embed)
 
@@ -602,7 +602,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             embed = discord.Embed(
                 description="The queue could not be shuffled as it is currently empty.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             await ctx.send(embed=embed)
 
@@ -616,7 +616,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed = discord.Embed(
             description=f"The repeat mode has been set to {mode}.",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         await ctx.send(embed=embed)
 
@@ -631,7 +631,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             title="Queue",
             description=f"Showing up to next {show} tracks",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         embed.set_author(name="Query Results")
         embed.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
@@ -655,7 +655,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             embed = discord.Embed(
                 description="The queue is currently empty.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             await ctx.send(embed=embed)
 
@@ -675,7 +675,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed = discord.Embed(
             description=f"Volume set to {volume:,}%",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         await ctx.send(embed=embed)
 
@@ -685,14 +685,14 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             embed = discord.Embed(
                 description="The volume must be 0% or above.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             await ctx.send(embed=embed)
         elif isinstance(exc, VolumeTooHigh):
             embed2 = discord.Embed(
                 description="The volume must be 150% or below.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             await ctx.send(embed=embed2)
 
@@ -707,7 +707,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed = discord.Embed(
             description=f"Volume set to {value:,}%",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         await ctx.send(embed=embed)
 
@@ -717,7 +717,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             embed = discord.Embed(
                 description="The player is already at max volume.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             await ctx.send(embed=embed)
 
@@ -732,7 +732,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed = discord.Embed(
             description=f"Volume set to {value:,}%",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         await ctx.send(embed=embed)
 
@@ -742,7 +742,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             embed = discord.Embed(
                 description="The player is already at min volume.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             await ctx.send(embed=embed)
 
@@ -763,7 +763,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
                         title=data["title"],
                         description=f"<{data['links']['genius']}>",
                         colour=ctx.author.colour,
-                        timestamp=timestamp_embed()
+                        timestamp=get_timestamp()
                     )
                     embed2.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
                     return await ctx.send(embed=embed2)
@@ -772,7 +772,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
                     title=data["title"],
                     description=data["lyrics"],
                     colour=ctx.author.colour,
-                    timestamp=timestamp_embed()
+                    timestamp=get_timestamp()
                 )
                 embed.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
                 embed.set_thumbnail(url=data["thumbnail"]["genius"])
@@ -785,7 +785,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             embed2 = discord.Embed(
                 description="No lyrics could be found.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             embed2.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
             await ctx.send(embed=embed2)
@@ -802,7 +802,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed2 = discord.Embed(
             description=f"Equaliser adjusted to the {preset} preset.",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         await ctx.send(embed=embed2)
 
@@ -812,7 +812,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             embed = discord.Embed(
                 description="The EQ preset must be either 'flat', 'boost', 'metal', or 'piano'.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             await ctx.send(embed=embed)
 
@@ -835,7 +835,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed2 = discord.Embed(
             description="Equaliser adjusted.",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         await ctx.send(embed=embed2)
 
@@ -846,12 +846,12 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
                         "-- the band number should be between 1 and 15, or one of the following "
                         "frequencies: " + ", ".join(str(b) for b in HZ_BANDS),
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         embed2 = discord.Embed(
             description="The EQ gain for any band should be between 10 dB and -10 dB.",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         if isinstance(exc, NonExistentEQBand):
 
@@ -870,7 +870,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed = discord.Embed(
             title="Now playing",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         embed.set_author(name="Playback Information")
         embed.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
@@ -900,7 +900,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed = discord.Embed(
             description="There is no track currently playing.",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         if isinstance(exc, PlayerIsAlreadyPaused):
             await ctx.send(embed=embed)
@@ -920,7 +920,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed = discord.Embed(
             description=f"Playing track in position {index}.",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         await ctx.send(embed=embed)
 
@@ -929,12 +929,12 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed = discord.Embed(
             description="There are no tracks in the queue.",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         embed2 = discord.Embed(
             description="That index is out of the bounds of the queue.",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         if isinstance(exc, QueueIsEmpty):
             await ctx.send(embed=embed)
@@ -952,7 +952,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed = discord.Embed(
             description="Track restarted.",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         await ctx.send(embed=embed)
 
@@ -962,7 +962,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
             embed = discord.Embed(
                 description="There are no tracks in the queue.",
                 colour=ctx.author.colour,
-                timestamp=timestamp_embed()
+                timestamp=get_timestamp()
             )
             await ctx.send(embed=embed)
 
@@ -985,7 +985,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin, description="Music commands"):
         embed = discord.Embed(
             description="Seeked",
             colour=ctx.author.colour,
-            timestamp=timestamp_embed()
+            timestamp=get_timestamp()
         )
         await ctx.send(embed=embed)
 
