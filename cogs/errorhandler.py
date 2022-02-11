@@ -5,7 +5,6 @@
 #
 # -----------------------------------------------------------
 import traceback
-from datetime import datetime
 
 import discord
 from discord.ext import commands
@@ -70,8 +69,7 @@ class ErrorHandler(commands.Cog):
         commands.BadArgument: 'Invalid argument given! (See `{ctx.prefix}help {ctx.command.qualified_name}` '
                               'for info on how to use this command).',
         commands.CommandNotFound: None,
-        commands.UserInputError: 'Invalid command usage! (See `{ctx.prefix}help {ctx.command.qualified_name}` ',
-        commands.CommandInvokeError: 'This error is unknown.'
+        commands.UserInputError: 'Invalid command usage! (See `{ctx.prefix}help {ctx.command.qualified_name}` '
     }
 
     @commands.Cog.listener()
@@ -91,21 +89,21 @@ class ErrorHandler(commands.Cog):
                     and not isinstance(error, commands.CommandInvokeError):
                 return await ctx.send(f':x: {error}')
 
-            exeuterror = discord.Embed(
+            execute_error = discord.Embed(
                 color=discord.Colour(0xff0000),
                 title=':rotating_light: An error occured while trying to execute that command, '
                       'Please contact ArikSquad#6222',
-                timestamp=datetime.utcnow()
+                timestamp=get_timestamp()
             )
 
-            await ctx.send(embed=exeuterror)
+            await ctx.send(embed=execute_error)
 
             print(error.original)
 
             embed = discord.Embed(
                 color=discord.Colour(0xff0000),
                 title='Command execution failed',
-                timestamp=datetime.utcnow()
+                timestamp=get_timestamp()
             )
 
             embed.add_field(name='Command', value=ctx.command)

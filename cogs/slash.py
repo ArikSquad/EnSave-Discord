@@ -8,6 +8,7 @@
 
 import asyncio
 import datetime
+import os
 import random
 import secrets
 import time
@@ -15,11 +16,14 @@ import time
 import aiohttp
 import discord
 from discord.ext import commands
-from discord_slash import cog_ext, SlashContext
+from discord_slash import cog_ext, SlashContext, MenuContext, ContextMenuType
+from dotenv import load_dotenv
 
-from game import tictactoe, hangman
+from utils import getter
 
 guild_ids = [770634445370687519]
+load_dotenv()
+secret = os.getenv('discord_secret')
 
 
 class Slash(commands.Cog, description="Slash Commands"):
@@ -107,36 +111,34 @@ class Slash(commands.Cog, description="Slash Commands"):
 
                 await ctx.send(embed=embed3)
 
-    @cog_ext.cog_slash(name="tictactoe", guild_ids=guild_ids, description="TicTacToe game!")
-    async def ttt(self, ctx):
-        """Play Tic-Tac-Toe"""
-        await tictactoe.play_game(self.bot, ctx, chance_for_error=0.2)
-
     @cog_ext.cog_slash(name="cookie", guild_ids=guild_ids, description="Cookie game!")
     async def cookie(self, ctx):
         """Who can catch the cookie first?"""
 
-        m = await ctx.send(embed=discord.Embed(title="🍪 Cookie is thinking..."))
+        m = await ctx.send(embed=discord.Embed(title="🍪 Cookie is coming..."))
         await asyncio.sleep(3)
+
         for i in range(3, 0, -1):
             await m.edit(embed=discord.Embed(title=f"🍪 Cookie is coming in **{i}**"))
             await asyncio.sleep(1)
 
-        start = datetime.datetime.utcnow()
+        start = datetime.datetime.now()
         await m.add_reaction("🍪")
         try:
-            reaction, user = await self.bot.wait_for(
+            _, user = await self.bot.wait_for(
                 "reaction_add",
                 check=lambda r, u: str(r.emoji) == "🍪" and r.message == m and not u.bot,
                 timeout=10,
             )
         except asyncio.TimeoutError:
-
-            await ctx.send("No one got the cookie :(")
+            prank = await ctx.send("No one got the cookie :(")
+            await asyncio.sleep(2)
+            prank.edit(content="Just kidding, you got the cookie! :)")
         else:
-
-            timevar = round((datetime.datetime.utcnow() - start).total_seconds() - self.bot.latency, 3)
-            await m.edit(embed=discord.Embed(title=f"**{user.display_name}** got the cookie in **{timevar}** seconds"))
+            time_variable = round((datetime.datetime.utcnow() - start).total_seconds() - self.bot.latency, 3)
+            await m.edit(embed=discord.Embed(
+                title=f"**{user.display_name}** got the cookie in **{time_variable}** seconds")
+            )
 
     @cog_ext.cog_slash(name="8ball", guild_ids=guild_ids)
     @commands.cooldown(rate=1, per=10.0, type=commands.BucketType.user)
@@ -181,19 +183,17 @@ class Slash(commands.Cog, description="Slash Commands"):
         else:
             await ctx.send(embed=embed3)
 
+    @cog_ext.cog_context_menu(target=ContextMenuType.MESSAGE, name='Resend', guild_ids=guild_ids)
+    async def test(self, ctx: MenuContext):
+        await ctx.send("*" + ctx.target_message.content)
+
     @cog_ext.cog_slash(name='Say', guild_ids=guild_ids)
     async def say(self, ctx, *, text):
-        f"""Says what you want it to say"""
+        """Says what you want it to say"""
         msg = discord.Embed(description=text,
-                            color=ctx.author.color)
-        await ctx.send(embed=msg)
-
-    @cog_ext.cog_slash(name="Hello", guild_ids=guild_ids)
-    async def hello(self, ctx):
-        """Says hello to you!"""
-        msg = discord.Embed(title="Misc",
-                            description=f"Hello {ctx.author.name}",
-                            color=discord.Color.green())
+                            color=ctx.author.color,
+                            timestamp=getter.get_timestamp()
+                            )
         await ctx.send(embed=msg)
 
     @cog_ext.cog_slash(name="Invite", guild_ids=guild_ids)
@@ -212,21 +212,16 @@ class Slash(commands.Cog, description="Slash Commands"):
         await ctx.author.send(embed=embed)
         await ctx.send(embed=embed)
 
-    @cog_ext.cog_slash(name="Hangman", guild_ids=guild_ids)
-    async def hangman(self, ctx):
-        """Play Hangman"""
-        await hangman.play(self.bot, ctx)
-
     @cog_ext.cog_slash(name="Dice", guild_ids=guild_ids)
     @commands.cooldown(rate=1, per=10.0, type=commands.BucketType.user)
-    async def rolldice(self, ctx):
+    async def _dice(self, ctx):
         """Roll dice!"""
         embed1 = discord.Embed(title=f"Games", description="Rolled a {}!".format(random.randint(1, 6)),
                                color=discord.Color.green())
         await ctx.send(embed=embed1)
 
-    @cog_ext.cog_slash(name="Ping", guild_ids=guild_ids)
-    async def ping(self, ctx):
+    @cog_ext.cog_slash(name="Latency", guild_ids=guild_ids)
+    async def _latency(self, ctx):
         """Shows the latency of the bot."""
         wait = discord.Embed(title="Info",
                              description=f"Waiting the server to respond!",
@@ -243,7 +238,7 @@ class Slash(commands.Cog, description="Slash Commands"):
         print(f'Ping {int(ping)}ms')
 
     @cog_ext.cog_slash(name="Server", guild_ids=guild_ids)
-    async def server(self, ctx):
+    async def _server(self, ctx):
         """ Get an invitation to our support server! """
 
         embed = discord.Embed(title="Info",
@@ -259,7 +254,7 @@ class Slash(commands.Cog, description="Slash Commands"):
         await ctx.send(embed=embed2)
 
     @cog_ext.cog_slash(name="GitHub", guild_ids=guild_ids)
-    async def github(self, ctx):
+    async def _github(self, ctx):
         """Returns a link for the GitHub"""
         embed1 = discord.Embed(title=f"Misc",
                                description="Check the code from [Click Me]"
@@ -339,6 +334,7 @@ class Slash(commands.Cog, description="Slash Commands"):
             color=0x42F56C
         )
         await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Slash(bot))

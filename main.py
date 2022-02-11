@@ -20,7 +20,8 @@ from pretty_help import DefaultMenu, PrettyHelp
 # Save logs to file with only hours, minutes and seconds
 from utils import logger
 
-logging.basicConfig(filename=f'logs/latest.log'),
+# Logging with max 100 lines
+logging.basicConfig(filename=f'logs/latest.log')
 
 # To change the token create a file named .env and write the token.
 # Example usage: TOKEN='(your token)'
