@@ -46,7 +46,7 @@
 
 
 # Overview
-This is an open-source discord bot developed byy [ArikSquad](http://github.com/Ariksquad).
+This is an open-source discord bot developed by [ArikSquad](http://github.com/Ariksquad).
 We also have documented files in this project, so feel free to check the files and see the documentation over there!
 
 # Installation
