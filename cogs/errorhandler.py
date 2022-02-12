@@ -117,10 +117,7 @@ class ErrorHandler(commands.Cog):
                                                                                           f' (`{ctx.channel.id}`)')
             embed.add_field(name='Sender', value=f'{ctx.author} (`{ctx.author.id}`)')
             embed.add_field(name='Exception', value=str(error))
-
             formatted_traceback = self._format_traceback(error.original, 4094)
-            # Embed desc limit is 4096 characters, which includes the codeblock markers
-
             embed.description = f'```{formatted_traceback}```'
 
             await self._send_traceback_embed(ctx, embed)
