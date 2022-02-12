@@ -4,7 +4,7 @@
 # (C) 2022 MikArt
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
-# https://github.com/Carberra/discord.py-music-tutorial
+# Forked from https://github.com/Carberra/discord.py-music-tutorial
 # -----------------------------------------------------------
 
 import asyncio
