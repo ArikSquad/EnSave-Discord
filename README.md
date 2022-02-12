@@ -46,7 +46,8 @@
 
 
 # Overview
-This is an open-source discord bot developed by [ArikSquad](http://github.com/Ariksquad) and [Mhilkos](http://github.com/Mhilkos).
+This is an open-source discord bot developed by [ArikSquad](http://github.com/Ariksquad).
+We also have documented files in this project, so feel free to check the files and see the documentation over there!
 
 # Installation
 1. Clone this repository.
@@ -65,7 +66,7 @@ pip install -r requirements.txt
 ```
 
 5. If you want to use Music commands you need to follow [this](https://github.com/PythonistaGuild/Wavelink#lavalink-installation) guide
-
+ 
 6. After that you can just run the main.py, and you are good to go!
 
 
