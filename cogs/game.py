@@ -16,7 +16,7 @@ from discord_slash import cog_ext
 
 from utils import getter
 
-guild_ids = [770634445370687519]
+guild_ids = getter.get_guild_ids()
 
 
 class Game(commands.Cog, description="Game Commands"):

@@ -18,7 +18,7 @@ from dotenv import load_dotenv
 
 from utils import getter
 
-guild_ids = [770634445370687519]
+guild_ids = getter.get_guild_ids()
 load_dotenv()
 secret = os.getenv('discord_secret')
 
