@@ -82,12 +82,12 @@ async def on_guild_remove(guild):
 
 # Sends a message that these commands only support slash commands.
 @bot.command(name='oldsupport',
-             aliases=['rockpaperscrissors', 'rps', "rollingdice", "diceroll",
-                      "rolldice", 'dice', "8Ball", '8ba', 'eightball', 'slot', 'bet',
-                      'slots', 'cookie', 'coinflip', 'doggo', 'dog'],
+             aliases=["rollingdice", "diceroll", "rolldice",
+                      'dice', 'slot', 'bet', 'slots',
+                      'cookie', 'coinflip', 'doggo', 'dog'],
              description="Removed commands.", hidden=True)
 async def old_dated(ctx):
-    embed = nextcord.Embed(title=f"Slash Commands.", description=f"{ctx.command} is no longer "
+    embed = nextcord.Embed(title=f"Slash Commands.", description=f"The command you tried to run is no longer "
                                                                  f"supported without slash command.",
                            color=ctx.author.color)
     await ctx.reply(embed=embed)
