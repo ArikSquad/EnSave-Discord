@@ -1,12 +1,8 @@
 asyncio
 aiohttp
-discord
+nextcord
 wavelink
 pyparsing
 python-dotenv
-discord-pretty-help
-discord-py-slash-command
 Pynacl
 validators
-requests
-discordwebhook

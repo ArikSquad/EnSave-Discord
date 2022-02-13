@@ -11,9 +11,8 @@ import math
 import operator
 from datetime import datetime
 
-import discord
-from discord.ext import commands
-from discord_slash import cog_ext
+import nextcord
+from nextcord.ext import commands
 from pyparsing import (
     CaselessLiteral,
     Combine,
@@ -141,19 +140,20 @@ class NumericStringParser(object):
 class Calculator(commands.Cog, description="Math commands"):
     """Calculator calculates stuff (math)"""
 
+    COG_EMOJI = "📚"
+
     # Init with the bot reference, and a reference to the settings var
     def __init__(self, bot):
         self.bot = bot
         self.nsp = NumericStringParser()
 
-    @cog_ext.cog_slash(name="calculator", guild_ids=guild_ids)
+    @commands.command(name="calculator", aliases=["calc"], description="Evaluate math expressions.")
     async def calculator(self, ctx, *, formula):
-        """Evaluate math expressions."""
         try:
             answer = self.nsp.eval(formula)
         except Exception as e:
-            execute_error = discord.Embed(
-                color=discord.Colour(0xff0000),
+            execute_error = nextcord.Embed(
+                color=nextcord.Colour(0xff0000),
                 title=f"Could not parse formula. {e}",
                 timestamp=datetime.utcnow()
             )
@@ -164,8 +164,8 @@ class Calculator(commands.Cog, description="Math commands"):
             answer = int(answer)
 
         # Send the calculated answer
-        answers = discord.Embed(
-            color=discord.Colour.gold(),
+        answers = nextcord.Embed(
+            color=nextcord.Colour.gold(),
             title=f"{formula} = {answer}"
         )
         answers.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)

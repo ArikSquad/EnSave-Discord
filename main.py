@@ -10,12 +10,9 @@ import json
 import logging
 import os
 
-import discord
-from discord.ext import commands
-from discord_components import DiscordComponents
-from discord_slash import SlashCommand as SlashComma
+import nextcord
 from dotenv import load_dotenv
-from pretty_help import DefaultMenu, PrettyHelp
+from nextcord.ext import commands
 
 # Save logs to file with only hours, minutes and seconds
 from utils import logger
@@ -48,25 +45,16 @@ def get_prefix(ctx, message):
 
 
 # Create the activity for Discord. Idle looks cool
-activity = discord.Activity(type=discord.ActivityType.watching,
-                            name=f'fast updates', status=discord.Status.idle)
+activity = nextcord.Activity(type=nextcord.ActivityType.watching,
+                             name=f'fast updates', status=nextcord.Status.idle)
 
 # Selects all intents and prefix, case-insensitive, description.
 bot = commands.Bot(command_prefix=get_prefix,
                    case_insensitive=True,
                    description="Utilities Bot.",
                    activity=activity,
-                   status=discord.Status.idle,
-                   intents=discord.Intents.all())
-
-# The variable for slash commands.
-slash = SlashComma(bot, sync_commands=True)
-
-# Variable for the help menus
-menu = DefaultMenu('◀️', '▶️', '❌', active_time=5, delete_after_timeout=True)
-
-# Creates a bot help_command and a Pretty Menu.
-bot.help_command = PrettyHelp(navigation=menu, color=discord.Colour.green(), no_category="Other")
+                   status=nextcord.Status.idle,
+                   intents=nextcord.Intents.all())
 
 
 # This event will be run after bot joins a guild.
@@ -93,29 +81,25 @@ async def on_guild_remove(guild):
 
 
 # Sends a message that these commands only support slash commands.
-@bot.command(name='none',
-             aliases=['ttt', 'rockpaperscrissors', 'rps', "rollingdice", "diceroll",
+@bot.command(name='oldsupport',
+             aliases=['rockpaperscrissors', 'rps', "rollingdice", "diceroll",
                       "rolldice", 'dice', "8Ball", '8ba', 'eightball', 'slot', 'bet',
-                      'slots', 'tictactoe', 'invite', 'ping', 'latency', "supportserver",
-                      "feedbackserver", "discord", 'server', 'github', 'sourcecode',
-                      'cookie', 'password', 'hello', 'slap', 'say', 'tell', 'coinflip',
-                      'av', 'doggo', 'dog', 'calc', 'calculator'], hidden=True)
+                      'slots', 'cookie', 'coinflip', 'doggo', 'dog'],
+             description="Removed commands.", hidden=True)
 async def old_dated(ctx):
-    embed = discord.Embed(title=f"Slash Commands.", description="We stopped supporting commands without slash. "
-                                                                "Please use slash commands. But keep in mind that we "
-                                                                "haven't made Music yet. So you can't use the music "
-                                                                "commands yet with slash commands.",
-                          color=ctx.author.color)
+    embed = nextcord.Embed(title=f"Slash Commands.", description=f"{ctx.command} is no longer "
+                                                                 f"supported without slash command.",
+                           color=ctx.author.color)
     await ctx.reply(embed=embed)
 
 
 # A command to change the prefix
-@bot.command(help="Change the prefix.", name="prefix")
+@bot.command(name="prefix", description="Change the prefix.", aliases=["changeprefix"])
 @commands.has_permissions(administrator=True)
-async def change_prefix(ctx, prefix):
-    embed = discord.Embed(title="Moderation",
-                          description=f"Changed the prefix to: " + prefix,
-                          color=discord.Color.gold())
+async def _change_prefix(ctx, prefix):
+    embed = nextcord.Embed(title="Moderation",
+                           description=f"Changed the prefix to: " + prefix,
+                           color=nextcord.Color.gold())
     await ctx.send(embed=embed)
 
     # Opens the prefixes.json to read the prefixes.
@@ -133,7 +117,6 @@ async def change_prefix(ctx, prefix):
 # This will be run, after the bot is ready.
 @bot.event
 async def on_ready():
-    DiscordComponents(bot)
     # Print the information about the bot.
     print("Logging in... at the time of " + str(datetime.datetime.now()))
     print(f'{logger.ColoredText.WARNING}{bot.user} has connected to Discord!{logger.ColoredText.END}')

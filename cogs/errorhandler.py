@@ -6,8 +6,8 @@
 # -----------------------------------------------------------
 import traceback
 
-import discord
-from discord.ext import commands
+import nextcord
+from nextcord.ext import commands
 
 from utils import getter
 
@@ -29,7 +29,7 @@ class ErrorHandler(commands.Cog):
         if len(v) > 0:
             return v
 
-    async def _send_traceback_embed(self, ctx: commands.Context, embed: discord.Embed):
+    async def _send_traceback_embed(self, ctx: commands.Context, embed: nextcord.Embed):
 
         cfg_value = self.bot.config.get('error_report_channel')
 
@@ -91,8 +91,8 @@ class ErrorHandler(commands.Cog):
                     and not isinstance(error, commands.CommandInvokeError):
                 return await ctx.send(f':x: {error}')
 
-            execute_error = discord.Embed(
-                color=discord.Colour(0xff0000),
+            execute_error = nextcord.Embed(
+                color=nextcord.Colour(0xff0000),
                 title=':rotating_light: An error occured while trying to execute that command, '
                       'Please contact ArikSquad#6222',
                 timestamp=getter.get_time()
@@ -102,8 +102,8 @@ class ErrorHandler(commands.Cog):
 
             print(error.original)
 
-            embed = discord.Embed(
-                color=discord.Colour(0xff0000),
+            embed = nextcord.Embed(
+                color=nextcord.Colour(0xff0000),
                 title='Command execution failed',
                 timestamp=getter.get_time()
             )
@@ -113,8 +113,8 @@ class ErrorHandler(commands.Cog):
                             value=ctx.message.content[:1021] + (ctx.message.content[1021:] and '...'))
             embed.add_field(name='Channel',
                             value='Private Message' if isinstance(ctx.channel,
-                                                                  discord.DMChannel) else f'#{ctx.channel.name}'
-                                                                                          f' (`{ctx.channel.id}`)')
+                                                                  nextcord.DMChannel) else f'#{ctx.channel.name}'
+                                                                                           f' (`{ctx.channel.id}`)')
             embed.add_field(name='Sender', value=f'{ctx.author} (`{ctx.author.id}`)')
             embed.add_field(name='Exception', value=str(error))
             formatted_traceback = self._format_traceback(error.original, 4094)
