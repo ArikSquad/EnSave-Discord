@@ -1,7 +1,8 @@
 asyncio
 aiohttp
 nextcord
-wavelink
+nextlink
+# pip install git+https://github.com/ArikSquad/Nextlink
 pyparsing
 python-dotenv
 Pynacl
