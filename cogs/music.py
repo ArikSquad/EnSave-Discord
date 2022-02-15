@@ -46,7 +46,7 @@ class Music(commands.Cog, description="Music commands"):
             if before.channel is None and after.channel is not None:
                 await member.edit(deafen=True)
 
-    @commands.command(name="play", help="Play a song.", description="Play a song.")
+    @commands.command(name="play", help="Play a song.")
     async def play(self, ctx: commands.Context, *, search: wavelink.YouTubeTrack):
         if not ctx.voice_client:
             voice: wavelink.Player = await ctx.author.voice.channel.connect(cls=wavelink.Player)
@@ -141,7 +141,7 @@ class Music(commands.Cog, description="Music commands"):
                                        timestamp=getter.get_time())
         await ctx.send(embed=not_connected)
 
-    @commands.command(name="stop", help="Stop voice channel", description="Stops the current song and clears the queue")
+    @commands.command(name="stop", help="Stops the current song and clears the queue")
     async def stop_command(self, ctx: commands.Context):
         voice: wavelink.Player = ctx.voice_client
         if voice.is_playing():
@@ -181,7 +181,7 @@ class Music(commands.Cog, description="Music commands"):
                                        timestamp=getter.get_time())
         await ctx.send(embed=not_connected)
 
-    @commands.command(name="queue", help="Shows the current queue", description="Shows the current queue")
+    @commands.command(name="queue", help="Shows the current queue")
     async def queue_command(self, ctx: commands.Context):
         voice: wavelink.Player = ctx.voice_client
 
@@ -200,8 +200,7 @@ class Music(commands.Cog, description="Music commands"):
         await ctx.send(voice.queue)
 
     @commands.command(name="Playing", aliases=["np"],
-                      help="Shows the current song",
-                      description="Shows the current song")
+                      help="Shows the current song")
     async def playing_command(self, ctx: commands.Context):
         voice: wavelink.Player = ctx.voice_client
 
