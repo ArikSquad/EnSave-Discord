@@ -11,7 +11,7 @@ from nextcord.ext import commands
 from utils import HelpCommand
 
 
-class Help(commands.Cog, description="Help"):
+class Help(commands.Cog, description="The help command."):
     """Shows help info for commands and cogs"""
     COG_EMOJI = "❔"
 

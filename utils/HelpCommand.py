@@ -53,7 +53,7 @@ class MyHelpCommand(commands.MinimalHelpCommand):
                 continue
             emoji = getattr(cog, "COG_EMOJI", None)
             options.append(nextcord.SelectOption(
-                label=cog.qualified_name if cog else "No Category",
+                label=cog.qualified_name if cog else "Other",
                 emoji=emoji,
                 description=cog.description[:100] if cog and cog.description else None
             ))
@@ -85,7 +85,7 @@ class MyHelpCommand(commands.MinimalHelpCommand):
                 filtered = await self.filter_commands(command_set, sort=True)
                 if not filtered:
                     continue
-                name = cog.qualified_name if cog else "No category"
+                name = cog.qualified_name if cog else "Other"
                 # emoji = getattr(cog, "COG_EMOJI", None)
                 cog_label = f"{name}"
                 # \u2002 is an en-space
@@ -116,7 +116,8 @@ class MyHelpCommand(commands.MinimalHelpCommand):
     async def send_command_help(self, command: commands.Command):
         emoji = getattr(command.cog, "COG_EMOJI", None)
         embed = await self._help_embed(
-            title=f"{emoji} {command.qualified_name}" if emoji else command.qualified_name,
+            title=f"{emoji}  {self.context.clean_prefix}{command.qualified_name} {command.signature}"
+            if emoji else command.qualified_name,
             description=command.help,
             command_set=command.commands if isinstance(command, commands.Group) else None
         )
@@ -125,7 +126,7 @@ class MyHelpCommand(commands.MinimalHelpCommand):
     async def cog_help_embed(self, cog: Optional[commands.Cog]) -> Embed:
         if cog is None:
             return await self._help_embed(
-                title=f"No category",
+                title=f"Other",
                 command_set=self.get_bot_mapping()[None]
             )
         emoji = getattr(cog, "COG_EMOJI", None)

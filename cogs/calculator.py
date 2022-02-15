@@ -147,7 +147,7 @@ class Calculator(commands.Cog, description="Math commands"):
         self.bot = bot
         self.nsp = NumericStringParser()
 
-    @commands.command(name="calculator", aliases=["calc"], description="Evaluate math expressions.")
+    @commands.command(name="calculator", aliases=["calc"], help="Evaluate math expressions.")
     async def calculator(self, ctx, *, formula):
         try:
             answer = self.nsp.eval(formula)
