@@ -44,7 +44,7 @@ def get_prefix(ctx, message):
             json.dump(prefixes, f, indent=4)
 
 
-# Create the activity for Discord. Idle looks cool
+# Create the activity for Discord. Idle looks cool.
 activity = nextcord.Activity(type=nextcord.ActivityType.watching,
                              name=f'fast updates', status=nextcord.Status.idle)
 
@@ -80,23 +80,11 @@ async def on_guild_remove(guild):
         json.dump(prefixes, f, indent=4)
 
 
-# Sends a message that these commands only support slash commands.
-@bot.command(name='oldsupport',
-             aliases=["rollingdice", "diceroll", "rolldice",
-                      'dice', 'slot', 'bet', 'slots',
-                      'cookie', 'coinflip', 'doggo', 'dog'],
-             description="Removed commands.", hidden=True)
-async def old_dated(ctx):
-    embed = nextcord.Embed(title=f"Slash Commands.", description=f"The command you tried to run is no longer "
-                                                                 f"supported without slash command.",
-                           color=ctx.author.color)
-    await ctx.reply(embed=embed)
-
-
-# A command to change the prefix
-@bot.command(name="prefix", description="Change the prefix.", aliases=["changeprefix"])
+# A command to change the prefix.
+@bot.command(name="prefix", help="Change the prefix of the guild.",
+             aliases=["changeprefix"])
 @commands.has_permissions(administrator=True)
-async def _change_prefix(ctx, prefix):
+async def change_prefix(ctx, prefix):
     embed = nextcord.Embed(title="Moderation",
                            description=f"Changed the prefix to: " + prefix,
                            color=nextcord.Color.gold())
