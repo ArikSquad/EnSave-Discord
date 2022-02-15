@@ -23,7 +23,7 @@ class Misc(commands.Cog, description="Misc Commands"):
     @nextcord.slash_command(name="dog", guild_ids=guild_ids, description="Dog pictures!")
     async def _dog(self, interaction: Interaction):
         async with aiohttp.ClientSession() as cs:
-            async with cs.get("https://random.dog/woof.json") as r:
+            async with cs.get('https://random.dog/woof.json') as r:
                 data = await r.json()
                 embed = nextcord.Embed(
                     title="Doggo",
@@ -32,8 +32,8 @@ class Misc(commands.Cog, description="Misc Commands"):
                 embed.set_image(url=data['url'])
                 await interaction.send(embed=embed)
 
-    @nextcord.slash_command(name="discord-invite", guild_ids=guild_ids, description="Get the invite link of the bot.")
-    async def _invite(self, interaction: Interaction):
+    @nextcord.slash_command(name="discord-invite", guild_ids=guild_ids, description='Get the invite link of the bot.')
+    async def _invite_discord(self, interaction: Interaction):
         embed = nextcord.Embed(
             title="Info",
             description=f"Invite me by clicking"
@@ -43,6 +43,19 @@ class Misc(commands.Cog, description="Misc Commands"):
             color=0xD75BF4
         )
         await interaction.send(embed=embed)
+
+    @commands.command(name='old_dated_command',
+                      aliases=[
+                          'dice', 'slot', 'cookie',
+                          'coinflip', 'dog', 'invite'
+                      ],
+                      help='Remove commands that are unsupported from the list. (Slash commands)', hidden=True)
+    async def old_dated(self, ctx):
+        embed = nextcord.Embed(title=f"Slash Commands.",
+                               description=f'The command you tried to run is no longer '
+                                           f'supported without slash command.',
+                               color=ctx.author.color)
+        await ctx.reply(embed=embed)
 
 
 def setup(bot):

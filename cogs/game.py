@@ -23,7 +23,7 @@ class Game(commands.Cog, description="Game Commands"):
         self.bot = bot
 
     @nextcord.slash_command(name="cookie", guild_ids=guild_ids, description="Cookie game!")
-    async def cookie(self, interaction: Interaction):
+    async def _cookie(self, interaction: Interaction):
         await interaction.send(embed=nextcord.Embed(title="🍪 Cookie is coming..."))
         await asyncio.sleep(3)
         await interaction.send("No one got the cookie :(")
@@ -31,7 +31,7 @@ class Game(commands.Cog, description="Game Commands"):
         await interaction.send("Just kidding, you got the cookie! :)")
 
     @nextcord.slash_command(name="slot", guild_ids=guild_ids, description="Roll the slot machine!")
-    async def slot(self, interaction: Interaction):
+    async def _slot(self, interaction: Interaction):
         emojis = "🍎🍊🍐🍋🍉🍇🍓🍒"
         a = random.choice(emojis)
         b = random.choice(emojis)
@@ -54,13 +54,13 @@ class Game(commands.Cog, description="Game Commands"):
             await interaction.send(embed=embed3)
 
     @nextcord.slash_command(name="dice", guild_ids=guild_ids, description="Roll the dice!")
-    async def dice(self, interaction: Interaction):
+    async def _dice(self, interaction: Interaction):
         embed1 = nextcord.Embed(title=f"Games", description="Rolled a {}!".format(random.randint(1, 6)),
                                 color=nextcord.Color.green())
         await interaction.send(embed=embed1)
 
     @nextcord.slash_command(name="coinflip", guild_ids=guild_ids, description="Flip a coin!")
-    async def coinflip(self, interaction: Interaction):
+    async def _coinflip(self, interaction: Interaction):
         determine_flip = [1, 0]
         if random.choice(determine_flip) == 1:
             embed = nextcord.Embed(title="Fun",
