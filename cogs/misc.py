@@ -5,6 +5,7 @@
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
 # -----------------------------------------------------------
+import random
 
 import aiohttp
 import nextcord
@@ -22,11 +23,19 @@ class Misc(commands.Cog, description="Misc Commands"):
 
     @nextcord.slash_command(name="dog", guild_ids=guild_ids, description="Posts a fun dog picture in the chat!")
     async def dog(self, interaction: Interaction):
+        choices = [1, 2, 3]
+        title_text = "Dog"
+
+        if random.choice(choices) == 1:
+            title_text = "Aww cute!"
+        elif random.choice(choices) == 2 & getter.get_premium(interaction.user.id):
+            title_text = "Get bot premium for more cool commands!"
+
         async with aiohttp.ClientSession() as cs:
             async with cs.get('https://random.dog/woof.json') as r:
                 data = await r.json()
                 embed = nextcord.Embed(
-                    title="Doggo",
+                    title=title_text,
                     color=interaction.user.color
                 )
                 embed.set_image(url=data['url'])
