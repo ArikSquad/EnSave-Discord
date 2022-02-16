@@ -23,14 +23,13 @@ class Misc(commands.Cog, description="Misc Commands"):
 
     @nextcord.slash_command(name="dog", guild_ids=guild_ids, description="Posts a fun dog picture in the chat!")
     async def dog(self, interaction: Interaction):
-        choices = [1, 2, 3]
+        choice = random.randint(1, 2)
         title_text = "Dog"
 
-        if random.choice(choices) == 1:
+        if choice == 1:
             title_text = "Aww cute!"
-        elif random.choice(choices) == 2 & getter.get_premium(interaction.user.id):
+        elif choice == 2:
             title_text = "Get bot premium for more cool commands!"
-
         async with aiohttp.ClientSession() as cs:
             async with cs.get('https://random.dog/woof.json') as r:
                 data = await r.json()
@@ -46,9 +45,8 @@ class Misc(commands.Cog, description="Misc Commands"):
         embed = nextcord.Embed(
             title='Info',
             description=f'Invite me by clicking '
-                        f'[here](https://discord.com/api/oauth2/userize?'
-                        f'client_id=812808865728954399&permissions=8&redirect_uri='
-                        f'http%3A%2F%2Fdiscord.mikart.eu%2F&scope=bot%20applications.commands).',
+                        f'[here](https://discord.com/api/oauth2/authorize?client_id='
+                        f'812808865728954399&permissions=8&scope=bot%20applications.commands).',
             color=0xD75BF4
         )
         await interaction.send(embed=embed)
