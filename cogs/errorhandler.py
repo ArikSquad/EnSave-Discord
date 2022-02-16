@@ -12,26 +12,23 @@ from nextcord.ext import commands
 from utils import getter
 
 
+def error_formatter(error, maxlength):
+    v = ''
+
+    for line in traceback.format_tb(error.__traceback__):
+        if len(v) + len(line) > maxlength:
+            return v
+        v = f'{v}\n{line}'
+    if len(v) > 0:
+        return v
+
+
 class ErrorHandler(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    def _format_traceback(self, error, maxlength):
-        """
-        Formats a traceback, with the option to cut it at a max length.
-        """
-        v = ''
-
-        for line in traceback.format_tb(error.__traceback__):
-            if len(v) + len(line) > maxlength:
-                return v
-            v = f'{v}\n{line}'
-        if len(v) > 0:
-            return v
-
-    async def _send_traceback_embed(self, ctx: commands.Context, embed: nextcord.Embed):
-
-        cfg_value = self.bot.config.get('error_report_channel')
+    async def traceback(self, ctx: commands.Context, embed: nextcord.Embed):
+        cfg_value = 770677608836366356
 
         if not cfg_value:
             return
@@ -50,14 +47,8 @@ class ErrorHandler(commands.Cog):
             if not perms.view_channel or not perms.send_messages or not perms.embed_links:
                 return
 
-        try:
-            await channel.send(embed=embed)
-        except:
-            pass
+        await channel.send(embed=embed)
 
-    # Extend this dict with your custom errors. Put the error class as key and the message you want to send as value.
-    # The message can be formatted with the context referred as "ctx" and the error object as "err".
-    # For more info on formatting, read https://pyformat.info/
     _error_messages = {
         commands.NoPrivateMessage: 'This command cannot be used in private messages',
         commands.BotMissingPermissions: '{err}',
@@ -76,10 +67,6 @@ class ErrorHandler(commands.Cog):
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx: commands.Context, error):
-        """
-        Handle any error that could happen in a command, including uncaught stuff which is sent and reported.
-        """
-
         classname = error.__class__
         if classname in self._error_messages.keys():
             msg = self._error_messages.get(classname, None)
@@ -117,10 +104,10 @@ class ErrorHandler(commands.Cog):
                                                                                            f' (`{ctx.channel.id}`)')
             embed.add_field(name='Sender', value=f'{ctx.author} (`{ctx.author.id}`)')
             embed.add_field(name='Exception', value=str(error))
-            formatted_traceback = self._format_traceback(error.original, 4094)
+            formatted_traceback = error_formatter(error.original, 4094)
             embed.description = f'```{formatted_traceback}```'
 
-            await self._send_traceback_embed(ctx, embed)
+            await self.traceback(ctx, embed)
 
 
 def setup(bot):
