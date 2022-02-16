@@ -25,8 +25,7 @@ class Game(commands.Cog, description="Game Commands"):
 
     @nextcord.slash_command(name="cookie", guild_ids=guild_ids, description="This is a inside joke command!")
     async def cookie(self, interaction: Interaction):
-        cookie_coming = await interaction.send(embed=nextcord.Embed(title="🍪 Cookie is coming..."))
-        await cookie_coming.add_reaction("🍪")
+        await interaction.send(embed=nextcord.Embed(title="🍪 Cookie is coming..."))
         await asyncio.sleep(3)
         await interaction.send("You didn't get the cookie :(")
 
