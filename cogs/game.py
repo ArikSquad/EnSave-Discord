@@ -7,6 +7,7 @@
 # -----------------------------------------------------------
 
 import asyncio
+import datetime
 import random
 
 import nextcord
@@ -22,13 +23,12 @@ class Game(commands.Cog, description="Game Commands"):
     def __init__(self, bot):
         self.bot = bot
 
-    @nextcord.slash_command(name="cookie", guild_ids=guild_ids, description="Cookie game!")
+    @nextcord.slash_command(name="cookie", guild_ids=guild_ids, description="This is a inside joke command!")
     async def cookie(self, interaction: Interaction):
-        await interaction.send(embed=nextcord.Embed(title="🍪 Cookie is coming..."))
+        cookie_coming = await interaction.send(embed=nextcord.Embed(title="🍪 Cookie is coming..."))
+        await cookie_coming.add_reaction("🍪")
         await asyncio.sleep(3)
-        await interaction.send("No one got the cookie :(")
-        await asyncio.sleep(2)
-        await interaction.send("Just kidding, you got the cookie! :)")
+        await interaction.send("You didn't get the cookie :(")
 
     @nextcord.slash_command(name="slot", guild_ids=guild_ids, description="Roll the slot machine!")
     async def slot(self, interaction: Interaction):
@@ -71,6 +71,35 @@ class Game(commands.Cog, description="Game Commands"):
         else:
             embed = nextcord.Embed(title="Fun",
                                    description=f"{interaction.user.mention} Flipped coin, we got **Tails**!",
+                                   color=interaction.user.color)
+            await interaction.send(embed=embed)
+
+    @nextcord.slash_command(name="slap", guild_ids=guild_ids, description="Slap someone!")
+    async def slap(self, interaction: Interaction, member: nextcord.Member):
+        if member.id == 812808865728954399:
+            dodge = nextcord.Embed(title=interaction.user.name,
+                                   description=f"tried to slap me, but I dodged. 😑",
+                                   color=interaction.user.color)
+            await interaction.send(embed=dodge)
+        elif interaction.user.id == member.id:
+            embed = nextcord.Embed(title=interaction.user.name,
+                                   description=f"tried to slap themselves, "
+                                               f"but hit too hard and went to a coma for 10 seconds. 😑",
+                                   color=interaction.user.color)
+            try:
+                await interaction.user.edit(timeout=nextcord.utils.utcnow()+datetime.timedelta(seconds=10))
+            except commands.MissingPermissions:
+                pass
+            await interaction.send(embed=embed)
+        elif getter.get_premium(member.id):
+            embed = nextcord.Embed(title=interaction.user.name,
+                                   description=f"tried to slap {member.name}, but had no strength to hit "
+                                               f"a premium user. 😑",
+                                   color=interaction.user.color)
+            await interaction.send(embed=embed)
+        else:
+            embed = nextcord.Embed(title=interaction.user.name,
+                                   description=f"just slapped {member.mention} in the face!",
                                    color=interaction.user.color)
             await interaction.send(embed=embed)
 
