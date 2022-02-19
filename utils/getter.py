@@ -61,3 +61,29 @@ def premium_ad_embed_interaction(interaction, title: str):
                           description=f"If you want more command's get bot premium!.",
                           color=interaction.user.color,
                           timestamp=get_time())
+
+
+def get_language(language: str):
+    if language.lower == "finnish":
+        return "fi_FI"
+    elif language.lower == "german":
+        return "de_DE"
+    elif language.lower == "spanish":
+        return "es_ES"
+    elif language.lower == "italian":
+        return "it_IT"
+    elif language.lower == "japanese":
+        return "ja_JP"
+    elif language.lower == "korean":
+        return "ko_KR"
+    elif language.lower == "russian":
+        return "ru_RU"
+    elif language.lower == "chinese":
+        return "zh_CN"
+    elif language.lower == "polish":
+        return "pl_PL"
+    elif language.lower == "portuguese":
+        return "pt_PT"
+    elif language.lower == "dutch":
+        return "nl_NL"
+    return language
