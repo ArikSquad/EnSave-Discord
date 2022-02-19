@@ -86,7 +86,7 @@ class Game(commands.Cog, description="Game Commands"):
                                                f"but hit too hard and went to a coma for 10 seconds. 😑",
                                    color=interaction.user.color)
             try:
-                await interaction.user.edit(timeout=nextcord.utils.utcnow()+datetime.timedelta(seconds=10))
+                await interaction.user.edit(timeout=nextcord.utils.utcnow() + datetime.timedelta(seconds=10))
             except commands.MissingPermissions:
                 pass
             await interaction.send(embed=embed)
@@ -101,6 +101,30 @@ class Game(commands.Cog, description="Game Commands"):
                                    description=f"just slapped {member.mention} in the face!",
                                    color=interaction.user.color)
             await interaction.send(embed=embed)
+
+    @nextcord.slash_command(name="8ball", guild_ids=guild_ids, description="Ask the magic 8ball a question!")
+    async def eightball(self, interaction: Interaction, *, question):
+        responses = [
+            "It is certain.",
+            "It is decidedly so.",
+            "Without a doubt.",
+            "Yes - definitely.",
+            "You may rely on it.",
+            "As I see it, yes.",
+            "Yes.",
+            "Most likely.",
+            "Outlook good.",
+            "Signs point to yes.",
+            "Reply hazy, try again.",
+            "Better not tell you now.",
+            "uwu",
+            "no, not today!",
+            "Very doubtful."]
+        embed = nextcord.Embed(title="Magic 8ball",
+                               description=f"{interaction.user.mention} asked: {question}\n"
+                                           f"Magic 8ball: **{random.choice(responses)}**",
+                               color=interaction.user.color)
+        await interaction.send(embed=embed)
 
 
 def setup(bot):
