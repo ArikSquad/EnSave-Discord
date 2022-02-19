@@ -7,6 +7,7 @@
 # -----------------------------------------------------------
 import nextcord
 import nextlink as wavelink
+from better_profanity import profanity
 from nextcord.ext import commands
 
 from utils import getter
@@ -57,20 +58,29 @@ class Music(commands.Cog, description="Music commands"):
         else:
             voice: wavelink.Player = ctx.voice_client
 
+        if not ctx.author.voice:
+            not_connected = nextcord.Embed(title="Music",
+                                           description=f"You are not connected to a voice channel.",
+                                           color=ctx.author.color,
+                                           timestamp=getter.get_time())
+            return ctx.send(embed=not_connected)
+
         if voice.queue.is_empty and not voice.is_playing():
             now_playing = nextcord.Embed(title="Music",
-                                         description=f'**Now playing**: `{search.title}`',
+                                         description=f'**Now playing**: `{profanity.censor(search.title)}`',
                                          color=ctx.author.color,
                                          timestamp=getter.get_time())
             await voice.play(search)
-            return await ctx.reply(embed=now_playing)
+            await ctx.reply(embed=now_playing)
         else:
             added_queue = nextcord.Embed(title="Music",
-                                         description=f"Added `{search.title}` to the queue.",
+                                         description=f"Added `{profanity.censor(search.title)}` to the queue.",
                                          color=ctx.author.color,
                                          timestamp=getter.get_time())
             await voice.queue.put_wait(search)
-            return await ctx.reply(embed=added_queue)
+            await ctx.reply(embed=added_queue)
+        if profanity.contains_profanity(search.title):
+            await ctx.message.delete()
 
     @commands.command(name="connect", aliases=["join"], help="Connect to a voice channel")
     async def connect_command(self, ctx: commands.Context, *, channel: nextcord.VoiceChannel = None):
@@ -102,6 +112,12 @@ class Music(commands.Cog, description="Music commands"):
     async def disconnect_command(self, ctx: commands.Context):
         voice: wavelink.Player = ctx.voice_client
         if voice and voice.is_connected():
+            if not ctx.author.voice:
+                not_connected = nextcord.Embed(title="Music",
+                                               description=f"You are not connected to a voice channel.",
+                                               color=ctx.author.color,
+                                               timestamp=getter.get_time())
+                return ctx.send(embed=not_connected)
             disconnected = nextcord.Embed(title="Music",
                                           description=f"I have disconnected.",
                                           color=ctx.author.color,
@@ -118,6 +134,12 @@ class Music(commands.Cog, description="Music commands"):
     async def pause_command(self, ctx: commands.Context):
         voice: wavelink.Player = ctx.voice_client
         if voice and voice.is_connected():
+            if not ctx.author.voice:
+                not_connected = nextcord.Embed(title="Music",
+                                               description=f"You are not connected to a voice channel.",
+                                               color=ctx.author.color,
+                                               timestamp=getter.get_time())
+                return ctx.send(embed=not_connected)
             if voice.is_paused():
                 paused_already = nextcord.Embed(title="Music",
                                                 description=f"I am already paused.",
@@ -140,6 +162,12 @@ class Music(commands.Cog, description="Music commands"):
     async def resume_command(self, ctx: commands.Context):
         voice: wavelink.Player = ctx.voice_client
         if voice and voice.is_connected():
+            if not ctx.author.voice:
+                not_connected = nextcord.Embed(title="Music",
+                                               description=f"You are not connected to a voice channel.",
+                                               color=ctx.author.color,
+                                               timestamp=getter.get_time())
+                return ctx.send(embed=not_connected)
             if voice.is_paused():
                 resumed = nextcord.Embed(title="Music",
                                          description=f"The playback has been resumed.",
@@ -162,6 +190,12 @@ class Music(commands.Cog, description="Music commands"):
     async def stop_command(self, ctx: commands.Context):
         voice: wavelink.Player = ctx.voice_client
         if voice.is_playing():
+            if voice.channel != ctx.author.voice.channel:
+                not_connected = nextcord.Embed(title="Music",
+                                               description=f"You are not connected to the voice channel.",
+                                               color=ctx.author.color,
+                                               timestamp=getter.get_time())
+                return ctx.send(embed=not_connected)
             stopped = nextcord.Embed(title="Music",
                                      description=f"The playback has been stopped and the queue has been cleared.",
                                      color=ctx.author.color,
@@ -180,6 +214,12 @@ class Music(commands.Cog, description="Music commands"):
     async def volume_command(self, ctx: commands.Context, volume: int):
         voice: wavelink.Player = ctx.voice_client
         if voice and voice.is_connected():
+            if voice.channel != ctx.author.voice.channel:
+                not_connected = nextcord.Embed(title="Music",
+                                               description=f"You are not connected to the voice channel.",
+                                               color=ctx.author.color,
+                                               timestamp=getter.get_time())
+                return ctx.send(embed=not_connected)
             if volume < 0 or volume > 100:
                 volume_must = nextcord.Embed(title="Music",
                                              description="Volume must be between 0 and 100",
@@ -206,20 +246,25 @@ class Music(commands.Cog, description="Music commands"):
             queue_embed = nextcord.Embed(title="Music",
                                          color=ctx.author.color,
                                          timestamp=getter.get_time())
-            queue_embed.add_field(name=f"Now Playing", value=f"{voice.source}")
-            queue_embed.add_field(name="Duration", value=f'{voice.source.duration}')
+            queue_embed.add_field(name=f"Now Playing", value=f"{profanity.censor(voice.source)}")
             await ctx.send(embed=queue_embed)
 
     @commands.command(name="loop", help="Make the song loop.")
     async def loop_command(self, ctx: commands.Context):
+        voice: wavelink.Player = ctx.voice_client
         if getter.get_premium(ctx.author.id):
+            if voice.channel != ctx.author.voice.channel:
+                not_connected = nextcord.Embed(title="Music",
+                                               description=f"You are not connected to the voice channel.",
+                                               color=ctx.author.color,
+                                               timestamp=getter.get_time())
+                return ctx.send(embed=not_connected)
             if not ctx.voice_client:
                 not_connected = nextcord.Embed(title="Music",
                                                description="I am not connected to a voice channel",
                                                color=ctx.author.color,
                                                timestamp=getter.get_time())
                 return await ctx.send(embed=not_connected)
-            voice: wavelink.Player = ctx.voice_client
             if not voice.is_playing():
                 no_tracks = nextcord.Embed(title="Music",
                                            description=f"No tracks are queued for **{ctx.guild.name}**",

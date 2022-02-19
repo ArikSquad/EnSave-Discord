@@ -9,6 +9,8 @@ import random
 
 import aiohttp
 import nextcord
+import requests
+from better_profanity import profanity
 from nextcord import Interaction
 from nextcord.ext import commands
 
@@ -63,6 +65,29 @@ class Misc(commands.Cog, description="Misc Commands"):
                                            f'supported without slash command.',
                                color=ctx.author.color)
         await ctx.reply(embed=embed)
+
+    @nextcord.slash_command(name="define", guild_ids=guild_ids, description="Define a word!")
+    async def define(self, interaction: Interaction, word: str):
+        if profanity.contains_profanity(word):
+            embed = nextcord.Embed(
+                title="Error",
+                description=f"{interaction.user.mention} The word you tried to check is inappropriate.!",
+                color=interaction.user.color
+            )
+            return await interaction.send(embed=embed)
+        response = requests.get(f"https://api.dictionaryapi.dev/api/v2/entries/en_Us/{word}")
+        if response.status_code == 200:
+            data = response.json()
+            meanings = data[0]["meanings"][0]["definitions"][0]
+            embed = nextcord.Embed(description=f"You asked for the definition of **{word}**!",
+                                   color=interaction.user.color)
+            embed.add_field(name="Definition", value=meanings["definition"], inline=False)
+            embed.add_field(name="Example", value=meanings["example"], inline=False)
+            await interaction.send(embed=embed)
+        else:
+            embed = nextcord.Embed(description="Something went wrong. Please try again later.",
+                                   color=interaction.user.color)
+            await interaction.send(embed=embed)
 
 
 def setup(bot):
