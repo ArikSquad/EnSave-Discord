@@ -10,6 +10,7 @@ import datetime
 import json
 
 import nextcord
+from nextcord import Interaction
 
 
 def get_time():
@@ -18,6 +19,10 @@ def get_time():
 
 def get_guild_ids():
     return [770634445370687519]
+
+
+def get_owner_id():
+    return 549152470194978817
 
 
 def get_premium(user_id):
@@ -42,48 +47,19 @@ def premium_embed(ctx, title: str):
                           timestamp=get_time())
 
 
-def premium_embed_interaction(interaction, title: str):
-    return nextcord.Embed(title=title,
-                          description="You need to be a premium user to use this command.",
-                          color=interaction.user.color,
-                          timestamp=get_time())
+class Sure(nextcord.ui.View):
+    def __init__(self):
+        super().__init__()
+        self.value = None
 
+    @nextcord.ui.button(label="Yes", style=nextcord.ButtonStyle.danger)
+    async def yes(self, button: nextcord.ui.Button, interaction: Interaction):
+        self.value = True
+        self.stop()
 
-def premium_ad_embed(ctx, title: str):
-    return nextcord.Embed(title=title,
-                          description=f"If you want more command's get bot premium!.",
-                          color=ctx.author.color,
-                          timestamp=get_time())
+    @nextcord.ui.button(label="No", style=nextcord.ButtonStyle.green)
+    async def no(self, button: nextcord.ui.Button, interaction: Interaction):
+        await interaction.send(f"You selected no", ephemeral=True)
+        self.value = False
+        self.stop()
 
-
-def premium_ad_embed_interaction(interaction, title: str):
-    return nextcord.Embed(title=title,
-                          description=f"If you want more command's get bot premium!.",
-                          color=interaction.user.color,
-                          timestamp=get_time())
-
-
-def get_language(language: str):
-    if language.lower == "finnish":
-        return "fi_FI"
-    elif language.lower == "german":
-        return "de_DE"
-    elif language.lower == "spanish":
-        return "es_ES"
-    elif language.lower == "italian":
-        return "it_IT"
-    elif language.lower == "japanese":
-        return "ja_JP"
-    elif language.lower == "korean":
-        return "ko_KR"
-    elif language.lower == "russian":
-        return "ru_RU"
-    elif language.lower == "chinese":
-        return "zh_CN"
-    elif language.lower == "polish":
-        return "pl_PL"
-    elif language.lower == "portuguese":
-        return "pt_PT"
-    elif language.lower == "dutch":
-        return "nl_NL"
-    return language
