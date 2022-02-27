@@ -68,10 +68,13 @@ class Music(commands.Cog, description="Music commands"):
 
         if voice.queue.is_empty and not voice.is_playing():
             now_playing = nextcord.Embed(title="Music",
-                                         description=f'**Now playing**: `{profanity.censor(search.title)}`',
+                                         description=f'**Now playing**: [{profanity.censor(search.title)}]'
+                                                     f'({search.uri})',
                                          color=ctx.author.color,
                                          timestamp=db.get_time())
             now_playing.set_image(url=search.thumbnail)
+            now_playing.add_field(name="Author", value=f"{search.author}")
+
             await voice.play(search)
             await ctx.reply(embed=now_playing, view=view)
             await view.wait()
@@ -84,7 +87,8 @@ class Music(commands.Cog, description="Music commands"):
                 await voice.stop()
         else:
             added_queue = nextcord.Embed(title="Music",
-                                         description=f"Added `{profanity.censor(search.title)}` to the queue.",
+                                         description=f"Added [{profanity.censor(search.title)}]"
+                                                     f"({search.uri}) to the queue.",
                                          color=ctx.author.color,
                                          timestamp=db.get_time())
             added_queue.set_image(url=search.thumbnail)
@@ -117,11 +121,11 @@ class Music(commands.Cog, description="Music commands"):
 
         if voice.queue.is_empty and not voice.is_playing():
             now_playing = nextcord.Embed(title="Music",
-                                         description=f'**Now playing**: `{profanity.censor(search.title)}`',
+                                         description=f'**Now playing**: [{profanity.censor(search.title)}]'
+                                                     f'({search.uri})',
                                          color=ctx.author.color,
                                          timestamp=db.get_time())
             now_playing.add_field(name="Author", value=f"{search.author}")
-            now_playing.add_field(name="Info", value=f"{search.info}")
             await voice.play(search)
             await ctx.reply(embed=now_playing, view=view)
             await view.wait()
@@ -134,11 +138,11 @@ class Music(commands.Cog, description="Music commands"):
                 await voice.stop()
         else:
             added_queue = nextcord.Embed(title="Music",
-                                         description=f"Added `{profanity.censor(search.title)}` to the queue.",
+                                         description=f"Added [{profanity.censor(search.title)}]"
+                                                     f"({search.uri}) to the queue.",
                                          color=ctx.author.color,
                                          timestamp=db.get_time())
             added_queue.add_field(name="Author", value=f"{search.author}")
-            added_queue.add_field(name="Info", value=f"{search.info}")
             await voice.queue.put_wait(search)
             await ctx.reply(embed=added_queue, view=view)
             await view.wait()
