@@ -10,17 +10,17 @@ import nextcord
 import nextcord.utils
 from nextcord.ext import commands
 
-from utils import getter
+from utils import db
 
 
-class Information(commands.Cog, description="Gather information."):
+class Info(commands.Cog, description="Gather information."):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(name="info", aliases=["information", "about"], help="Gather information about the bot.",
                       hidden=True)
     async def info(self, ctx):
-        if ctx.author.id in getter.get_owner_ids():
+        if ctx.author.id in db.get_owner_ids():
             embed = nextcord.Embed(title="Information", color=ctx.author.color)
             embed.add_field(name="Author", value="ArikSquad#6222")
             embed.add_field(name="Library", value="nextcord")
@@ -33,7 +33,7 @@ class Information(commands.Cog, description="Gather information."):
 
     @commands.command(name="eval", help="Evaluate code", hidden=True)
     async def eval(self, ctx, *, code):
-        if ctx.author.id in getter.get_owner_ids():
+        if ctx.author.id in db.get_owner_ids():
             try:
                 result = eval(code)
                 if result is not None:
@@ -43,7 +43,7 @@ class Information(commands.Cog, description="Gather information."):
 
     @commands.command(name="exec", help="Execute code", hidden=True)
     async def exec(self, ctx, *, code):
-        if ctx.author.id in getter.get_owner_ids():
+        if ctx.author.id in db.get_owner_ids():
             try:
                 exec(code)
             except Exception as e:
@@ -51,8 +51,8 @@ class Information(commands.Cog, description="Gather information."):
 
     @commands.command(name="shutdown", help="Shutdown the bot.", hidden=True)
     async def shutdown(self, ctx):
-        if ctx.author.id in getter.get_owner_ids():
-            view = getter.YesNo()
+        if ctx.author.id in db.get_owner_ids():
+            view = db.YesNo()
             sure = nextcord.Embed(title="Are you sure?", description="This will logout "
                                                                      "from discord and exit the python program.",
                                   color=ctx.author.color)
@@ -66,4 +66,4 @@ class Information(commands.Cog, description="Gather information."):
 
 
 def setup(bot):
-    bot.add_cog(Information(bot))
+    bot.add_cog(Info(bot))

@@ -13,9 +13,9 @@ import nextcord
 from nextcord import Interaction
 from nextcord.ext import commands
 
-from utils import getter
+from utils import db
 
-guild_ids = getter.get_guild_ids()
+guild_ids = db.get_guild_ids()
 
 
 class Game(commands.Cog, description="Game Commands"):
@@ -103,7 +103,7 @@ class Game(commands.Cog, description="Game Commands"):
             except commands.MissingPermissions:
                 pass
             await interaction.send(embed=embed)
-        elif getter.get_premium(member.id):
+        elif db.get_premium(member.id):
             embed = nextcord.Embed(title=interaction.user.name,
                                    description=f"tried to slap {member.name}, but had no strength to hit "
                                                f"a premium user. 😑",

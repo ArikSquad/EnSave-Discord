@@ -121,6 +121,7 @@ class MyHelpCommand(commands.MinimalHelpCommand):
             description=command.help,
             command_set=command.commands if isinstance(command, commands.Group) else None
         )
+        embed.add_field(name="Aliases", value=", ".join(command.aliases) or "None")
         await self.get_destination().send(embed=embed)
 
     async def cog_help_embed(self, cog: Optional[commands.Cog]) -> Embed:

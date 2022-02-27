@@ -9,7 +9,7 @@ import traceback
 import nextcord
 from nextcord.ext import commands
 
-from utils import getter
+from utils import db
 
 
 def error_formatter(error, maxlength):
@@ -82,7 +82,7 @@ class ErrorHandler(commands.Cog):
                 color=nextcord.Colour(0xff0000),
                 title=':rotating_light: An error occured while trying to execute that command, '
                       'Please contact ArikSquad#6222',
-                timestamp=getter.get_time()
+                timestamp=db.get_time()
             )
 
             await ctx.send(embed=execute_error)
@@ -92,7 +92,7 @@ class ErrorHandler(commands.Cog):
             embed = nextcord.Embed(
                 color=nextcord.Colour(0xff0000),
                 title='Command execution failed',
-                timestamp=getter.get_time()
+                timestamp=db.get_time()
             )
 
             embed.add_field(name='Command', value=ctx.command)

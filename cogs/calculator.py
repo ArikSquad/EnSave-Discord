@@ -27,9 +27,9 @@ from pyparsing import (
     oneOf
 )
 
-from utils import getter
+from utils import db
 
-guild_ids = getter.get_guild_ids()
+guild_ids = db.get_guild_ids()
 
 
 class NumericStringParser(object):
