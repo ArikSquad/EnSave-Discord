@@ -7,18 +7,15 @@
 # -----------------------------------------------------------
 import datetime
 import json
-import logging
 import os
 
+# Main imports that run the bot.
 import nextcord
 from dotenv import load_dotenv
 from nextcord.ext import commands
 
-# Save logs to file with only hours, minutes and seconds
-from utils import logger
-
-# Logging with max 100 lines
-logging.basicConfig(filename=f'logs/latest.log')
+# Coloured text from logger file.
+from utils import color
 
 # To change the token create a file named .env and write the token.
 # Example usage: TOKEN='(your token)'
@@ -107,11 +104,11 @@ async def change_prefix(ctx, prefix):
 async def on_ready():
     # Print the information about the bot.
     print("Logging in... at the time of " + str(datetime.datetime.now()))
-    print(f'{logger.ColoredText.WARNING}{bot.user} has connected to Discord!{logger.ColoredText.END}')
-    print(f"Name: {logger.ColoredText.CYAN}{bot.user.name}{logger.ColoredText.END}")
-    print(f"ID: {logger.ColoredText.CYAN}{bot.user.id}{logger.ColoredText.END}")
-    print(f'{logger.ColoredText.BOLD}####################################{logger.ColoredText.END}')
-    print(f"Connected to {logger.ColoredText.GREEN}{len(bot.guilds)} guilds{logger.ColoredText.END}")
+    print(f'{color.WARNING}{bot.user} has connected to Discord!{color.END}')
+    print(f"Name: {color.CYAN}{bot.user.name}{color.END}")
+    print(f"ID: {color.CYAN}{bot.user.id}{color.END}")
+    print(f'{color.BOLD}###########################################{color.END}')
+    print(f"Connected to {color.GREEN}{len(bot.guilds)} guilds{color.END}")
 
 
 # Load all the cogs.
@@ -119,7 +116,7 @@ for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         loader = filename[:-3]
         bot.load_extension(f'cogs.{loader}')
-        print(f'{logger.ColoredText.HEADER}{loader.capitalize()} has been loaded{logger.ColoredText.END}')
+        print(f'{color.HEADER}{loader.capitalize()} has been loaded{color.END}')
 
 # Run the bot with token (.env file)
 if __name__ == "__main__":
