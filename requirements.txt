@@ -1,8 +1,7 @@
 asyncio
 aiohttp
 nextcord
-nextlink
-# pip install git+https://github.com/ArikSquad/Nextlink
+git+https://github.com/ArikSquad/Nextlink
 pyparsing
 python-dotenv
 Pynacl
