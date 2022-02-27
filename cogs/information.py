@@ -52,7 +52,7 @@ class Information(commands.Cog, description="Gather information."):
     @commands.command(name="shutdown", help="Shutdown the bot.", hidden=True)
     async def shutdown(self, ctx):
         if ctx.author.id == getter.get_owner_id():
-            view = getter.Sure()
+            view = getter.YesNo()
             sure = nextcord.Embed(title="Are you sure?", description="This will logout "
                                                                      "from discord and exit the python program.",
                                   color=ctx.author.color)
@@ -62,7 +62,7 @@ class Information(commands.Cog, description="Gather information."):
                 return
             elif view.value:
                 shutting = nextcord.Embed(title="Admin", description="Shutting down...", color=ctx.author.color)
-                await message.edit(embed=shutting)
+                await message.delete()
                 await self.bot.close()
 
 

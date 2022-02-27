@@ -53,6 +53,7 @@ class Music(commands.Cog, description="Music commands"):
 
     @commands.command(name="play", help="Play a song.")
     async def play(self, ctx: commands.Context, *, search: wavelink.YouTubeTrack):
+        view = getter.PauseStop()
         if not ctx.voice_client:
             voice: wavelink.Player = await ctx.author.voice.channel.connect(cls=wavelink.Player)
         else:
@@ -72,7 +73,15 @@ class Music(commands.Cog, description="Music commands"):
                                          timestamp=getter.get_time())
             now_playing.set_image(url=search.thumbnail)
             await voice.play(search)
-            await ctx.reply(embed=now_playing)
+            await ctx.reply(embed=now_playing, view=view)
+            await view.wait()
+            if view.value is None:
+                return
+            elif view.value == "pause":
+                await voice.set_pause(True)
+
+            elif view.value == "stop":
+                await voice.stop()
         else:
             added_queue = nextcord.Embed(title="Music",
                                          description=f"Added `{profanity.censor(search.title)}` to the queue.",
@@ -80,8 +89,14 @@ class Music(commands.Cog, description="Music commands"):
                                          timestamp=getter.get_time())
             added_queue.set_image(url=search.thumbnail)
             await voice.queue.put_wait(search)
-            await ctx.reply(embed=added_queue)
-
+            await ctx.reply(embed=added_queue, view=view)
+            await view.wait()
+            if view.value is None:
+                return view.clear_items()
+            elif view.value == "pause":
+                await voice.pause()
+            elif view.value == "stop":
+                await voice.stop()
         if profanity.contains_profanity(search.title):
             await ctx.message.delete()
 
@@ -135,6 +150,7 @@ class Music(commands.Cog, description="Music commands"):
 
     @commands.command(name="pause", help="Pause voice channel")
     async def pause_command(self, ctx: commands.Context):
+        view = getter.Resume()
         voice: wavelink.Player = ctx.voice_client
         if voice and voice.is_connected():
             if not ctx.author.voice:
@@ -149,12 +165,18 @@ class Music(commands.Cog, description="Music commands"):
                                                 color=ctx.author.color,
                                                 timestamp=getter.get_time())
                 return await ctx.send(embed=paused_already)
-            paused_already = nextcord.Embed(title="Music",
-                                            description=f"The playback has been paused.",
-                                            color=ctx.author.color,
-                                            timestamp=getter.get_time())
+            paused = nextcord.Embed(title="Music",
+                                    description=f"The playback has been paused.",
+                                    color=ctx.author.color,
+                                    timestamp=getter.get_time())
             await voice.pause()
-            return await ctx.send(embed=paused_already)
+            await ctx.send(embed=paused, view=view)
+            await view.wait()
+            if view.value is None:
+                return
+            elif view.value:
+                await voice.resume()
+
         not_connected = nextcord.Embed(title="Music",
                                        description=f"I am not to a voice channel.",
                                        color=ctx.author.color,

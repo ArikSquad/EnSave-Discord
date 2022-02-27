@@ -47,19 +47,62 @@ def premium_embed(ctx, title: str):
                           timestamp=get_time())
 
 
-class Sure(nextcord.ui.View):
+# noinspection PyUnusedLocal
+class PauseStop(nextcord.ui.View):
+    def __init__(self):
+        super().__init__()
+        self.value = None
+
+    @nextcord.ui.button(label="Pause", style=nextcord.ButtonStyle.blurple)
+    async def _pause(self, button: nextcord.ui.Button, interaction: Interaction):
+        paused = nextcord.Embed(title="Music",
+                                description=f"The playback has been paused.",
+                                color=interaction.user.color,
+                                timestamp=get_time())
+        await interaction.send(embed=paused)
+        self.value = "pause"
+        self.stop()
+
+    @nextcord.ui.button(label="Stop", style=nextcord.ButtonStyle.danger)
+    async def _stop(self, button: nextcord.ui.Button, interaction: Interaction):
+        stopped = nextcord.Embed(title="Music",
+                                 description=f"The playback has been stopped.",
+                                 color=interaction.user.color,
+                                 timestamp=get_time())
+        await interaction.send(embed=stopped)
+        self.value = "stop"
+        self.stop()
+
+
+class Resume(nextcord.ui.View):
+    def __init__(self):
+        super().__init__()
+        self.value = None
+
+    @nextcord.ui.button(label="Resume", style=nextcord.ButtonStyle.blurple)
+    async def _resume(self, button: nextcord.ui.Button, interaction: Interaction):
+        paused = nextcord.Embed(title="Music",
+                                description=f"The playback has been resumed.",
+                                color=interaction.user.color,
+                                timestamp=get_time())
+        await interaction.send(embed=paused)
+        self.value = True
+        self.stop()
+
+
+# noinspection PyUnusedLocal
+class YesNo(nextcord.ui.View):
     def __init__(self):
         super().__init__()
         self.value = None
 
     @nextcord.ui.button(label="Yes", style=nextcord.ButtonStyle.danger)
-    async def yes(self, button: nextcord.ui.Button, interaction: Interaction):
+    async def _yes(self, button: nextcord.ui.Button, interaction: Interaction):
         self.value = True
         self.stop()
 
     @nextcord.ui.button(label="No", style=nextcord.ButtonStyle.green)
-    async def no(self, button: nextcord.ui.Button, interaction: Interaction):
-        await interaction.send(f"You selected no", ephemeral=True)
+    async def _no(self, button: nextcord.ui.Button, interaction: Interaction):
+        await interaction.send(f"Okay, we won't do that then!", ephemeral=True)
         self.value = False
         self.stop()
-
