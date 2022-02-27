@@ -106,3 +106,19 @@ class YesNo(nextcord.ui.View):
         await interaction.send(f"Okay, we won't do that then!", ephemeral=True)
         self.value = False
         self.stop()
+
+
+# noinspection PyUnusedLocal
+class Cookie(nextcord.ui.View):
+    def __init__(self):
+        super().__init__()
+        self.value = None
+
+    @nextcord.ui.button(emoji="🍪", style=nextcord.ButtonStyle.blurple)
+    async def _cookie(self, button: nextcord.ui.Button, interaction: Interaction):
+        embed = nextcord.Embed(title="Cookie",
+                               description=f"{interaction.user.mention} have received a cookie.",
+                               color=interaction.user.color,
+                               timestamp=get_time())
+        self.value = True
+        self.stop()

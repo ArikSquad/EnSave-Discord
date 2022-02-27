@@ -6,7 +6,6 @@
 #
 # -----------------------------------------------------------
 
-import asyncio
 import datetime
 import random
 
@@ -23,11 +22,25 @@ class Game(commands.Cog, description="Game Commands"):
     def __init__(self, bot):
         self.bot = bot
 
-    @nextcord.slash_command(name="cookie", guild_ids=guild_ids, description="This is a inside joke command!")
-    async def cookie(self, interaction: Interaction):
-        await interaction.send(embed=nextcord.Embed(title="🍪 Cookie is coming..."))
-        await asyncio.sleep(3)
-        await interaction.send("You didn't get the cookie :(")
+    # @nextcord.slash_command(name="cookie", guild_ids=guild_ids, description="Try to get the cookie!")
+    # async def cookie(self, interaction: Interaction):
+    #    time = 5
+    #    view = getter.Cookie()
+    #    coming = nextcord.Embed(title="Cookie!",
+    #                            description=f"The cookie is coming soon!",
+    #                            color=nextcord.Color.green())
+    #    seconds_embed = nextcord.Embed(title="Cookie!",
+    #                                   description=f"The cookie is coming in {time} seconds!",
+    #                                   color=nextcord.Color.green())
+    #    message = await interaction.send(embed=coming)
+    #    for i in range(time):
+    #        await asyncio.sleep(1)
+    #    time = time - 1
+    #    await message.edit(embed=seconds_embed)
+    #   await message.edit(embed=seconds_embed, view=view)
+    #   await view.wait()
+    #   if view.value is None:
+    #       return
 
     @nextcord.slash_command(name="slot", guild_ids=guild_ids, description="Roll the slot machine!")
     async def slot(self, interaction: Interaction):
