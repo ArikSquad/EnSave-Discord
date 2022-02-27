@@ -21,8 +21,8 @@ def get_guild_ids():
     return [770634445370687519]
 
 
-def get_owner_id():
-    return 549152470194978817
+def get_owner_ids():
+    return [549152470194978817, 537237654207725568]
 
 
 def get_premium(user_id):
