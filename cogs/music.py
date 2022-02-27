@@ -35,13 +35,13 @@ class Music(commands.Cog, description="Music commands"):
         print(f" Wavelink node: {node.identifier} is ready.")
 
     @commands.Cog.listener()
-    async def on_wavelink_track_end(self, player: wavelink.Player, **payload: dict):
-        if not player.queue.is_empty:
-            if not self.loop:
+    async def on_wavelink_track_end(self, player: wavelink.Player, track, reason):
+        if not self.loop:
+            if not player.queue.is_empty:
                 new = player.queue.get()
                 await player.play(new)
-            else:
-                await player.play(player.track)
+        if self.loop:
+            await player.play(player.track)
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member: nextcord.Member,
@@ -262,25 +262,6 @@ class Music(commands.Cog, description="Music commands"):
                                        color=ctx.author.color,
                                        timestamp=getter.get_time())
         await ctx.send(embed=not_connected)
-
-    @commands.command(name="Playing", aliases=["np"],
-                      help="Shows the current song")
-    async def playing_command(self, ctx: commands.Context):
-        voice: wavelink.Player = ctx.voice_client
-        if voice.is_playing:
-            queue_embed = nextcord.Embed(title="Music",
-                                         color=ctx.author.color,
-                                         timestamp=getter.get_time())
-            queue_embed.add_field(name="Volume",
-                                  value=f"{voice.volume}%",
-                                  inline=False)
-            await ctx.send(embed=queue_embed)
-        else:
-            not_playing = nextcord.Embed(title="Music",
-                                         description=f"I am not playing anything.",
-                                         color=ctx.author.color,
-                                         timestamp=getter.get_time())
-            await ctx.send(embed=not_playing)
 
     @commands.command(name="loop", help="Make the song loop.")
     async def loop_command(self, ctx: commands.Context):
