@@ -1,9 +1,11 @@
+# Important
+nextcord
 asyncio
 aiohttp
-nextcord
-git+https://github.com/ArikSquad/Nextlink
 pyparsing
 python-dotenv
-Pynacl
-validators
 requests
+
+# Music commands
+Pynacl
+git+https://github.com/ArikSquad/Nextlink
