@@ -27,15 +27,12 @@ from pyparsing import (
     oneOf
 )
 
-from utils import db
-
-guild_ids = db.get_guild_ids()
-
 
 class NumericStringParser(object):
     """
     Most of this code comes from the fourFn.py pyparsing example
     """
+
     def pushfirst(self, strg, loc, toks):
         self.exprStack.append(toks[0])
 
@@ -72,8 +69,9 @@ class NumericStringParser(object):
         pi = CaselessLiteral("PI")
         expr = Forward()
         atom = (
-            (Optional(oneOf("- +")) + (pi | e | fnumber | ident + lpar + expr + rpar).setParseAction(self.pushfirst))
-            | Optional(oneOf("- +")) + Group(lpar + expr + rpar)
+                (Optional(oneOf("- +")) + (pi | e | fnumber | ident + lpar + expr + rpar).setParseAction(
+                    self.pushfirst))
+                | Optional(oneOf("- +")) + Group(lpar + expr + rpar)
         ).setParseAction(self.pushuminus)
         # by defining exponentiation as "atom [ ^ factor ]..." instead of
         # "atom [ ^ atom ]...", we get right-to-left exponents, instead of left-to-right
