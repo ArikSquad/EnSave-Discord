@@ -270,7 +270,7 @@ class Music(commands.Cog, description="Music commands"):
     async def stop_command(self, ctx: commands.Context):
         voice: wavelink.Player = ctx.voice_client
         if voice.is_playing():
-            if voice.channel != ctx.author.voice.channel:
+            if not ctx.author.voice:
                 not_connected = nextcord.Embed(title="Music",
                                                description=f"You are not connected to the voice channel.",
                                                color=ctx.author.color,
@@ -294,7 +294,7 @@ class Music(commands.Cog, description="Music commands"):
     async def volume_command(self, ctx: commands.Context, volume: int):
         voice: wavelink.Player = ctx.voice_client
         if voice and voice.is_connected():
-            if voice.channel != ctx.author.voice.channel:
+            if not ctx.author.voice:
                 not_connected = nextcord.Embed(title="Music",
                                                description=f"You are not connected to the voice channel.",
                                                color=ctx.author.color,
@@ -322,7 +322,7 @@ class Music(commands.Cog, description="Music commands"):
     async def loop_command(self, ctx: commands.Context):
         voice: wavelink.Player = ctx.voice_client
         if db.get_premium(ctx.author.id):
-            if voice.channel != ctx.author.voice.channel:
+            if not ctx.author.voice:
                 not_connected = nextcord.Embed(title="Music",
                                                description=f"You are not connected to the voice channel.",
                                                color=ctx.author.color,
@@ -355,6 +355,49 @@ class Music(commands.Cog, description="Music commands"):
                 return await ctx.send(embed=loop_disabled)
 
         await ctx.reply(embed=db.premium_embed(ctx, "Music"))
+
+    @commands.command(name="shuffle", help="Shuffle the queue.")
+    async def shuffle_command(self, ctx: commands.Context):
+        voice: wavelink.Player = ctx.voice_client
+        if db.get_premium(ctx.author.id):
+            if ctx.author.voice:
+                not_connected = nextcord.Embed(title="Music",
+                                               description=f"You are not connected to the voice channel.",
+                                               color=ctx.author.color,
+                                               timestamp=db.get_time())
+                return ctx.send(embed=not_connected)
+            if not ctx.voice_client:
+                not_connected = nextcord.Embed(title="Music",
+                                               description="I am not connected to a voice channel",
+                                               color=ctx.author.color,
+                                               timestamp=db.get_time())
+                return await ctx.send(embed=not_connected)
+            if not voice.queue():
+                no_tracks = nextcord.Embed(title="Music",
+                                           description=f"No tracks are queued for **{ctx.guild.name}**",
+                                           color=ctx.author.color,
+                                           timestamp=db.get_time())
+                return await ctx.send(embed=no_tracks)
+            await voice.queue().shuffle()
+
+    @commands.command(name="playing", help="Info about the current track.")
+    async def playing_command(self, ctx: commands.Context):
+        voice: wavelink.Player = ctx.voice_client
+        coming = await voice.queue.get_wait()
+        if voice.is_playing():
+            embed = nextcord.Embed(title="Music",
+                                   description=f"**{coming.title}**\n\n"
+                                   )
+            if isinstance(coming, wavelink.YouTubeTrack):
+                embed.set_thumbnail(url=coming.thumbnail)
+            embed.add_field(name="Author", value=coming.author)
+            await ctx.send(embed=embed)
+        else:
+            no_tracks = nextcord.Embed(title="Music",
+                                       description=f"No tracks are queued for **{ctx.guild.name}**",
+                                       color=ctx.author.color,
+                                       timestamp=db.get_time())
+            await ctx.send(embed=no_tracks)
 
 
 def setup(bot):
