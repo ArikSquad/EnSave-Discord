@@ -70,6 +70,7 @@ class Info(commands.Cog, description="Gather information."):
         if ctx.author.id in database.get_owner_ids():
             try:
                 self.bot.unload_extension(f'cogs.{cog}')
+                await ctx.send(f"`{cog}` unloaded.")
             except commands.ExtensionNotFound:
                 await ctx.send(f'There is no extension called {profanity.censor(cog)}')
             except commands.ExtensionNotLoaded:
@@ -80,6 +81,7 @@ class Info(commands.Cog, description="Gather information."):
         if ctx.author.id in database.get_owner_ids():
             try:
                 self.bot.load_extension(f'cogs.{cog}')
+                await ctx.send(f'Loaded extension {profanity.censor(cog)}')
             except commands.ExtensionNotFound:
                 await ctx.send(f'There is no extension called {profanity.censor(cog)}')
             except commands.ExtensionAlreadyLoaded:
@@ -90,10 +92,17 @@ class Info(commands.Cog, description="Gather information."):
         if ctx.author.id in database.get_owner_ids():
             try:
                 self.bot.reload_extension(f'cogs.{cog}')
+                await ctx.send(f"Successfully reloaded {cog}.")
             except commands.ExtensionNotFound:
                 await ctx.send(f'There is no extension called {profanity.censor(cog)}')
             except commands.ExtensionFailed:
                 await ctx.send('The extension failed.')
+
+    @commands.command(name='add_premium', help='Add a premium user', hidden=True)
+    async def add_premium(self, ctx, user: nextcord.Member):
+        if ctx.author.id in database.get_owner_ids():
+            database.add_premium(user.id)
+            await ctx.send(f"{user.mention} is now a premium user.")
 
 
 def setup(bot):
