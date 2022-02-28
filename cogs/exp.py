@@ -21,17 +21,18 @@ class Experience(commands.Cog, description="Virtual experience."):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        amount = 3.5 * len(message.clean_content)
-        if len(message.clean_content) > 42:
-            amount = 142
-        with open('db/users.json', 'r+') as f:
-            data = json.load(f)
-            if str(message.author.id) not in data:
-                data[str(message.author.id)] = 0
-            else:
-                data[str(message.author.id)] = data[str(message.author.id)] + amount
-            f.seek(0)
-            json.dump(data, f, indent=4)
+        if message.author is not self.bot.user:
+            amount = 3.5 * len(message.clean_content)
+            if len(message.clean_content) > 42:
+                amount = 142
+            with open('db/users.json', 'r+') as f:
+                data = json.load(f)
+                if str(message.author.id) not in data:
+                    data[str(message.author.id)] = 0
+                else:
+                    data[str(message.author.id)] = data[str(message.author.id)] + amount
+                f.seek(0)
+                json.dump(data, f, indent=4)
 
     @commands.command(name='level', help="Check your level.")
     async def level(self, ctx):
@@ -45,8 +46,8 @@ class Experience(commands.Cog, description="Virtual experience."):
                 else "This person is still reaching premium.",
                 color=ctx.author.color
             )
-            user_level.add_field(name='Level', value=exp / 1000, inline=True)
-            user_level.add_field(name='Experience', value=exp, inline=True)
+            user_level.add_field(name='Level', value=round(exp / 1000), inline=False)
+            user_level.add_field(name='Experience', value=exp, inline=False)
 
             await ctx.send(embed=user_level)
 
@@ -62,9 +63,38 @@ class Experience(commands.Cog, description="Virtual experience."):
                 color=ctx.author.color
             )
             for i, (user, exp) in enumerate(data):
-                leaderboard.add_field(name=f"{i + 1}. {self.bot.get_user(int(user)).name}", value=exp, inline=True)
+                leaderboard.add_field(name=f"{i + 1}. {self.bot.get_user(int(user)).name}",
+                                      value=round(exp) if exp > 1000 else exp, inline=True)
             await ctx.send(embed=leaderboard)
 
+    @commands.command(name='addexp', help="Add experience to somebody.", hidden=True)
+    async def add_exp(self, ctx, user: nextcord.Member, amount: int):
+        with open("db/users.json", "r+") as f:
+            data = json.load(f)
+            data[str(user.id)] = data[str(user.id)] + amount
+            f.seek(0)
+            json.dump(data, f, indent=4)
+        new_exp_embed = nextcord.Embed(
+            title=f"Admin",
+            description=f"{ctx.author.name} has added {amount} experience to {user.name}.",
+            color=ctx.author.color
+        )
+        await ctx.send(embed=new_exp_embed)
+
+    @commands.command(name='setexp', help="Set experience to somebody.", hidden=True)
+    async def set_exp(self, ctx, user: nextcord.Member, amount: int):
+        if ctx.author.id in database.get_owner_ids():
+            with open("db/users.json", "r+") as f:
+                data = json.load(f)
+                data[str(user.id)] = amount
+                f.seek(0)
+                json.dump(data, f, indent=4)
+            new_exp_embed = nextcord.Embed(
+                title=f"Admin",
+                description=f"{ctx.author.name} has set {user.name}'s experience to {amount}.",
+                color=ctx.author.color
+            )
+            await ctx.send(embed=new_exp_embed)
 
 
 def setup(bot):
