@@ -27,7 +27,6 @@ class HelpView(nextcord.ui.View):
         self._help_command = help_command
 
     async def on_timeout(self):
-        # remove dropdown from message on timeout
         self.clear_items()
         await self._help_command.response.edit(view=self)
 
@@ -36,16 +35,19 @@ class HelpView(nextcord.ui.View):
 
 
 class MyHelpCommand(commands.MinimalHelpCommand):
+    def __init__(self, **options):
+        super().__init__()
+        self.response = None
+
     def get_command_signature(self, command):
         return f"{self.context.clean_prefix}{command.qualified_name} {command.signature}"
 
     async def _cog_select_options(self) -> list[nextcord.SelectOption]:
-        options: list[nextcord.SelectOption] = []
-        options.append(nextcord.SelectOption(
+        options: list[nextcord.SelectOption] = [nextcord.SelectOption(
             label="Home",
             emoji="🏠",
             description="Go back to the main menu.",
-        ))
+        )]
 
         for cog, command_set in self.get_bot_mapping().items():
             filtered = await self.filter_commands(command_set, sort=True)
@@ -117,7 +119,7 @@ class MyHelpCommand(commands.MinimalHelpCommand):
         emoji = getattr(command.cog, "COG_EMOJI", None)
         embed = await self._help_embed(
             title=f"{emoji}  {self.context.clean_prefix}{command.qualified_name} {command.signature}"
-            if emoji else command.qualified_name,
+            if emoji else self.context.clean_prefix + command.qualified_name + " " + command.signature,
             description=command.help,
             command_set=command.commands if isinstance(command, commands.Group) else None
         )
