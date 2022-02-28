@@ -34,6 +34,15 @@ class Experience(commands.Cog, description="Virtual experience."):
                 f.seek(0)
                 json.dump(data, f, indent=4)
 
+            if data[str(message.author.id)] > 50000 and not database.get_premium(message.author.id):
+                database.add_premium(message.author.id)
+                user_level = nextcord.Embed(
+                    title=f"EnSave Leveling",
+                    description='Congratulations, you have earned EnSave Premium!',
+                    color=message.author.color
+                )
+                await message.channel.send(embed=user_level)
+
     @commands.command(name='level', help="Check your level.")
     async def level(self, ctx):
         with open("db/users.json", "r") as f:
