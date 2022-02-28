@@ -14,7 +14,7 @@ import nextcord
 from dotenv import load_dotenv
 from nextcord.ext import commands
 
-# Coloured text from logger file.
+# Coloured text from color file.
 from utils import color
 
 # To change the token create a file named .env and write the token.
