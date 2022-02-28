@@ -1,0 +1,71 @@
+# -----------------------------------------------------------
+# This is a discord bot by ArikSquad and you are viewing the source code of it.
+#
+# (C) 2022 MikArt
+# Released under the CC BY-NC 4.0 (BY-NC 4.0)
+#
+# -----------------------------------------------------------
+import json
+
+import nextcord
+from nextcord.ext import commands
+
+from utils import database
+
+
+class Experience(commands.Cog, description="Virtual experience."):
+    COG_EMOJI = "📈"
+
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        amount = 3.5 * len(message.clean_content)
+        if len(message.clean_content) > 42:
+            amount = 142
+        with open('db/users.json', 'r+') as f:
+            data = json.load(f)
+            if str(message.author.id) not in data:
+                data[str(message.author.id)] = 0
+            else:
+                data[str(message.author.id)] = data[str(message.author.id)] + amount
+            f.seek(0)
+            json.dump(data, f, indent=4)
+
+    @commands.command(name='level', help="Check your level.")
+    async def level(self, ctx):
+        with open("db/users.json", "r") as f:
+            data = json.load(f)
+            exp = data[str(ctx.author.id)]
+
+            user_level = nextcord.Embed(
+                title=f"{ctx.author.name}'s level",
+                description="This user has premium." if database.get_premium(ctx.author.id)
+                else "This person is still reaching premium.",
+                color=ctx.author.color
+            )
+            user_level.add_field(name='Level', value=exp / 1000, inline=True)
+            user_level.add_field(name='Experience', value=exp, inline=True)
+
+            await ctx.send(embed=user_level)
+
+    @commands.command(name='leaderboard', help="Check the leaderboard.")
+    async def leaderboard(self, ctx):
+        with open("db/users.json", "r") as f:
+            data = json.load(f)
+            data = sorted(data.items(), key=lambda x: x[1], reverse=True)
+            data = data[:10]
+            leaderboard = nextcord.Embed(
+                title="Leaderboard",
+                description="This is the leaderboard.",
+                color=ctx.author.color
+            )
+            for i, (user, exp) in enumerate(data):
+                leaderboard.add_field(name=f"{i + 1}. {self.bot.get_user(int(user)).name}", value=exp, inline=True)
+            await ctx.send(embed=leaderboard)
+
+
+
+def setup(bot):
+    bot.add_cog(Experience(bot))
