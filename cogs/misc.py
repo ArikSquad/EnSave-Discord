@@ -14,9 +14,9 @@ from better_profanity import profanity
 from nextcord import Interaction
 from nextcord.ext import commands
 
-from utils import db
+from utils import database
 
-guild_ids = db.get_guild_ids()
+guild_ids = database.get_guild_ids()
 
 
 class Misc(commands.Cog, description="Misc Commands"):

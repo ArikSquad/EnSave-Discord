@@ -8,9 +8,10 @@
 
 import nextcord
 import nextcord.utils
+from better_profanity import profanity
 from nextcord.ext import commands
 
-from utils import db
+from utils import database
 
 
 class Info(commands.Cog, description="Gather information."):
@@ -20,7 +21,7 @@ class Info(commands.Cog, description="Gather information."):
     @commands.command(name="info", aliases=["information", "about"], help="Gather information about the bot.",
                       hidden=True)
     async def info(self, ctx):
-        if ctx.author.id in db.get_owner_ids():
+        if ctx.author.id in database.get_owner_ids():
             embed = nextcord.Embed(title="Information", color=ctx.author.color)
             embed.add_field(name="Author", value="ArikSquad#6222")
             embed.add_field(name="Library", value="nextcord")
@@ -33,7 +34,7 @@ class Info(commands.Cog, description="Gather information."):
 
     @commands.command(name="eval", help="Evaluate code", hidden=True)
     async def eval(self, ctx, *, code):
-        if ctx.author.id in db.get_owner_ids():
+        if ctx.author.id in database.get_owner_ids():
             try:
                 result = eval(code)
                 if result is not None:
@@ -43,7 +44,7 @@ class Info(commands.Cog, description="Gather information."):
 
     @commands.command(name="exec", help="Execute code", hidden=True)
     async def exec(self, ctx, *, code):
-        if ctx.author.id in db.get_owner_ids():
+        if ctx.author.id in database.get_owner_ids():
             try:
                 exec(code)
             except Exception as e:
@@ -51,8 +52,8 @@ class Info(commands.Cog, description="Gather information."):
 
     @commands.command(name="shutdown", help="Shutdown the bot.", hidden=True)
     async def shutdown(self, ctx):
-        if ctx.author.id in db.get_owner_ids():
-            view = db.YesNo()
+        if ctx.author.id in database.get_owner_ids():
+            view = database.YesNo()
             sure = nextcord.Embed(title="Are you sure?", description="This will logout "
                                                                      "from discord and exit the python program.",
                                   color=ctx.author.color)
@@ -63,6 +64,36 @@ class Info(commands.Cog, description="Gather information."):
             elif view.value:
                 await message.delete()
                 await self.bot.close()
+
+    @commands.command(name='unload_cog', help='Unload a cog.', hidden=True)
+    async def unload(self, ctx, cog):
+        if ctx.author.id in database.get_owner_ids():
+            try:
+                self.bot.unload_extension(f'cogs.{cog}')
+            except commands.ExtensionNotFound:
+                await ctx.send(f'There is no extension called {profanity.censor(cog)}')
+            except commands.ExtensionNotLoaded:
+                await ctx.send('The extension is already unloaded.')
+
+    @commands.command(name='load_cog', help='Load a cog.', hidden=True)
+    async def load(self, ctx, cog):
+        if ctx.author.id in database.get_owner_ids():
+            try:
+                self.bot.load_extension(f'cogs.{cog}')
+            except commands.ExtensionNotFound:
+                await ctx.send(f'There is no extension called {profanity.censor(cog)}')
+            except commands.ExtensionAlreadyLoaded:
+                await ctx.send('The extension is already loaded.')
+
+    @commands.command(name='restart_cog', help='Restart a cog', hidden=True)
+    async def restart(self, ctx, cog):
+        if ctx.author.id in database.get_owner_ids():
+            try:
+                self.bot.reload_extension(f'cogs.{cog}')
+            except commands.ExtensionNotFound:
+                await ctx.send(f'There is no extension called {profanity.censor(cog)}')
+            except commands.ExtensionFailed:
+                await ctx.send('The extension failed.')
 
 
 def setup(bot):

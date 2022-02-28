@@ -40,6 +40,14 @@ def get_premium(user_id):
         return False
 
 
+def add_premium(user_id):
+    with open('db/premium.json', 'w') as f:
+        data = json.load(f)
+        data[str(user_id)] = "true"
+        json.dump(data, f, indent=4)
+    return False
+
+
 def premium_embed(ctx, title: str):
     return nextcord.Embed(title=title,
                           description="You need to be a premium user to use this command.",
@@ -52,6 +60,9 @@ class PauseStop(nextcord.ui.View):
     def __init__(self):
         super().__init__()
         self.value = None
+
+    async def on_timeout(self):
+        self.clear_items()
 
     @nextcord.ui.button(label="Pause", style=nextcord.ButtonStyle.blurple)
     async def _pause(self, button: nextcord.ui.Button, interaction: Interaction):
@@ -79,6 +90,9 @@ class Resume(nextcord.ui.View):
         super().__init__()
         self.value = None
 
+    async def on_timeout(self):
+        self.clear_items()
+
     @nextcord.ui.button(label="Resume", style=nextcord.ButtonStyle.blurple)
     async def _resume(self, button: nextcord.ui.Button, interaction: Interaction):
         paused = nextcord.Embed(title="Music",
@@ -96,6 +110,9 @@ class YesNo(nextcord.ui.View):
         super().__init__()
         self.value = None
 
+    async def on_timeout(self):
+        self.clear_items()
+
     @nextcord.ui.button(label="Yes", style=nextcord.ButtonStyle.danger)
     async def _yes(self, button: nextcord.ui.Button, interaction: Interaction):
         self.value = True
@@ -105,20 +122,4 @@ class YesNo(nextcord.ui.View):
     async def _no(self, button: nextcord.ui.Button, interaction: Interaction):
         await interaction.send(f"Okay, we won't do that then!", ephemeral=True)
         self.value = False
-        self.stop()
-
-
-# noinspection PyUnusedLocal
-class Cookie(nextcord.ui.View):
-    def __init__(self):
-        super().__init__()
-        self.value = None
-
-    @nextcord.ui.button(emoji="🍪", style=nextcord.ButtonStyle.blurple)
-    async def _cookie(self, button: nextcord.ui.Button, interaction: Interaction):
-        embed = nextcord.Embed(title="Cookie",
-                               description=f"{interaction.user.mention} have received a cookie.",
-                               color=interaction.user.color,
-                               timestamp=get_time())
-        self.value = True
         self.stop()
