@@ -399,6 +399,19 @@ class Music(commands.Cog, description="Music commands"):
                                        timestamp=database.get_time())
             await ctx.send(embed=no_tracks)
 
+    @commands.command(name="info_music", help="Info about the current track.")
+    async def info_music_command(self, ctx: commands.Context):
+        voice: wavelink.Player = ctx.voice_client
+        coming = await voice.queue.get_wait()
+        if voice.is_playing():
+            embed = nextcord.Embed(title="Music",
+                                   description=f"**{coming.title}**\n\n"
+                                   )
+            if isinstance(coming, wavelink.YouTubeTrack):
+                embed.set_thumbnail(url=coming.thumbnail)
+            embed.add_field(name="Author", value=coming.author)
+            await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Music(bot))
