@@ -66,7 +66,7 @@ class Info(commands.Cog, description="Gather information."):
                 await self.bot.close()
 
     @commands.command(name='unload_cog', help='Unload a cog.', hidden=True)
-    async def unload(self, ctx, cog):
+    async def unload_cog(self, ctx, cog):
         if ctx.author.id in database.get_owner_ids():
             try:
                 self.bot.unload_extension(f'cogs.{cog}')
