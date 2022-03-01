@@ -77,7 +77,7 @@ class Info(commands.Cog, description="Gather information."):
                 await ctx.send('The extension is already unloaded.')
 
     @commands.command(name='load_cog', help='Load a cog.', hidden=True)
-    async def load(self, ctx, cog):
+    async def load_cog(self, ctx, cog):
         if ctx.author.id in database.get_owner_ids():
             try:
                 self.bot.load_extension(f'cogs.{cog}')
@@ -88,7 +88,7 @@ class Info(commands.Cog, description="Gather information."):
                 await ctx.send('The extension is already loaded.')
 
     @commands.command(name='restart_cog', help='Restart a cog', hidden=True)
-    async def restart(self, ctx, cog):
+    async def restart_cog(self, ctx, cog):
         if ctx.author.id in database.get_owner_ids():
             try:
                 self.bot.reload_extension(f'cogs.{cog}')
