@@ -78,17 +78,18 @@ class Experience(commands.Cog, description="Virtual experience."):
 
     @commands.command(name='addexp', help="Add experience to somebody.", hidden=True)
     async def add_exp(self, ctx, user: nextcord.Member, amount: int):
-        with open("db/users.json", "r+") as f:
-            data = json.load(f)
-            data[str(user.id)] = data[str(user.id)] + amount
-            f.seek(0)
-            json.dump(data, f, indent=4)
-        new_exp_embed = nextcord.Embed(
-            title=f"Admin",
-            description=f"{ctx.author.name} has added {amount} experience to {user.name}.",
-            color=ctx.author.color
-        )
-        await ctx.send(embed=new_exp_embed)
+        if ctx.author.id in database.get_owner_ids():
+            with open("db/users.json", "r+") as f:
+                data = json.load(f)
+                data[str(user.id)] = data[str(user.id)] + amount
+                f.seek(0)
+                json.dump(data, f, indent=4)
+            new_exp_embed = nextcord.Embed(
+                title=f"Admin",
+                description=f"{ctx.author.name} has added {amount} experience to {user.name}.",
+                color=ctx.author.color
+            )
+            await ctx.send(embed=new_exp_embed)
 
     @commands.command(name='setexp', help="Set experience to somebody.", hidden=True)
     async def set_exp(self, ctx, user: nextcord.Member, amount: int):
