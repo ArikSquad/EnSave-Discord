@@ -1,11 +1,14 @@
-# Important
+# For the essential for discord bot.
 nextcord
 asyncio
 aiohttp
-pyparsing
 python-dotenv
-requests
 
-# Music commands
-Pynacl
+# These are for some commands the bot includes.
+requests
+better_profanity
+
+# These libraries are used in the music commands.
+PyNaCl
+PyParsing
 git+https://github.com/ArikSquad/Nextlink
