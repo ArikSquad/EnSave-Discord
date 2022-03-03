@@ -1,15 +1,16 @@
 # -----------------------------------------------------------
 # This is a discord bot by ArikSquad and you are viewing the source code of it.
 #
-# (C) 2022 MikArt
+# (C) 2021-2022 MikArt
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
 # -----------------------------------------------------------
+
+# The libraries that are for the bot.
 import datetime
 import json
 import os
 
-# Main imports that run the bot.
 import nextcord
 from dotenv import load_dotenv
 from nextcord.ext import commands
@@ -61,6 +62,7 @@ async def on_guild_join(guild):
     with open('db/prefixes.json', 'r') as f:
         prefixes = json.load(f)
 
+    # This is the default prefix. You can change it if you want to!
     prefixes[str(guild.id)] = '.'
     # Opens the prefixes.json to write the prefixes.
     with open('db/prefixes.json', 'w') as f:
@@ -70,6 +72,7 @@ async def on_guild_join(guild):
 # This even will be run after the bot leaves a guild.
 @bot.event
 async def on_guild_remove(guild):
+    # This command just removed the prefix from the database.
     with open('db/prefixes.json', 'r') as f:
         prefixes = json.load(f)
     prefixes.pop(str(guild.id))
@@ -77,7 +80,7 @@ async def on_guild_remove(guild):
         json.dump(prefixes, f, indent=4)
 
 
-# A command to change the prefix.
+# This is a command to change the prefix.
 @bot.command(name="prefix", help="Change the prefix of the guild.",
              aliases=["changeprefix"])
 @commands.has_permissions(administrator=True)
@@ -102,7 +105,7 @@ async def change_prefix(ctx, prefix):
 # This will be run, after the bot is ready.
 @bot.event
 async def on_ready():
-    # Print the information about the bot.
+    # Print some information about the bot.
     print("Logging in... at the time of " + str(datetime.datetime.now()))
     print(f'{color.WARNING}{bot.user} has connected to Discord!{color.END}')
     print(f"Name: {color.CYAN}{bot.user.name}{color.END}")
@@ -111,7 +114,7 @@ async def on_ready():
     print(f"Connected to {color.GREEN}{len(bot.guilds)} guilds{color.END}")
 
 
-# Load all the cogs.
+# Load all the cogs, then tell what have been loaded.
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         loader = filename[:-3]
