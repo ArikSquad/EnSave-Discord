@@ -77,11 +77,11 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
     # When a message is sent in a guild, add some xp to the user.
     @commands.Cog.listener()
     async def on_message(self, message):
-        time = 1
         with open('db/prefixes.json', 'r') as f:
             prefixes = json.load(f)
             prefix = prefixes[str(message.guild.id)]
-        if not message.content.startswith(prefix) and message.author.id != 812808865728954399:
+        if not message.content.startswith(prefix) and message.author.id != 812808865728954399 \
+                and not message.author.bot:
             await add_exp_on_message(message)
 
     @commands.command(name='level', help="Check your level.")
