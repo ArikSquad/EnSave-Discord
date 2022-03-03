@@ -13,6 +13,48 @@ from nextcord.ext import commands
 from utils import database
 
 
+async def add_exp_on_message(message):
+    with open('db/users.json', 'r') as f:
+        data = json.load(f)
+        if str(message.author.id) in data:
+            old_exp = data[str(message.author.id)]['experience']
+
+    amount = 3.5 * len(message.clean_content)
+    if len(message.clean_content) > 42:
+        amount = 142
+    with open('db/users.json', 'r+') as f:
+        data = json.load(f)
+        if str(message.author.id) not in data:
+            data[str(message.author.id)] = {}
+            data[str(message.author.id)]['experience'] = 0
+            data[str(message.author.id)]['level'] = 0
+        else:
+            if data[str(message.author.id)]['experience'] >= 1000:
+                data[str(message.author.id)]['experience'] = 0
+                data[str(message.author.id)]['level'] += 1
+            else:
+                data[str(message.author.id)]['experience'] += amount
+        f.seek(0)
+        json.dump(data, f, indent=4)
+
+    if data[str(message.author.id)]['experience'] > 50000 and not database.get_premium(message.author.id):
+        database.add_premium(message.author.id)
+        user_level = nextcord.Embed(
+            title=f"EnSave Leveling",
+            description='Congratulations, you have earned EnSave Premium!',
+            color=message.author.color
+        )
+        await message.channel.send(embed=user_level)
+    elif data[str(message.author.id)]['level'] > old_exp:
+        user_level = nextcord.Embed(
+            title=f"EnSave Leveling",
+            description=f"Congratulations, you have leveled "
+                        f"up to level {data[str(message.author.id)]['level']}!",
+            color=message.author.color
+        )
+        await message.channel.send(embed=user_level)
+
+
 class Experience(commands.Cog, description="Gain levels to get more commands!"):
     COG_EMOJI = "📈"
 
@@ -23,45 +65,7 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author is not self.bot.user:
-            with open('db/users.json', 'r') as f:
-                data = json.load(f)
-                if str(message.author.id) in data:
-                    old_exp = data[str(message.author.id)]['experience']
-
-            amount = 3.5 * len(message.clean_content)
-            if len(message.clean_content) > 42:
-                amount = 142
-            with open('db/users.json', 'r+') as f:
-                data = json.load(f)
-                if str(message.author.id) not in data:
-                    data[str(message.author.id)] = {}
-                    data[str(message.author.id)]['experience'] = 0
-                    data[str(message.author.id)]['level'] = 0
-                else:
-                    if data[str(message.author.id)]['experience'] >= 1000:
-                        data[str(message.author.id)]['experience'] = 0
-                        data[str(message.author.id)]['level'] += 1
-                    else:
-                        data[str(message.author.id)]['experience'] += amount
-                f.seek(0)
-                json.dump(data, f, indent=4)
-
-            if data[str(message.author.id)]['experience'] > 50000 and not database.get_premium(message.author.id):
-                database.add_premium(message.author.id)
-                user_level = nextcord.Embed(
-                    title=f"EnSave Leveling",
-                    description='Congratulations, you have earned EnSave Premium!',
-                    color=message.author.color
-                )
-                await message.channel.send(embed=user_level)
-            elif data[str(message.author.id)]['level'] > old_exp:
-                user_level = nextcord.Embed(
-                    title=f"EnSave Leveling",
-                    description=f"Congratulations, you have leveled "
-                                f"up to level {data[str(message.author.id)]['level']}!",
-                    color=message.author.color
-                )
-                await message.channel.send(embed=user_level)
+            await add_exp_on_message(message)
 
     @commands.command(name='level', help="Check your level.")
     async def level(self, ctx):
