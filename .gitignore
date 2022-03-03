@@ -3,6 +3,3 @@
 venv
 .github
 .env
-/db/premium.json
-/db/prefixes.json
-/db/users.json

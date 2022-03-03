@@ -13,32 +13,52 @@ from nextcord.ext import commands
 from utils import database
 
 
-class Experience(commands.Cog, description="Virtual experience."):
+class Experience(commands.Cog, description="Gain levels to get more commands!"):
     COG_EMOJI = "📈"
 
     def __init__(self, bot):
         self.bot = bot
 
+    # When a message is sent in a guild, add some xp to the user.
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author is not self.bot.user:
+            with open('db/users.json', 'r') as f:
+                data = json.load(f)
+                if str(message.author.id) in data:
+                    old_exp = data[str(message.author.id)]['experience']
+
             amount = 3.5 * len(message.clean_content)
             if len(message.clean_content) > 42:
                 amount = 142
             with open('db/users.json', 'r+') as f:
                 data = json.load(f)
                 if str(message.author.id) not in data:
-                    data[str(message.author.id)] = 0
+                    data[str(message.author.id)] = {}
+                    data[str(message.author.id)]['experience'] = 0
+                    data[str(message.author.id)]['level'] = 0
                 else:
-                    data[str(message.author.id)] = data[str(message.author.id)] + amount
+                    if data[str(message.author.id)]['experience'] >= 1000:
+                        data[str(message.author.id)]['experience'] = 0
+                        data[str(message.author.id)]['level'] += 1
+                    else:
+                        data[str(message.author.id)]['experience'] += amount
                 f.seek(0)
                 json.dump(data, f, indent=4)
 
-            if data[str(message.author.id)] > 50000 and not database.get_premium(message.author.id):
+            if data[str(message.author.id)]['experience'] > 50000 and not database.get_premium(message.author.id):
                 database.add_premium(message.author.id)
                 user_level = nextcord.Embed(
                     title=f"EnSave Leveling",
                     description='Congratulations, you have earned EnSave Premium!',
+                    color=message.author.color
+                )
+                await message.channel.send(embed=user_level)
+            elif data[str(message.author.id)]['level'] > old_exp:
+                user_level = nextcord.Embed(
+                    title=f"EnSave Leveling",
+                    description=f"Congratulations, you have leveled "
+                                f"up to level {data[str(message.author.id)]['level']}!",
                     color=message.author.color
                 )
                 await message.channel.send(embed=user_level)
@@ -47,7 +67,8 @@ class Experience(commands.Cog, description="Virtual experience."):
     async def level(self, ctx):
         with open("db/users.json", "r") as f:
             data = json.load(f)
-            exp = data[str(ctx.author.id)]
+            exp = data[str(ctx.author.id)]['experience']
+            level = data[str(ctx.author.id)]['level']
 
             user_level = nextcord.Embed(
                 title=f"{ctx.author.name}'s level",
@@ -55,7 +76,7 @@ class Experience(commands.Cog, description="Virtual experience."):
                 else "This person is still reaching premium.",
                 color=ctx.author.color
             )
-            user_level.add_field(name='Level', value=round(exp / 1000), inline=False)
+            user_level.add_field(name='Level', value=level, inline=False)
             user_level.add_field(name='Experience', value=exp, inline=False)
 
             await ctx.send(embed=user_level)

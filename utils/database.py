@@ -27,23 +27,23 @@ def get_owner_ids():
 
 def get_premium(user_id):
     try:
-        with open('db/premium.json', 'r') as f:
+        with open('db/users.json', 'r') as f:
             data = json.load(f)
-        if data[str(user_id)] == "true":
+        if data[str(user_id)]['premium'] == "true":
             return True
         else:
             return False
     except KeyError:
-        with open('db/premium.json', 'w') as f:
-            data[str(user_id)] = "false"
+        with open('db/users.json', 'w') as f:
+            data[str(user_id)]['premium'] = "false"
             json.dump(data, f, indent=4)
         return False
 
 
 def add_premium(user_id):
-    with open('db/premium.json', 'w') as f:
+    with open('db/users.json', 'w') as f:
         data = json.load(f)
-        data[str(user_id)] = "true"
+        data[str(user_id)]['premium'] = "true"
         json.dump(data, f, indent=4)
     return False
 
