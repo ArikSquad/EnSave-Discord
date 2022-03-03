@@ -159,6 +159,32 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
             )
             await ctx.send(embed=new_level_embed)
 
+    @commands.command(name='getlevel', help="Get a users level.", hidden=True)
+    async def get_level(self, ctx, user: nextcord.Member):
+        if ctx.author.id in database.get_owner_ids():
+            with open("db/users.json", "r") as f:
+                data = json.load(f)
+                level = data[str(user.id)]['level']
+            level_embed = nextcord.Embed(
+                title=f"Admin",
+                description=f"{user.name}'s level is {level}.",
+                color=ctx.author.color
+            )
+            await ctx.send(embed=level_embed)
+
+    @commands.command(name='getexp', help="Get a users experience.", hidden=True)
+    async def get_exp(self, ctx, user: nextcord.Member):
+        if ctx.author.id in database.get_owner_ids():
+            with open("db/users.json", "r") as f:
+                data = json.load(f)
+                exp = data[str(user.id)]['experience']
+            exp_embed = nextcord.Embed(
+                title=f"Admin",
+                description=f"{user.name}'s experience is {exp}.",
+                color=ctx.author.color
+            )
+            await ctx.send(embed=exp_embed)
+
 
 def setup(bot):
     bot.add_cog(Experience(bot))
