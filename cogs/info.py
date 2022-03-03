@@ -24,8 +24,8 @@ class Info(commands.Cog, description="Gather information."):
     async def info(self, ctx, user: nextcord.User = None):
         if user is None and ctx.author.id in database.get_owners_id():
             embed = nextcord.Embed(title="Information", color=ctx.author.color)
-            embed.add_field(name="Authors", value=str(database.get_owners_discord())[1:-1])
-            embed.add_field(name="Author IDs", value=str(database.get_owners_id())[1:-1])
+            embed.add_field(name="Authors", value=str(database.get_owners_discord())[1:-1], inline=False)
+            embed.add_field(name="Author IDs", value=str(database.get_owners_id())[1:-1], inline=False)
             embed.add_field(name="Library", value="nextcord")
             embed.add_field(name="Version", value=nextcord.__version__)
             embed.add_field(name="Guilds", value=len(self.bot.guilds))
@@ -41,7 +41,7 @@ class Info(commands.Cog, description="Gather information."):
             embed = nextcord.Embed(title="Information", color=user.color)
             embed.set_thumbnail(url=user.avatar.url)
             embed.add_field(name="Username", value=user.name)
-            embed.add_field(name="Discriminator", value=user.discriminator)
+            embed.add_field(name="Tag", value=user.discriminator)
             embed.add_field(name="ID", value=user.id, inline=False)
             embed.add_field(name="Created at", value=user.created_at.strftime("%d/%m/%Y %H:%M:%S"), inline=False)
             embed.add_field(name="Experience", value=exp if exp is not None else "None")
