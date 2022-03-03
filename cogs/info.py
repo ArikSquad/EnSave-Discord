@@ -19,18 +19,6 @@ class Info(commands.Cog, description="Gather information."):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        if message.author.id == self.bot.user.id:
-            return
-        # Write the username to the user.json.
-        with open('db/users.json', 'r+') as f:
-            data = json.load(f)
-            # Check if the username is in the file inside message.author.id
-            if str(message.author.id) not in data:
-                data[str(message.author.id)]['username'] = str(message.author.name)
-                json.dump(data, f, indent=4)
-
     @commands.command(name="info", aliases=["information", "about"], help="Gather information about the bot.",
                       hidden=True)
     async def info(self, ctx, user: nextcord.User = None):
