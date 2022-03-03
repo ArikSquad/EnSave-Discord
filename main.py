@@ -15,8 +15,8 @@ import nextcord
 from dotenv import load_dotenv
 from nextcord.ext import commands
 
-# Coloured text from color file.
-from utils import color
+# Coloured text from color file and Prefix from database file.
+from utils import color, database
 
 # To change the token create a file named .env and write the token.
 # Example usage: TOKEN='(your token)'
@@ -24,29 +24,12 @@ load_dotenv()
 token = os.getenv('token')
 
 
-# Gets prefix in db/prefixes.json.
-def get_prefix(message):
-    try:
-        with open('db/prefixes.json', 'r') as f:
-            prefixes = json.load(f)
-
-        return prefixes[str(message.guild.id)]
-    except KeyError:
-        with open('db/prefixes.json', 'r') as f:
-            prefixes = json.load(f)
-
-        prefixes[str(message.guild.id)] = '.'
-
-        with open('db/prefixes.json', 'w') as f:
-            json.dump(prefixes, f, indent=4)
-
-
 # Create the activity for Discord. Idle looks cool.
 activity = nextcord.Activity(type=nextcord.ActivityType.watching,
                              name=f'fast updates', status=nextcord.Status.idle)
 
 # Selects all intents and prefix, case-insensitive, description.
-bot = commands.Bot(command_prefix=get_prefix,
+bot = commands.Bot(command_prefix=database.get_prefix,
                    case_insensitive=True,
                    description="Utilities Bot.",
                    activity=activity,

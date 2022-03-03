@@ -29,6 +29,22 @@ def get_owners_id():
     return [549152470194978817, 537237654207725568]
 
 
+def get_prefix(ctx, message):
+    try:
+        with open('db/prefixes.json', 'r') as f:
+            prefixes = json.load(f)
+
+        return prefixes[str(message.guild.id)]
+    except KeyError:
+        with open('db/prefixes.json', 'r') as f:
+            prefixes = json.load(f)
+
+        prefixes[str(message.guild.id)] = '.'
+
+        with open('db/prefixes.json', 'w') as f:
+            json.dump(prefixes, f, indent=4)
+
+
 def get_premium(user_id):
     try:
         with open('db/users.json', 'r') as f:
@@ -39,7 +55,6 @@ def get_premium(user_id):
             return False
     except KeyError:
         with open('db/users.json', 'w') as f:
-            data[str(user_id)] = {}
             data[str(user_id)]['premium'] = "false"
             json.dump(data, f, indent=4)
         return False
@@ -49,6 +64,7 @@ def set_premium(user_id, premium: bool):
     with open('db/users.json', 'w') as f:
         data = json.load(f)
         data[str(user_id)]['premium'] = str(premium).lower()
+        f.seek(0)
         json.dump(data, f, indent=4)
     return False
 
