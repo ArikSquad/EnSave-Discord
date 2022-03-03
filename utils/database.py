@@ -35,15 +35,16 @@ def get_premium(user_id):
             return False
     except KeyError:
         with open('db/users.json', 'w') as f:
+            data[str(user_id)] = {}
             data[str(user_id)]['premium'] = "false"
             json.dump(data, f, indent=4)
         return False
 
 
-def add_premium(user_id):
+def set_premium(user_id, premium: bool):
     with open('db/users.json', 'w') as f:
         data = json.load(f)
-        data[str(user_id)]['premium'] = "true"
+        data[str(user_id)]['premium'] = str(premium).lower()
         json.dump(data, f, indent=4)
     return False
 

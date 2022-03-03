@@ -5,6 +5,7 @@
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
 # -----------------------------------------------------------
+import json
 
 import nextcord
 import nextcord.utils
@@ -18,10 +19,22 @@ class Info(commands.Cog, description="Gather information."):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.author.id == self.bot.user.id:
+            return
+        # Write the username to the user.json.
+        with open('db/users.json', 'r+') as f:
+            data = json.load(f)
+            # Check if the username is in the file inside message.author.id
+            if str(message.author.id) not in data:
+                data[str(message.author.id)]['username'] = str(message.author.name)
+                json.dump(data, f, indent=4)
+
     @commands.command(name="info", aliases=["information", "about"], help="Gather information about the bot.",
                       hidden=True)
-    async def info(self, ctx):
-        if ctx.author.id in database.get_owner_ids():
+    async def info(self, ctx, user: nextcord.User = None):
+        if user is None and ctx.author.id in database.get_owner_ids():
             embed = nextcord.Embed(title="Information", color=ctx.author.color)
             embed.add_field(name="Author", value="ArikSquad#6222")
             embed.add_field(name="Library", value="nextcord")
@@ -30,7 +43,24 @@ class Info(commands.Cog, description="Gather information."):
             embed.add_field(name="Users", value=len(self.bot.users))
             embed.add_field(name="Latency", value=f"{self.bot.latency * 1000:.2f}ms")
 
-            await ctx.send(embed=embed)
+            return await ctx.send(embed=embed)
+        elif user is not None and ctx.author.id in database.get_owner_ids():
+            with open("db/users.json", "r") as f:
+                data = json.load(f)
+                if user.id in data:
+                    exp = data[str(ctx.author.id)]['experience']
+                    level = data[str(ctx.author.id)]['level']
+            embed = nextcord.Embed(title="Information", color=ctx.author.color)
+            embed.set_thumbnail(url=user.avatar.url)
+            embed.set_image(url=user.banner.url)
+            embed.add_field(name="Username", value=user.name)
+            embed.add_field(name="Discriminator", value=user.discriminator)
+            embed.add_field(name="ID", value=user.id)
+            embed.add_field(name="Created at", value=user.created_at.strftime("%d/%m/%Y %H:%M:%S"))
+            embed.add_field(name="Color", value=f"{user.color.value:0>6x}")
+            embed.add_field(name="Experience", value=exp if exp is not None else "None")
+            embed.add_field(name="Level", value=level if level is not None else "None")
+            embed.add_field(name="Premium", value="Yes" if database.get_premium(user.id) is True else "No")
 
     @commands.command(name="eval", help="Evaluate code", hidden=True)
     async def eval(self, ctx, *, code):
@@ -101,7 +131,7 @@ class Info(commands.Cog, description="Gather information."):
     @commands.command(name='add_premium', help='Add a premium user', hidden=True)
     async def add_premium(self, ctx, user: nextcord.Member):
         if ctx.author.id in database.get_owner_ids():
-            database.add_premium(user.id)
+            database.set_premium(user.id, True)
             await ctx.send(f"{user.mention} is now a premium user.")
 
 

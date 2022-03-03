@@ -25,7 +25,6 @@ async def add_exp_on_message(message):
     with open('db/users.json', 'r+') as f:
         data = json.load(f)
         if str(message.author.id) not in data:
-            data[str(message.author.id)] = {}
             data[str(message.author.id)]['experience'] = 0
             data[str(message.author.id)]['level'] = 0
         else:
@@ -38,7 +37,7 @@ async def add_exp_on_message(message):
         json.dump(data, f, indent=4)
 
     if data[str(message.author.id)]['experience'] > 50000 and not database.get_premium(message.author.id):
-        database.add_premium(message.author.id)
+        database.set_premium(message.author.id, True)
         user_level = nextcord.Embed(
             title=f"EnSave Leveling",
             description='Congratulations, you have earned EnSave Premium!',
@@ -89,16 +88,15 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
     async def leaderboard(self, ctx):
         with open("db/users.json", "r") as f:
             data = json.load(f)
-            data = sorted(data.items(), key=lambda x: x[1], reverse=True)
-            data = data[:10]
+            users = sorted(data.items(), key=lambda x: x[1]['experience'], reverse=True)
             leaderboard = nextcord.Embed(
-                title="Leaderboard",
-                description="This is the leaderboard.",
+                title=f"{ctx.author.name}'s level",
+                description="This user has premium." if database.get_premium(ctx.author.id)
+                else "This person is still reaching premium.",
                 color=ctx.author.color
             )
-            for i, (user, exp) in enumerate(data):
-                leaderboard.add_field(name=f"{i + 1}. {self.bot.get_user(int(user)).name}",
-                                      value=round(exp) if exp > 1000 else exp, inline=True)
+            for i, user in enumerate(users):
+                leaderboard.add_field(name=f"{i + 1}. {user[0]}", value=user[1]['experience'], inline=False)
             await ctx.send(embed=leaderboard)
 
     @commands.command(name='addexp', help="Add experience to somebody.", hidden=True)
@@ -106,7 +104,7 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
         if ctx.author.id in database.get_owner_ids():
             with open("db/users.json", "r+") as f:
                 data = json.load(f)
-                data[str(user.id)] = data[str(user.id)] + amount
+                data[str(user.id)]['experience'] += amount
                 f.seek(0)
                 json.dump(data, f, indent=4)
             new_exp_embed = nextcord.Embed(
@@ -121,7 +119,7 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
         if ctx.author.id in database.get_owner_ids():
             with open("db/users.json", "r+") as f:
                 data = json.load(f)
-                data[str(user.id)] = amount
+                data[str(user.id)]['experience'] = amount
                 f.seek(0)
                 json.dump(data, f, indent=4)
             new_exp_embed = nextcord.Embed(
@@ -130,6 +128,36 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
                 color=ctx.author.color
             )
             await ctx.send(embed=new_exp_embed)
+
+    @commands.command(name='setlevel', help="Set level to somebody.", hidden=True)
+    async def set_level(self, ctx, user: nextcord.Member, amount: int):
+        if ctx.author.id in database.get_owner_ids():
+            with open("db/users.json", "r+") as f:
+                data = json.load(f)
+                data[str(user.id)]['level'] = amount
+                f.seek(0)
+                json.dump(data, f, indent=4)
+            new_level_embed = nextcord.Embed(
+                title=f"Admin",
+                description=f"{ctx.author.name} has set {user.name}'s level to {amount}.",
+                color=ctx.author.color
+            )
+            await ctx.send(embed=new_level_embed)
+
+    @commands.command(name='addlevel', help="Add levels to somebody.", hidden=True)
+    async def add_level(self, ctx, user: nextcord.Member, amount: int):
+        if ctx.author.id in database.get_owner_ids():
+            with open("db/users.json", "r+") as f:
+                data = json.load(f)
+                data[str(user.id)]['level'] += amount
+                f.seek(0)
+                json.dump(data, f, indent=4)
+            new_level_embed = nextcord.Embed(
+                title=f"Admin",
+                description=f"{ctx.author.name} has added {amount} levels to {user.name}.",
+                color=ctx.author.color
+            )
+            await ctx.send(embed=new_level_embed)
 
 
 def setup(bot):
