@@ -19,19 +19,13 @@ async def add_exp_on_message(message):
         amount = 75
     with open('db/users.json', 'r+') as f:
         data = json.load(f)
-        if str(message.author.id) not in data:
-            data[str(message.author.id)] = {}
-            data[str(message.author.id)]['experience'] = 1
-            data[str(message.author.id)]['level'] = 0
-            data[str(message.author.id)]['sent'] = 1
+        if data[str(message.author.id)]['experience'] > 1000:
+            data[str(message.author.id)]['experience'] = 0
+            data[str(message.author.id)]['level'] = data[str(message.author.id)]['level'] + 1
+            data[str(message.author.id)]['sent'] = 0
         else:
-            if data[str(message.author.id)]['experience'] > 1000:
-                data[str(message.author.id)]['experience'] = 0
-                data[str(message.author.id)]['level'] = data[str(message.author.id)]['level'] + 1
-                data[str(message.author.id)]['sent'] = 0
-            else:
-                data[str(message.author.id)]['experience'] = data[str(message.author.id)]['experience'] + amount
-            f.seek(0)
+            data[str(message.author.id)]['experience'] = data[str(message.author.id)]['experience'] + amount
+        f.seek(0)
         json.dump(data, f, indent=4, sort_keys=True)
 
     if data[str(message.author.id)]['level'] > 50 and not database.get_premium(message.author.id):
@@ -81,23 +75,24 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
             prefixes = json.load(f)
             prefix = prefixes[str(message.guild.id)]
         if not message.content.startswith(prefix) and message.author.id != 812808865728954399 \
-                and not message.author.bot:
+                and not message.author.bot and message.guild.id == 770634445370687519:
             await add_exp_on_message(message)
 
     @commands.command(name='level', help="Check your level.")
     async def level(self, ctx):
-        user_level = nextcord.Embed(
-            title=f"{ctx.author.name}'s level",
-            description="This user has gotten premium." if database.get_premium(ctx.author.id)
-            else "This person is still reaching premium.",
-            color=ctx.author.color
-        )
-        user_level.add_field(name='Level', value=get_level(ctx), inline=False)
-        user_level.add_field(name='Experience', value=get_level(ctx), inline=False)
+        if ctx.guild.id == 770634445370687519:
+            user_level = nextcord.Embed(
+                title=f"{ctx.author.name}'s level",
+                description="This user has gotten premium." if database.get_premium(ctx.author.id)
+                else "This person is still reaching premium.",
+                color=ctx.author.color
+            )
+            user_level.add_field(name='Level', value=get_level(ctx), inline=False)
+            user_level.add_field(name='Experience', value=get_level(ctx), inline=False)
 
-        await ctx.send(embed=user_level)
+            await ctx.send(embed=user_level)
 
-    @commands.command(name='addexp', help="Add experience to somebody.", hidden=True)
+    @commands.command(name='addexp', help="Add experience to somebody.", hidden=True, guild_ids=[770634445370687519])
     async def add_exp(self, ctx, user: nextcord.Member, amount: int):
         if ctx.author.id in database.get_owners_id():
             with open("db/users.json", "r+") as f:

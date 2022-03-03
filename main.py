@@ -25,8 +25,8 @@ token = os.getenv('token')
 
 
 # Create the activity for Discord. Idle looks cool.
-activity = nextcord.Activity(type=nextcord.ActivityType.watching,
-                             name=f'fast updates', status=nextcord.Status.idle)
+activity = nextcord.Activity(type=nextcord.ActivityType.custom,
+                             name=f'updating...', status=nextcord.Status.idle)
 
 # Selects all intents and prefix, case-insensitive, description.
 bot = commands.Bot(command_prefix=database.get_prefix,
@@ -94,6 +94,18 @@ async def on_ready():
     print(f"ID: {color.CYAN}{bot.user.id}{color.END}")
     print(f'{color.BOLD}###########################################{color.END}')
     print(f"Connected to {color.GREEN}{len(bot.guilds)} guilds{color.END}")
+
+    with open("db/users.json", "r") as f:
+        data = json.load(f)
+    guild = bot.get_guild(770634445370687519)
+    async for member in guild.fetch_members():
+        if str(member.id) not in data and not member.bot:
+            data[str(member.id)] = {}
+            data[str(member.id)]["experience"] = 0
+            data[str(member.id)]["level"] = 0
+            data[str(member.id)]["sent"] = 1
+    with open("db/users.json", 'w') as f:
+        json.dump(data, f, indent=4)
 
 
 # Load all the cogs, then tell what have been loaded.
