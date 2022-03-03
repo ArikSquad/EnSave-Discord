@@ -75,7 +75,7 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
 
             user_level = nextcord.Embed(
                 title=f"{ctx.author.name}'s level",
-                description="This user has premium." if database.get_premium(ctx.author.id)
+                description="This user has gotten premium." if database.get_premium(ctx.author.id)
                 else "This person is still reaching premium.",
                 color=ctx.author.color
             )
