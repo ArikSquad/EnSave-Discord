@@ -24,7 +24,7 @@ load_dotenv()
 token = os.getenv('token')
 
 
-# Gets prefix in db/prefixes.json. PyUnusedLocal for the ctx warning.
+# Gets prefix in db/prefixes.json.
 def get_prefix(message):
     try:
         with open('db/prefixes.json', 'r') as f:
