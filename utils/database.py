@@ -21,11 +21,11 @@ def get_guild_ids():
     return [770634445370687519]
 
 
-def get_owner_discord():
+def get_owners_discord():
     return ["ArikSquad#6222", "Mhilkos#7676"]
 
 
-def get_owner_ids():
+def get_owners_id():
     return [549152470194978817, 537237654207725568]
 
 
