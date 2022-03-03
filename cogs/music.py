@@ -72,7 +72,7 @@ class Music(commands.Cog, description="Music commands"):
                                                      f'({search.uri})',
                                          color=ctx.author.color,
                                          timestamp=database.get_time())
-            now_playing.set_image(url=search.thumbnail)
+            now_playing.set_thumbnail(url=search.thumbnail)
             now_playing.add_field(name="Author", value=f"{search.author}")
 
             await voice.play(search)
@@ -91,7 +91,7 @@ class Music(commands.Cog, description="Music commands"):
                                                      f"({search.uri}) to the queue.",
                                          color=ctx.author.color,
                                          timestamp=database.get_time())
-            added_queue.set_image(url=search.thumbnail)
+            added_queue.set_thumbnail(url=search.thumbnail)
             await voice.queue.put_wait(search)
             await ctx.reply(embed=added_queue, view=view)
             await view.wait()
