@@ -22,9 +22,10 @@ class Info(commands.Cog, description="Gather information."):
     @commands.command(name="info", aliases=["information", "about"], help="Gather information about the bot.",
                       hidden=True)
     async def info(self, ctx, user: nextcord.User = None):
-        if user is None and ctx.author.id in database.get_owner_ids():
+        if user is None and ctx.author.id in database.get_owners_id():
             embed = nextcord.Embed(title="Information", color=ctx.author.color)
-            embed.add_field(name="Author", value="ArikSquad#6222")
+            embed.add_field(name="Authors", value=str(database.get_owners_discord())[1:-1])
+            embed.add_field(name="Author IDs", value=str(database.get_owners_id())[1:-1])
             embed.add_field(name="Library", value="nextcord")
             embed.add_field(name="Version", value=nextcord.__version__)
             embed.add_field(name="Guilds", value=len(self.bot.guilds))
@@ -32,27 +33,26 @@ class Info(commands.Cog, description="Gather information."):
             embed.add_field(name="Latency", value=f"{self.bot.latency * 1000:.2f}ms")
 
             return await ctx.send(embed=embed)
-        elif user is not None and ctx.author.id in database.get_owner_ids():
+        elif user is not None and ctx.author.id in database.get_owners_id():
             with open("db/users.json", "r") as f:
                 data = json.load(f)
                 exp = data[str(ctx.author.id)]['experience']
                 level = data[str(ctx.author.id)]['level']
-            embed = nextcord.Embed(title="Information", color=ctx.author.color)
+            embed = nextcord.Embed(title="Information", color=user.color)
             embed.set_thumbnail(url=user.avatar.url)
             embed.add_field(name="Username", value=user.name)
             embed.add_field(name="Discriminator", value=user.discriminator)
-            embed.add_field(name="ID", value=user.id)
-            embed.add_field(name="Created at", value=user.created_at.strftime("%d/%m/%Y %H:%M:%S"))
-            embed.add_field(name="Color", value=f"{user.color.value:0>6x}")
+            embed.add_field(name="ID", value=user.id, inline=False)
+            embed.add_field(name="Created at", value=user.created_at.strftime("%d/%m/%Y %H:%M:%S"), inline=False)
             embed.add_field(name="Experience", value=exp if exp is not None else "None")
             embed.add_field(name="Level", value=level if level is not None else "None")
-            embed.add_field(name="Premium", value="Yes" if database.get_premium(user.id) is True else "No")
+            embed.add_field(name="Premium", value="Yes" if database.get_premium(user.id) is True else "No", inline=False)
 
             await ctx.send(embed=embed)
 
     @commands.command(name="eval", help="Evaluate code", hidden=True)
     async def eval(self, ctx, *, code):
-        if ctx.author.id in database.get_owner_ids():
+        if ctx.author.id in database.get_owners_id():
             try:
                 result = eval(code)
                 if result is not None:
@@ -62,7 +62,7 @@ class Info(commands.Cog, description="Gather information."):
 
     @commands.command(name="exec", help="Execute code", hidden=True)
     async def exec(self, ctx, *, code):
-        if ctx.author.id in database.get_owner_ids():
+        if ctx.author.id in database.get_owners_id():
             try:
                 exec(code)
             except Exception as e:
@@ -70,7 +70,7 @@ class Info(commands.Cog, description="Gather information."):
 
     @commands.command(name="shutdown", help="Shutdown the bot.", hidden=True)
     async def shutdown(self, ctx):
-        if ctx.author.id in database.get_owner_ids():
+        if ctx.author.id in database.get_owners_id():
             view = database.YesNo()
             sure = nextcord.Embed(title="Are you sure?", description="This will logout "
                                                                      "from discord and exit the python program.",
@@ -85,7 +85,7 @@ class Info(commands.Cog, description="Gather information."):
 
     @commands.command(name='unload_cog', help='Unload a cog.', hidden=True)
     async def unload_cog(self, ctx, cog):
-        if ctx.author.id in database.get_owner_ids():
+        if ctx.author.id in database.get_owners_id():
             try:
                 self.bot.unload_extension(f'cogs.{cog}')
                 await ctx.send(f"`{cog}` unloaded.")
@@ -96,7 +96,7 @@ class Info(commands.Cog, description="Gather information."):
 
     @commands.command(name='load_cog', help='Load a cog.', hidden=True)
     async def load_cog(self, ctx, cog):
-        if ctx.author.id in database.get_owner_ids():
+        if ctx.author.id in database.get_owners_id():
             try:
                 self.bot.load_extension(f'cogs.{cog}')
                 await ctx.send(f'Loaded extension {profanity.censor(cog)}')
@@ -107,7 +107,7 @@ class Info(commands.Cog, description="Gather information."):
 
     @commands.command(name='restart_cog', help='Restart a cog', hidden=True)
     async def restart_cog(self, ctx, cog):
-        if ctx.author.id in database.get_owner_ids():
+        if ctx.author.id in database.get_owners_id():
             try:
                 self.bot.reload_extension(f'cogs.{cog}')
                 await ctx.send(f"Successfully reloaded {cog}.")
@@ -118,7 +118,7 @@ class Info(commands.Cog, description="Gather information."):
 
     @commands.command(name='add_premium', help='Add a premium user', hidden=True)
     async def add_premium(self, ctx, user: nextcord.Member):
-        if ctx.author.id in database.get_owner_ids():
+        if ctx.author.id in database.get_owners_id():
             database.set_premium(user.id, True)
             await ctx.send(f"{user.mention} is now a premium user.")
 
