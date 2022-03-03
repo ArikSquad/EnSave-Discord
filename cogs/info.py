@@ -35,12 +35,10 @@ class Info(commands.Cog, description="Gather information."):
         elif user is not None and ctx.author.id in database.get_owner_ids():
             with open("db/users.json", "r") as f:
                 data = json.load(f)
-                if user.id in data:
-                    exp = data[str(ctx.author.id)]['experience']
-                    level = data[str(ctx.author.id)]['level']
+                exp = data[str(ctx.author.id)]['experience']
+                level = data[str(ctx.author.id)]['level']
             embed = nextcord.Embed(title="Information", color=ctx.author.color)
             embed.set_thumbnail(url=user.avatar.url)
-            embed.set_image(url=user.banner.url)
             embed.add_field(name="Username", value=user.name)
             embed.add_field(name="Discriminator", value=user.discriminator)
             embed.add_field(name="ID", value=user.id)
@@ -49,6 +47,8 @@ class Info(commands.Cog, description="Gather information."):
             embed.add_field(name="Experience", value=exp if exp is not None else "None")
             embed.add_field(name="Level", value=level if level is not None else "None")
             embed.add_field(name="Premium", value="Yes" if database.get_premium(user.id) is True else "No")
+
+            await ctx.send(embed=embed)
 
     @commands.command(name="eval", help="Evaluate code", hidden=True)
     async def eval(self, ctx, *, code):
