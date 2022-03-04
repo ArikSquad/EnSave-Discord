@@ -13,6 +13,10 @@ import nextcord
 from nextcord import Interaction
 
 
+def get_bot_name():
+    return "EnSave"
+
+
 def get_time():
     return datetime.datetime.utcnow()
 
