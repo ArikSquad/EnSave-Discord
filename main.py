@@ -15,8 +15,8 @@ import nextcord
 from dotenv import load_dotenv
 from nextcord.ext import commands
 
-# Coloured text from color file and Prefix from database file.
-from utils import color, database
+# Coloured text from logger file and Prefix from database file.
+from utils import logger, database
 
 # To change the token create a file named .env and write the token.
 # Example usage: TOKEN='(your token)'
@@ -89,11 +89,11 @@ async def change_prefix(ctx, prefix):
 async def on_ready():
     # Print some information about the bot.
     print("Logging in... at the time of " + str(datetime.datetime.now()))
-    print(f'{color.WARNING}{bot.user} has connected to Discord!{color.END}')
-    print(f"Name: {color.CYAN}{bot.user.name}{color.END}")
-    print(f"ID: {color.CYAN}{bot.user.id}{color.END}")
-    print(f'{color.BOLD}###########################################{color.END}')
-    print(f"Connected to {color.GREEN}{len(bot.guilds)} guilds{color.END}")
+    print(f'{logger.WARNING}{bot.user} has connected to Discord!{logger.END}')
+    print(f"Name: {logger.CYAN}{bot.user.name}{logger.END}")
+    print(f"ID: {logger.CYAN}{bot.user.id}{logger.END}")
+    print(f'{logger.BOLD}###########################################{logger.END}')
+    print(f"Connected to {logger.GREEN}{len(bot.guilds)} guilds{logger.END}")
 
     with open("db/users.json", "r") as f:
         data = json.load(f)
@@ -113,7 +113,7 @@ for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         loader = filename[:-3]
         bot.load_extension(f'cogs.{loader}')
-        print(f'{color.HEADER}{loader.capitalize()} has been loaded{color.END}')
+        print(f'{logger.HEADER}{loader.capitalize()} has been loaded{logger.END}')
 
 # Run the bot with token (.env file)
 if __name__ == "__main__":
