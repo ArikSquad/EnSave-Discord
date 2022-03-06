@@ -17,7 +17,7 @@
     "549152470194978817": {
         "experience": 17.5,
         "level": 0,
-        "premium": "true",
+        "premium": true,
         "sent": 1
     },
     "566979275031314442": {
@@ -138,8 +138,8 @@
     "913758403929727006": {
         "experience": 0,
         "level": 0,
-        "sent": 1,
-        "premium": "true"
+        "premium": true,
+        "sent": 1
     },
     "948132996488253540": {
         "experience": 0,
