@@ -15,7 +15,7 @@ from nextcord.ext import commands
 from utils import database
 
 
-class Info(commands.Cog, description="Gather information."):
+class Admin(commands.Cog, description="Gather information."):
     def __init__(self, bot):
         self.bot = bot
 
@@ -46,8 +46,8 @@ class Info(commands.Cog, description="Gather information."):
             embed.add_field(name="Created at", value=user.created_at.strftime("%d/%m/%Y %H:%M:%S"), inline=False)
             embed.add_field(name="Experience", value=exp if exp is not None else "None")
             embed.add_field(name="Level", value=level if level is not None else "None")
-            embed.add_field(name="Premium", value="Yes" if database.get_premium(user.id) is True else "No", inline=False)
-
+            embed.add_field(name="Premium", value="Yes" if database.get_premium(user.id) is True else "No",
+                            inline=False)
             await ctx.send(embed=embed)
 
     @commands.command(name="eval", help="Evaluate code", hidden=True)
@@ -116,12 +116,12 @@ class Info(commands.Cog, description="Gather information."):
             except commands.ExtensionFailed:
                 await ctx.send('The extension failed.')
 
-    @commands.command(name='add_premium', help='Add a premium user', hidden=True)
-    async def add_premium(self, ctx, user: nextcord.Member):
+    @commands.command(name='set_premium', help='Set premium state of a user.', hidden=True)
+    async def set_premium(self, ctx, user: nextcord.Member, state: bool = True):
         if ctx.author.id in database.get_owners_id():
-            database.set_premium(user.id, True)
+            database.set_premium(user.id, state)
             await ctx.send(f"{user.mention} is now a premium user.")
 
 
 def setup(bot):
-    bot.add_cog(Info(bot))
+    bot.add_cog(Admin(bot))
