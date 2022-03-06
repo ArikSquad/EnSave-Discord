@@ -60,7 +60,7 @@ def get_premium(user_id):
     except KeyError:
         with open('db/users.json', 'w') as f:
             data[str(user_id)]['premium'] = "false"
-            json.dump(data, f, indent=4)
+            json.dump(data, f, indent=4, sort_keys=True)
         return False
 
 
@@ -69,7 +69,7 @@ def set_premium(user_id, premium: bool):
         data = json.load(f)
         data[str(user_id)]['premium'] = str(premium).lower()
         f.seek(0)
-        json.dump(data, f, indent=4)
+        json.dump(data, f, indent=4, sort_keys=True)
     return False
 
 

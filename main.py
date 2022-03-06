@@ -105,7 +105,7 @@ async def on_ready():
             data[str(member.id)]["level"] = 0
             data[str(member.id)]["sent"] = 1
     with open("db/users.json", 'w') as f:
-        json.dump(data, f, indent=4)
+        json.dump(data, f, indent=4, sort_keys=True)
 
 
 # Load all the cogs, then tell what have been loaded.
