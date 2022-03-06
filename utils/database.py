@@ -53,13 +53,13 @@ def get_premium(user_id):
     try:
         with open('db/users.json', 'r') as f:
             data = json.load(f)
-        if data[str(user_id)]['premium'] == "true":
+        if data[str(user_id)]['premium']:
             return True
         else:
             return False
     except KeyError:
         with open('db/users.json', 'w') as f:
-            data[str(user_id)]['premium'] = "false"
+            data[str(user_id)]['premium'] = False
             json.dump(data, f, indent=4, sort_keys=True)
         return False
 
@@ -67,7 +67,7 @@ def get_premium(user_id):
 def set_premium(user_id, premium: bool):
     with open('db/users.json', 'w') as f:
         data = json.load(f)
-        data[str(user_id)]['premium'] = str(premium).lower()
+        data[str(user_id)]['premium'] = premium
         f.seek(0)
         json.dump(data, f, indent=4, sort_keys=True)
     return False
