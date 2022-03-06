@@ -34,6 +34,7 @@ class Music(commands.Cog, description="Music commands"):
     async def on_wavelink_node_ready(self, node: wavelink.Node):
         print(f" Wavelink node: {node.identifier} is ready.")
 
+    # noinspection PyUnusedLocal
     @commands.Cog.listener()
     async def on_wavelink_track_end(self, player: wavelink.Player, track, reason):
         if not self.loop:
