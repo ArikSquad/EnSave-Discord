@@ -81,36 +81,6 @@ def premium_embed(ctx, title: str):
 
 
 # noinspection PyUnusedLocal
-class PauseStop(nextcord.ui.View):
-    def __init__(self):
-        super().__init__()
-        self.value = None
-
-    async def on_timeout(self):
-        self.clear_items()
-
-    @nextcord.ui.button(label="Pause", style=nextcord.ButtonStyle.blurple)
-    async def _pause(self, button: nextcord.ui.Button, interaction: Interaction):
-        paused = nextcord.Embed(title="Music",
-                                description=f"The playback has been paused.",
-                                color=interaction.user.color,
-                                timestamp=get_time())
-        await interaction.send(embed=paused)
-        self.value = "pause"
-        self.stop()
-
-    @nextcord.ui.button(label="Stop", style=nextcord.ButtonStyle.danger)
-    async def _stop(self, button: nextcord.ui.Button, interaction: Interaction):
-        stopped = nextcord.Embed(title="Music",
-                                 description=f"The playback has been stopped.",
-                                 color=interaction.user.color,
-                                 timestamp=get_time())
-        await interaction.send(embed=stopped)
-        self.value = "stop"
-        self.stop()
-
-
-# noinspection PyUnusedLocal
 class Resume(nextcord.ui.View):
     def __init__(self):
         super().__init__()

@@ -54,7 +54,6 @@ class Music(commands.Cog, description="Music commands"):
 
     @commands.command(name="play", aliases=['youtube', 'yt'], help="Play a song.")
     async def play(self, ctx: commands.Context, *, search: wavelink.YouTubeTrack):
-        view = database.PauseStop()
         if not ctx.voice_client:
             voice: wavelink.Player = await ctx.author.voice.channel.connect(cls=wavelink.Player)
         else:
@@ -77,15 +76,7 @@ class Music(commands.Cog, description="Music commands"):
             now_playing.add_field(name="Author", value=f"{search.author}")
 
             await voice.play(search)
-            await ctx.reply(embed=now_playing, view=view)
-            await view.wait()
-            if view.value is None:
-                return
-            elif view.value == "pause":
-                await voice.set_pause(True)
-
-            elif view.value == "stop":
-                await voice.stop()
+            await ctx.reply(embed=now_playing)
         else:
             added_queue = nextcord.Embed(title="Music",
                                          description=f"Added [{profanity.censor(search.title)}]"
@@ -94,20 +85,12 @@ class Music(commands.Cog, description="Music commands"):
                                          timestamp=database.get_time())
             added_queue.set_thumbnail(url=search.thumbnail)
             await voice.queue.put_wait(search)
-            await ctx.reply(embed=added_queue, view=view)
-            await view.wait()
-            if view.value is None:
-                return view.clear_items()
-            elif view.value == "pause":
-                await voice.pause()
-            elif view.value == "stop":
-                await voice.stop()
+            await ctx.reply(embed=added_queue)
         if profanity.contains_profanity(search.title):
             await ctx.message.delete()
 
     @commands.command(name="soundcloud", aliases=['sc'], help="Play a song using soundcloud.")
     async def soundcloud(self, ctx: commands.Context, *, search: wavelink.SoundCloudTrack):
-        view = database.PauseStop()
         if not ctx.voice_client:
             voice: wavelink.Player = await ctx.author.voice.channel.connect(cls=wavelink.Player)
         else:
@@ -128,15 +111,7 @@ class Music(commands.Cog, description="Music commands"):
                                          timestamp=database.get_time())
             now_playing.add_field(name="Author", value=f"{search.author}")
             await voice.play(search)
-            await ctx.reply(embed=now_playing, view=view)
-            await view.wait()
-            if view.value is None:
-                return
-            elif view.value == "pause":
-                await voice.set_pause(True)
-
-            elif view.value == "stop":
-                await voice.stop()
+            await ctx.reply(embed=now_playing)
         else:
             added_queue = nextcord.Embed(title="Music",
                                          description=f"Added [{profanity.censor(search.title)}]"
@@ -145,14 +120,7 @@ class Music(commands.Cog, description="Music commands"):
                                          timestamp=database.get_time())
             added_queue.add_field(name="Author", value=f"{search.author}")
             await voice.queue.put_wait(search)
-            await ctx.reply(embed=added_queue, view=view)
-            await view.wait()
-            if view.value is None:
-                return view.clear_items()
-            elif view.value == "pause":
-                await voice.pause()
-            elif view.value == "stop":
-                await voice.stop()
+            await ctx.reply(embed=added_queue)
         if profanity.contains_profanity(search.title):
             await ctx.message.delete()
 
