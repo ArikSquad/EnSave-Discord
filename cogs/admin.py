@@ -13,7 +13,7 @@ import nextcord.utils
 from better_profanity import profanity
 from nextcord.ext import commands
 
-from utils import database
+from utils import database, logger
 
 
 class Admin(commands.Cog, description="Gather information."):
@@ -117,26 +117,23 @@ class Admin(commands.Cog, description="Gather information."):
             except commands.ExtensionFailed:
                 await ctx.send('The extension failed.')
 
-    @commands.command(name='restart_bot', help='Restart the bot.', hidden=True)
-    async def restart_bot(self, ctx):
+    @commands.command(name='restart_all', help='Restart all the cogs.', hidden=True)
+    async def restart_all(self, ctx):
         if ctx.author.id in database.get_owners_id():
-            view = database.YesNo()
-            sure = nextcord.Embed(title="Are you sure?", description="This will restart the bot.",
-                                  color=ctx.author.color)
-            message = await ctx.send(embed=sure, view=view)
-            await view.wait()
-            if view.value is None:
-                return
-            elif view.value:
-                await message.delete()
-                await self.bot.close()
-                os.system("python3 main.py")
+            for filename in os.listdir('./cogs'):
+                if filename.endswith('.py'):
+                    loader = filename[:-3]
+                    self.bot.reload_extension(f'cogs.{loader}')
+                    print(f'{logger.HEADER}{loader.capitalize()} has been reloaded{logger.END}')
 
     @commands.command(name='set_premium', help='Set premium state of a user.', hidden=True)
     async def set_premium(self, ctx, user: nextcord.Member, state: bool = True):
         if ctx.author.id in database.get_owners_id():
-            database.set_premium(user.id, state)
-            await ctx.send(f"{user.mention} is now a premium user.")
+            if user.id in database.get_owners_id():
+                await ctx.send("You can't set the premium state of an owner.")
+            else:
+                database.set_premium(user.id, state)
+                await ctx.send(f"{user.mention} is now a premium user.")
 
 
 def setup(bot):
