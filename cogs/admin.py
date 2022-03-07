@@ -6,6 +6,7 @@
 #
 # -----------------------------------------------------------
 import json
+import os
 
 import nextcord
 import nextcord.utils
@@ -105,7 +106,7 @@ class Admin(commands.Cog, description="Gather information."):
             except commands.ExtensionAlreadyLoaded:
                 await ctx.send('The extension is already loaded.')
 
-    @commands.command(name='restart_cog', help='Restart a cog', hidden=True)
+    @commands.command(name='restart_cog', aliases=['reload_cog'], help='Restart a cog', hidden=True)
     async def restart_cog(self, ctx, cog):
         if ctx.author.id in database.get_owners_id():
             try:
@@ -115,6 +116,21 @@ class Admin(commands.Cog, description="Gather information."):
                 await ctx.send(f'There is no extension called {profanity.censor(cog)}')
             except commands.ExtensionFailed:
                 await ctx.send('The extension failed.')
+
+    @commands.command(name='restart_bot', help='Restart the bot.', hidden=True)
+    async def restart_bot(self, ctx):
+        if ctx.author.id in database.get_owners_id():
+            view = database.YesNo()
+            sure = nextcord.Embed(title="Are you sure?", description="This will restart the bot.",
+                                  color=ctx.author.color)
+            message = await ctx.send(embed=sure, view=view)
+            await view.wait()
+            if view.value is None:
+                return
+            elif view.value:
+                await message.delete()
+                await self.bot.close()
+                os.system("python3 main.py")
 
     @commands.command(name='set_premium', help='Set premium state of a user.', hidden=True)
     async def set_premium(self, ctx, user: nextcord.Member, state: bool = True):
