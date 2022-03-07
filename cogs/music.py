@@ -84,6 +84,8 @@ class Music(commands.Cog, description="Music commands"):
                                          color=ctx.author.color,
                                          timestamp=database.get_time())
             added_queue.set_thumbnail(url=search.thumbnail)
+            added_queue.add_field(name="Author", value=f"{search.author}")
+
             await voice.queue.put_wait(search)
             await ctx.reply(embed=added_queue)
         if profanity.contains_profanity(search.title):
@@ -110,6 +112,7 @@ class Music(commands.Cog, description="Music commands"):
                                          color=ctx.author.color,
                                          timestamp=database.get_time())
             now_playing.add_field(name="Author", value=f"{search.author}")
+
             await voice.play(search)
             await ctx.reply(embed=now_playing)
         else:
