@@ -6,14 +6,13 @@
 #
 # -----------------------------------------------------------
 import json
-import os
 
 import nextcord
 import nextcord.utils
 from better_profanity import profanity
 from nextcord.ext import commands
 
-from utils import database, logger
+from utils import database
 
 
 class Admin(commands.Cog, description="Gather information."):
@@ -116,15 +115,6 @@ class Admin(commands.Cog, description="Gather information."):
                 await ctx.send(f'There is no extension called {profanity.censor(cog)}')
             except commands.ExtensionFailed:
                 await ctx.send('The extension failed.')
-
-    @commands.command(name='restart_all', help='Restart all the cogs.', hidden=True)
-    async def restart_all(self, ctx):
-        if ctx.author.id in database.get_owners_id():
-            for filename in os.listdir('./cogs'):
-                if filename.endswith('.py'):
-                    loader = filename[:-3]
-                    self.bot.reload_extension(f'cogs.{loader}')
-                    print(f'{logger.HEADER}{loader.capitalize()} has been reloaded{logger.END}')
 
     @commands.command(name='set_premium', help='Set premium state of a user.', hidden=True)
     async def set_premium(self, ctx, user: nextcord.Member, state: bool = True):
