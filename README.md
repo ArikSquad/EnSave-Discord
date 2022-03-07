@@ -55,9 +55,9 @@ We also have documented files in this project, so feel free to check the files a
 git clone https://github.com/ArikSquad/EnSave-Discord.git
 ```
   
-2. Open Command Prompt or Terminal. Here is an example if you have it on your desktop: 
+2. Open Command Prompt or Terminal. Then go into the folder with this command: 
   ```
-  cd Desktop/EnSave-Discord
+  cd EnSave-Discord
   ```
  
 3. Then install requirements in your shell.
