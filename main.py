@@ -25,8 +25,8 @@ token = os.getenv('token')
 
 
 # Create the activity for Discord. Idle looks cool.
-activity = nextcord.Activity(type=nextcord.ActivityType.custom,
-                             name=f'updating...', status=nextcord.Status.idle)
+activity = nextcord.Activity(type=nextcord.ActivityType.watching,
+                             name=f'24/7', status=nextcord.Status.idle)
 
 # Selects all intents and prefix, case-insensitive, description.
 bot = commands.Bot(command_prefix=database.get_prefix,
