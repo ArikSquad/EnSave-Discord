@@ -64,7 +64,7 @@ class Music(commands.Cog, description="Music commands"):
                                            description=f"You are not connected to a voice channel.",
                                            color=ctx.author.color,
                                            timestamp=database.get_time())
-            return ctx.send(embed=not_connected)
+            return await ctx.send(embed=not_connected)
 
         if voice.queue.is_empty and not voice.is_playing():
             now_playing = nextcord.Embed(title="Music",
@@ -103,7 +103,7 @@ class Music(commands.Cog, description="Music commands"):
                                            description=f"You are not connected to a voice channel.",
                                            color=ctx.author.color,
                                            timestamp=database.get_time())
-            return ctx.send(embed=not_connected)
+            return await ctx.send(embed=not_connected)
 
         if voice.queue.is_empty and not voice.is_playing():
             now_playing = nextcord.Embed(title="Music",
