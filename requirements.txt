@@ -1,5 +1,5 @@
 # For the essential for discord bot.
-nextcord
+git+https://github.com/nextcord/nextcord
 asyncio
 aiohttp
 python-dotenv
