@@ -117,13 +117,16 @@ class Admin(commands.Cog, description="Gather information."):
                 await ctx.send('The extension failed.')
 
     @commands.command(name='set_premium', help='Set premium state of a user.', hidden=True)
-    async def set_premium(self, ctx, user: nextcord.Member, state: bool = True):
+    async def set_premium(self, ctx, user: nextcord.Member, state: bool = None):
         if ctx.author.id in database.get_owners_id():
             if user.id in database.get_owners_id():
                 await ctx.send("You can't set the premium state of an owner.")
             else:
-                database.set_premium(user.id, state)
-                await ctx.send(f"{user.mention} is now a premium user.")
+                if state:
+                    database.set_premium(user.id, state)
+                else:
+                    database.set_premium(user.id)
+                await ctx.send(f"{user.mention}'s new state of premium: {state}")
 
 
 def setup(bot):

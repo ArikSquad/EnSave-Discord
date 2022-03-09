@@ -26,40 +26,39 @@ async def add_exp_on_message(message):
         else:
             data[str(message.author.id)]['experience'] = data[str(message.author.id)]['experience'] + amount
         f.seek(0)
-        json.dump(data, f, indent=4, sort_keys=True)
+        json.dump(data, f, indent=4)
 
-    if data[str(message.author.id)]['level'] > 50 and not database.get_premium(message.author.id):
-        database.set_premium(message.author.id, True)
-        user_level = nextcord.Embed(
-            title=f"EnSave Leveling",
-            description='Congratulations, you have earned EnSave Premium!',
-            color=message.author.color
-        )
-        await message.channel.send(embed=user_level)
-    elif data[str(message.author.id)]['sent'] == 0:
-        user_level = nextcord.Embed(
-            title=f"EnSave Leveling",
-            description=f"Congratulations, you have leveled "
-                        f"up to level {data[str(message.author.id)]['level']}!",
-            color=message.author.color
-        )
-        await message.channel.send(embed=user_level)
-        data[str(message.author.id)]['sent'] = 1
-        f.seek(0)
-        json.dump(data, f, indent=4, sort_keys=True)
-        f.truncate()
+        if data[str(message.author.id)]['level'] > 50 and not database.get_premium(message.author.id):
+            database.set_premium(message.author.id, True)
+            user_level = nextcord.Embed(
+                title=f"EnSave Leveling",
+                description='Congratulations, you have earned EnSave Premium!',
+                color=message.author.color
+            )
+            await message.channel.send(embed=user_level)
+        elif data[str(message.author.id)]['sent'] == 0:
+            user_level = nextcord.Embed(
+                title=f"EnSave Leveling",
+                description=f"Congratulations, you have leveled "
+                            f"up to level {data[str(message.author.id)]['level']}!",
+                color=message.author.color
+            )
+            await message.channel.send(embed=user_level)
+            data[str(message.author.id)]['sent'] = 1
+            f.seek(0)
+            json.dump(data, f, indent=4)
 
 
-def get_level(ctx):
+def get_level(author_id):
     with open('db/users.json', 'r') as f:
         data = json.load(f)
-        return data[str(ctx.author.id)]['level']
+        return data[str(author_id)]['level']
 
 
-def get_xp(ctx):
+def get_xp(author_id):
     with open('db/users.json', 'r') as f:
         data = json.load(f)
-        return data[str(ctx.author.id)]['experience']
+        return data[str(author_id)]['experience']
 
 
 class Experience(commands.Cog, description="Gain levels to get more commands!"):
@@ -87,8 +86,8 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
                 else "This person is still reaching premium.",
                 color=ctx.author.color
             )
-            user_level.add_field(name='Level', value=get_level(ctx), inline=False)
-            user_level.add_field(name='Experience', value=get_level(ctx), inline=False)
+            user_level.add_field(name='Level', value=get_level(ctx.author.id), inline=False)
+            user_level.add_field(name='Experience', value=get_level(ctx.author.id), inline=False)
 
             await ctx.send(embed=user_level)
 
@@ -99,8 +98,7 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
                 data = json.load(f)
                 data[str(user.id)]['experience'] = data[str(user.id)]['experience'] + amount
                 f.seek(0)
-                json.dump(data, f, indent=4, sort_keys=True)
-                f.truncate()
+                json.dump(data, f, indent=4)
             new_exp_embed = nextcord.Embed(
                 title=f"Admin",
                 description=f"{ctx.author.name} has added {amount} experience to {user.name}.",
@@ -115,8 +113,7 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
                 data = json.load(f)
                 data[str(user.id)]['experience'] = amount
                 f.seek(0)
-                json.dump(data, f, indent=4, sort_keys=True)
-                f.truncate()
+                json.dump(data, f, indent=4)
             new_exp_embed = nextcord.Embed(
                 title=f"Admin",
                 description=f"{ctx.author.name} has set {user.name}'s experience to {amount}.",
@@ -131,8 +128,7 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
                 data = json.load(f)
                 data[str(user.id)]['level'] = amount
                 f.seek(0)
-                json.dump(data, f, indent=4, sort_keys=True)
-                f.truncate()
+                json.dump(data, f, indent=4)
             new_level_embed = nextcord.Embed(
                 title=f"Admin",
                 description=f"{ctx.author.name} has set {user.name}'s level to {amount}.",
@@ -147,8 +143,7 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
                 data = json.load(f)
                 data[str(user.id)]['level'] = data[str(user.id)]['level'] + amount
                 f.seek(0)
-                json.dump(data, f, indent=4, sort_keys=True)
-                f.truncate()
+                json.dump(data, f, indent=4)
             new_level_embed = nextcord.Embed(
                 title=f"Admin",
                 description=f"{ctx.author.name} has added {amount} levels to {user.name}.",
@@ -168,7 +163,6 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
                 color=ctx.author.color
             )
             await ctx.send(embed=level_embed)
-            f.truncate()
 
     @commands.command(name='getexp', help="Get a users experience.", hidden=True)
     async def get_exp(self, ctx, user: nextcord.Member):
@@ -182,7 +176,6 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
                 color=ctx.author.color
             )
             await ctx.send(embed=exp_embed)
-            f.truncate()
 
 
 def setup(bot):

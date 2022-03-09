@@ -64,12 +64,12 @@ def get_premium(user_id):
         return False
 
 
-def set_premium(user_id, premium: bool):
-    with open('db/users.json', 'w') as f:
+def set_premium(user_id, premium: bool = True):
+    with open('db/users.json', 'r+') as f:
         data = json.load(f)
         data[str(user_id)]['premium'] = premium
         f.seek(0)
-        json.dump(data, f, indent=4, sort_keys=True)
+        json.dump(data, f, indent=4)
     return False
 
 

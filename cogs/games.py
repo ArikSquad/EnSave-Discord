@@ -18,7 +18,7 @@ from utils import database
 guild_ids = database.get_guild_ids()
 
 
-class Game(commands.Cog, description="Game Commands"):
+class Games(commands.Cog, description="Game Commands"):
     def __init__(self, bot):
         self.bot = bot
 
@@ -121,4 +121,4 @@ class Game(commands.Cog, description="Game Commands"):
 
 
 def setup(bot):
-    bot.add_cog(Game(bot))
+    bot.add_cog(Games(bot))
