@@ -99,7 +99,7 @@ class Admin(commands.Cog, description="Gather information."):
         if ctx.author.id in database.get_owners_id():
             try:
                 self.bot.load_extension(f'cogs.{cog}')
-                await ctx.send(f'Loaded extension {profanity.censor(cog)}')
+                await ctx.send(f'Loaded extension {cog}')
             except commands.ExtensionNotFound:
                 await ctx.send(f'There is no extension called {profanity.censor(cog)}')
             except commands.ExtensionAlreadyLoaded:
