@@ -14,7 +14,7 @@ from nextcord.ext import commands
 
 
 class HelpDropdown(nextcord.ui.Select):
-    def __init__(self, help_command: "MyHelpCommand", options: list[nextcord.SelectOption]):
+    def __init__(self, help_command: "MyHelpCommand", options: [nextcord.SelectOption]):
         super().__init__(placeholder="Choose a category...", min_values=1, max_values=1, options=options)
         self._help_command = help_command
 
@@ -28,7 +28,7 @@ class HelpDropdown(nextcord.ui.Select):
 
 
 class HelpView(nextcord.ui.View):
-    def __init__(self, help_command: "MyHelpCommand", options: list[nextcord.SelectOption], *,
+    def __init__(self, help_command: "MyHelpCommand", options: [nextcord.SelectOption], *,
                  timeout: Optional[float] = 120.0):
         super().__init__(timeout=timeout)
         self.add_item(HelpDropdown(help_command, options))
@@ -50,8 +50,8 @@ class MyHelpCommand(commands.MinimalHelpCommand):
     def get_command_signature(self, command):
         return f"{self.context.clean_prefix}{command.qualified_name} {command.signature}"
 
-    async def _cog_select_options(self) -> list[nextcord.SelectOption]:
-        options: list[nextcord.SelectOption] = [nextcord.SelectOption(
+    async def _cog_select_options(self) -> [nextcord.SelectOption]:
+        options: [nextcord.SelectOption] = [nextcord.SelectOption(
             label="Home",
             emoji="🏠",
             description="Go back to the main menu.",
