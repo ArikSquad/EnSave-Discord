@@ -31,8 +31,8 @@ class Music(commands.Cog, description="Music commands"):
                                             password='thisisarik')
 
     @commands.Cog.listener()
-    async def on_wavelink_node_ready(self, node: wavelink.Node):
-        print(f" Wavelink node: {node.identifier} is ready.")
+    async def on_nextlink_node_ready(self, node: wavelink.Node):
+        print(f"NextLink node: {node.identifier} is ready.")
 
     # noinspection PyUnusedLocal
     @commands.Cog.listener()
@@ -383,6 +383,28 @@ class Music(commands.Cog, description="Music commands"):
                 embed.set_thumbnail(url=coming.thumbnail)
             embed.add_field(name="Author", value=coming.author)
             await ctx.send(embed=embed)
+
+    @commands.command(name="skip", help="Skips the song.")
+    async def skip_command(self, ctx: commands.Context):
+        voice: wavelink.Player = ctx.voice_client
+        if voice.is_playing():
+            if not ctx.author.voice:
+                not_connected = nextcord.Embed(title="Music",
+                                               description=f"You are not connected to the voice channel.",
+                                               color=ctx.author.color,
+                                               timestamp=database.get_time())
+                return ctx.send(embed=not_connected)
+            skipped = nextcord.Embed(title="Music",
+                                     description=f"The song has been skipped.",
+                                     color=ctx.author.color,
+                                     timestamp=database.get_time())
+            await voice.stop()
+            return await ctx.send(embed=skipped)
+        not_connected = nextcord.Embed(title="Music",
+                                       description=f"I am not to a voice channel.",
+                                       color=ctx.author.color,
+                                       timestamp=database.get_time())
+        await ctx.send(embed=not_connected)
 
 
 def setup(bot):
