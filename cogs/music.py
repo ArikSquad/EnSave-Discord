@@ -43,7 +43,7 @@ class Music(commands.Cog, description="Music commands"):
 
     # noinspection PyUnusedLocal
     @commands.Cog.listener()
-    async def on_wavelink_track_end(self, player: wavelink.Player, track, reason):
+    async def on_nextlink_track_end(self, player: wavelink.Player, track, reason):
         if not self.loop:
             if not player.queue.is_empty:
                 new = player.queue.get()
