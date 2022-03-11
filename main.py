@@ -21,7 +21,7 @@ from utils import logger, database
 # To change the token create a file named .env and write the token.
 # Example usage: TOKEN='(your token)'
 load_dotenv()
-token = os.getenv('token')
+token = os.getenv('TOKEN')
 
 
 # Create the activity for Discord. Idle looks cool.
