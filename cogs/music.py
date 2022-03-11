@@ -16,7 +16,7 @@ from nextcord.ext import commands
 from utils import database
 
 load_dotenv()
-host_server = os.getenv('MUSIC')
+host_server = str(os.getenv('MUSIC'))
 
 
 # noinspection PyTypeChecker
@@ -33,7 +33,7 @@ class Music(commands.Cog, description="Music commands"):
 
         await wavelink.NodePool.create_node(bot=self.bot,
                                             host=host_server,
-                                            port=433,
+                                            port=443,
                                             password='thisisarik',
                                             https=True)
 
