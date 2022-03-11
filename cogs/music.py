@@ -5,12 +5,18 @@
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
 # -----------------------------------------------------------
+import os
+
 import nextcord
 import nextlink as wavelink
 from better_profanity import profanity
+from dotenv import load_dotenv
 from nextcord.ext import commands
 
 from utils import database
+
+load_dotenv()
+host_server = os.getenv('MUSIC')
 
 
 # noinspection PyTypeChecker
@@ -26,9 +32,10 @@ class Music(commands.Cog, description="Music commands"):
         await self.bot.wait_until_ready()
 
         await wavelink.NodePool.create_node(bot=self.bot,
-                                            host='127.0.0.1',
-                                            port=2333,
-                                            password='thisisarik')
+                                            host=host_server,
+                                            port=433,
+                                            password='thisisarik',
+                                            https=True)
 
     @commands.Cog.listener()
     async def on_nextlink_node_ready(self, node: wavelink.Node):
