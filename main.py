@@ -12,16 +12,18 @@ import json
 import os
 
 import nextcord
+from danbot_api import DanBotClient
 from dotenv import load_dotenv
 from nextcord.ext import commands
 
 # Coloured text from logger file and Prefix from database file.
 from utils import logger, database
 
-# To change the token create a file named .env and write the token.
-# Example usage: TOKEN='(your token)'
+# Load the bot token. You should create a file named .env and write the token.
+# Example: TOKEN='(your token)'
 load_dotenv()
 token = os.getenv('TOKEN')
+danbot = os.getenv('DBHAPI')
 
 
 # Create the activity for Discord. Idle looks cool.
@@ -31,7 +33,8 @@ activity = nextcord.Activity(type=nextcord.ActivityType.watching,
 # Selects all intents and prefix, case-insensitive, description.
 bot = commands.Bot(command_prefix=database.get_prefix,
                    case_insensitive=True,
-                   description="Utilities Bot.",
+                   description="EnSave is a Discord bot, that adds some cool utility commands and some music commands. "
+                               "Have fun and explore the commands of EnSave.",
                    activity=activity,
                    status=nextcord.Status.idle,
                    intents=nextcord.Intents.all())
@@ -87,6 +90,8 @@ async def change_prefix(ctx, prefix):
 # This will be run, after the bot is ready.
 @bot.event
 async def on_ready():
+    # Send information to DanBot.
+    DanBotClient(bot, key=danbot, autopost=True)
     # Print some information about the bot.
     print("Logging in... at the time of " + str(datetime.datetime.now()))
     print(f'{logger.WARNING}{bot.user} has connected to Discord!{logger.END}')

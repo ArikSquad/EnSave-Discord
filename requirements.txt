@@ -8,6 +8,7 @@ python-dotenv
 requests
 better_profanity
 mcstatus
+git+https://github.com/ArikSquad/danbot-hosting
 
 # These libraries are used in the music commands.
 PyNaCl
