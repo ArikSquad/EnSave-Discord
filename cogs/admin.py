@@ -86,7 +86,7 @@ class Admin(commands.Cog, description="Gather information."):
             view = database.YesNo()
             sure = discord.Embed(title="Are you sure?", description="This will logout "
                                                                     "from discord and exit the python program.",
-                                 color=ctx.author.print_color)
+                                 color=ctx.author.color)
             message = await ctx.send(embed=sure, view=view)
             await view.wait()
             if view.value is None:
