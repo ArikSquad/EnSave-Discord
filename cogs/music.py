@@ -5,7 +5,6 @@
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
 # -----------------------------------------------------------
-import asyncio
 import os
 
 import discord
@@ -28,11 +27,12 @@ class Music(commands.Cog, description="Music commands"):
         self.bot = bot
         self.loop = False
 
-    async def cog_load(self):
-        asyncio.create_task(self.connect_nodes())
+    @commands.Cog.listener()
+    async def on_ready(self):
+        self.bot.loop.create_task(self.connect_nodes())
 
     async def connect_nodes(self):
-        await self.bot.wait_until_ready()
+        print("ready")
         await wavelink.NodePool.create_node(bot=self.bot, host=host_server, port=443, password='thisisarik', https=True)
 
     @commands.Cog.listener()
