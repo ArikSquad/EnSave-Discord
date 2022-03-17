@@ -1,16 +1,17 @@
 # For the essential for discord bot.
-git+https://github.com/nextcord/nextcord
+git+https://github.com/Rapptz/discord.py
 asyncio
 aiohttp
 python-dotenv
 
-# These are for some commands the bot includes.
+# These libraries are for some special commands, that the bot includes.
 requests
 better_profanity
 mcstatus
-git+https://github.com/ArikSquad/danbot-hosting
+danbot-hosting
+psutil
 
 # These libraries are used in the music commands.
 PyNaCl
 PyParsing
-git+https://github.com/ArikSquad/Nextlink
+Wavelink
