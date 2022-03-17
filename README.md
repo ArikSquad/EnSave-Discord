@@ -48,6 +48,7 @@
 # Overview
 This is an open-source discord bot developed by [ArikSquad](https://github.com/Ariksquad) and [Mhilkos](https://github.com/Mhilkos).
 We also have documented files in this project, so feel free to check the files and see the documentation over there!
+EnSave uses discord.py library which has been unarchived. If you would like to use this as your own bot, please give us some credit.
 
 # Installation
 1. Clone this repository.
