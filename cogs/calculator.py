@@ -11,8 +11,8 @@ import math
 import operator
 from datetime import datetime
 
-import nextcord
-from nextcord.ext import commands
+import discord
+from discord.ext import commands
 from pyparsing import (
     CaselessLiteral,
     Combine,
@@ -150,8 +150,8 @@ class Calculator(commands.Cog, description="Math commands"):
         try:
             answer = self.nsp.eval(formula)
         except Exception as e:
-            execute_error = nextcord.Embed(
-                color=nextcord.Colour(0xff0000),
+            execute_error = discord.Embed(
+                color=discord.Colour(0xff0000),
                 title=f"Could not parse formula. {e}",
                 timestamp=datetime.utcnow()
             )
@@ -162,13 +162,13 @@ class Calculator(commands.Cog, description="Math commands"):
             answer = int(answer)
 
         # Send the calculated answer
-        answers = nextcord.Embed(
-            color=nextcord.Colour.gold(),
+        answers = discord.Embed(
+            color=discord.Colour.gold(),
             title=f"{formula} = {answer}"
         )
         answers.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
         await ctx.send(embed=answers)
 
 
-def setup(bot):
-    bot.add_cog(Calculator(bot))
+async def setup(bot):
+    await bot.add_cog(Calculator(bot))

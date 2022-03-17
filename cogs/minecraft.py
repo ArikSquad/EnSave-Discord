@@ -7,12 +7,12 @@
 # -----------------------------------------------------------
 import os
 
+import discord
 import mcstatus
-import nextcord
 from aiohttp import request
 from better_profanity import profanity
+from discord.ext import commands
 from dotenv import load_dotenv
-from nextcord.ext import commands
 
 load_dotenv()
 apikey = os.getenv('HYPIXELAPI')
@@ -28,18 +28,18 @@ class Minecraft(commands.Cog, description="Minecraft tool commands."):
     async def mcstatus(self, ctx, server: str):
         try:
             status = mcstatus.MinecraftServer.lookup(server).status()
-            player = nextcord.Embed(title=f"Minecraft Server Status: {profanity.censor(server)}",
-                                    description="Server is online",
-                                    color=0x00ff00)
+            player = discord.Embed(title=f"Minecraft Server Status: {profanity.censor(server)}",
+                                   description="Server is online",
+                                   color=0x00ff00)
             player.add_field(name="Players", value=f"{status.players.online}/{status.players.max}")
             player.add_field(name="Version", value=status.version.name, inline=False)
             player.add_field(name="Protocol", value=status.version.protocol, inline=False)
             player.add_field(name="Description", value=status.description, inline=False)
             await ctx.send(embed=player)
         except OSError:
-            offline = nextcord.Embed(title=f"Minecraft Server Status: {profanity.censor(server)}",
-                                     description=f"Server is offline.",
-                                     color=0xFF0000)
+            offline = discord.Embed(title=f"Minecraft Server Status: {profanity.censor(server)}",
+                                    description=f"Server is offline.",
+                                    color=0xFF0000)
             await ctx.send(embed=offline)
 
     @commands.command(name="bedwars", aliases=["bw"], description="Get the status of Hypixel Bedwars player.")
@@ -60,7 +60,7 @@ class Minecraft(commands.Cog, description="Minecraft tool commands."):
                 return await ctx.send("This command could not be executed. Try again later\n"
                                       "ERROR: RATELIMIT")
 
-        embed = nextcord.Embed(title=f"{username} Bedwars Stats", color=nextcord.Color.orange())
+        embed = discord.Embed(title=f"{username} Bedwars Stats", color=discord.Color.orange())
         embed.add_field(name="Games Played", value=f"{games_played} games", inline=False)
         embed.add_field(name="Losses", value=f"{losses} losses", inline=False)
         embed.add_field(name="Wins", value=f"{wins} wins", inline=False)
@@ -72,13 +72,13 @@ class Minecraft(commands.Cog, description="Minecraft tool commands."):
 
     @commands.command(name="skin", aliases=["mcskin", "minecraftskin"], description="Get the skin of a player.")
     async def get_skin(self, ctx, username: str):
-        embed = nextcord.Embed(title=f"{username}'s skin",
-                               description=f"Loading the skin of {username}...",
-                               color=nextcord.Color.orange())
+        embed = discord.Embed(title=f"{username}'s skin",
+                              description=f"Loading the skin of {username}...",
+                              color=discord.Color.orange())
         embed.set_thumbnail(url="https://minotar.net/helm/" + username)
         embed.set_image(url="https://minotar.net/armor/body/" + username)
         await ctx.send(embed=embed)
 
 
-def setup(bot):
-    bot.add_cog(Minecraft(bot))
+async def setup(bot):
+    await bot.add_cog(Minecraft(bot))

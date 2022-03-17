@@ -9,8 +9,8 @@
 import datetime
 import json
 
-import nextcord
-from nextcord import Interaction
+import discord
+from discord import Interaction
 
 
 def get_bot_name():
@@ -74,14 +74,14 @@ def set_premium(user_id, premium: bool = True):
 
 
 def premium_embed(ctx, title: str):
-    return nextcord.Embed(title=title,
-                          description="You need to be a premium user to use this command.",
-                          color=ctx.author.color,
-                          timestamp=get_time())
+    return discord.Embed(title=title,
+                         description="You need to be a premium user to use this command.",
+                         color=ctx.author.color,
+                         timestamp=get_time())
 
 
 # noinspection PyUnusedLocal
-class Resume(nextcord.ui.View):
+class Resume(discord.ui.View):
     def __init__(self):
         super().__init__()
         self.value = None
@@ -89,19 +89,19 @@ class Resume(nextcord.ui.View):
     async def on_timeout(self):
         self.clear_items()
 
-    @nextcord.ui.button(label="Resume", style=nextcord.ButtonStyle.blurple)
-    async def _resume(self, button: nextcord.ui.Button, interaction: Interaction):
-        paused = nextcord.Embed(title="Music",
-                                description=f"The playback has been resumed.",
-                                color=interaction.user.color,
-                                timestamp=get_time())
-        await interaction.send(embed=paused)
+    @discord.ui.button(label="Resume", style=discord.ButtonStyle.blurple)
+    async def _resume(self, button: discord.ui.Button, interaction: Interaction):
+        paused = discord.Embed(title="Music",
+                               description=f"The playback has been resumed.",
+                               color=interaction.user.color,
+                               timestamp=get_time())
+        await interaction.response.send_message(embed=paused)
         self.value = True
         self.stop()
 
 
 # noinspection PyUnusedLocal
-class YesNo(nextcord.ui.View):
+class YesNo(discord.ui.View):
     def __init__(self):
         super().__init__()
         self.value = None
@@ -109,13 +109,13 @@ class YesNo(nextcord.ui.View):
     async def on_timeout(self):
         self.clear_items()
 
-    @nextcord.ui.button(label="Yes", style=nextcord.ButtonStyle.danger)
-    async def _yes(self, button: nextcord.ui.Button, interaction: Interaction):
+    @discord.ui.button(label="Yes", style=discord.ButtonStyle.danger)
+    async def _yes(self, button: discord.ui.Button, interaction: Interaction):
         self.value = True
         self.stop()
 
-    @nextcord.ui.button(label="No", style=nextcord.ButtonStyle.green)
-    async def _no(self, button: nextcord.ui.Button, interaction: Interaction):
-        await interaction.send(f"Okay, we won't do that then!", ephemeral=True)
+    @discord.ui.button(label="No", style=discord.ButtonStyle.green)
+    async def _no(self, button: discord.ui.Button, interaction: Interaction):
+        await interaction.response.send_message(f"Okay, we won't do that then!", ephemeral=True)
         self.value = False
         self.stop()

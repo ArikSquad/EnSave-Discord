@@ -9,21 +9,19 @@
 import datetime
 import random
 
-import nextcord
-from nextcord import Interaction
-from nextcord.ext import commands
+import discord
+from discord import app_commands
+from discord.ext import commands
 
 from utils import database
 
-guild_ids = database.get_guild_ids()
-
 
 class Games(commands.Cog, description="Game Commands"):
-    def __init__(self, bot):
+    def __init__(self, bot) -> None:
         self.bot = bot
 
-    @nextcord.slash_command(name="slot", guild_ids=guild_ids, description="Roll the slot machine!")
-    async def slot(self, interaction: Interaction):
+    @app_commands.command(name="slot", description="Roll the slot machine!")
+    async def slot(self, interaction: discord.Interaction):
         emojis = "🍎🍊🍐🍋🍉🍇🍓🍒"
         a = random.choice(emojis)
         b = random.choice(emojis)
@@ -31,72 +29,72 @@ class Games(commands.Cog, description="Game Commands"):
 
         slotmachine = f"**[ {a} {b} {c} ]\n{interaction.user.name}**,"
 
-        embed1 = nextcord.Embed(title=f"Games", description=f"{slotmachine} All matching, you won! 🎉",
-                                color=nextcord.Color.green())
-        embed2 = nextcord.Embed(title=f"Games", description=f"{slotmachine} 2 in a row, you won! 🎉",
-                                color=nextcord.Color.purple())
-        embed3 = nextcord.Embed(title=f"Games", description=f"{slotmachine} No match, you lost 😢",
-                                color=nextcord.Color.red())
+        embed1 = discord.Embed(title=f"Games", description=f"{slotmachine} All matching, you won! 🎉",
+                               color=discord.Color.green())
+        embed2 = discord.Embed(title=f"Games", description=f"{slotmachine} 2 in a row, you won! 🎉",
+                               color=discord.Color.purple())
+        embed3 = discord.Embed(title=f"Games", description=f"{slotmachine} No match, you lost 😢",
+                               color=discord.Color.red())
 
         if a == b == c:
-            await interaction.send(embed=embed1)
+            await interaction.response.send_message(embed=embed1)
         elif (a == b) or (a == c) or (b == c):
-            await interaction.send(embed=embed2)
+            await interaction.response.send_message(embed=embed2)
         else:
-            await interaction.send(embed=embed3)
+            await interaction.response.send_message(embed=embed3)
 
-    @nextcord.slash_command(name="dice", guild_ids=guild_ids, description="Roll the dice!")
-    async def dice(self, interaction: Interaction):
-        embed1 = nextcord.Embed(title=f"Games", description="Rolled a {}!".format(random.randint(1, 6)),
-                                color=nextcord.Color.green())
-        await interaction.send(embed=embed1)
+    @app_commands.command(name="dice", description="Roll the dice!")
+    async def dice(self, interaction: discord.Interaction):
+        embed1 = discord.Embed(title=f"Games", description="Rolled a {}!".format(random.randint(1, 6)),
+                               color=discord.Color.green())
+        await interaction.response.send_message(embed=embed1)
 
-    @nextcord.slash_command(name="coinflip", guild_ids=guild_ids, description="Flip a coin!")
-    async def coinflip(self, interaction: Interaction):
+    @app_commands.command(name="coinflip", description="Flip a coin!")
+    async def coinflip(self, interaction: discord.Interaction):
         determine_flip = [1, 0]
         if random.choice(determine_flip) == 1:
-            embed = nextcord.Embed(title="Fun",
-                                   description=f"{interaction.user.mention} Flipped coin, we got **Heads**!",
-                                   color=interaction.user.color)
-            await interaction.send(embed=embed)
+            embed = discord.Embed(title="Fun",
+                                  description=f"{interaction.user.mention} Flipped coin, we got **Heads**!",
+                                  color=interaction.user.color)
+            await interaction.response.send_message(embed=embed)
 
         else:
-            embed = nextcord.Embed(title="Fun",
-                                   description=f"{interaction.user.mention} Flipped coin, we got **Tails**!",
-                                   color=interaction.user.color)
-            await interaction.send(embed=embed)
+            embed = discord.Embed(title="Fun",
+                                  description=f"{interaction.user.mention} Flipped coin, we got **Tails**!",
+                                  color=interaction.user.color)
+            await interaction.response.send_message(embed=embed)
 
-    @nextcord.slash_command(name="slap", guild_ids=guild_ids, description="Slap someone!")
-    async def slap(self, interaction: Interaction, member: nextcord.Member):
+    @app_commands.command(name="slap", description="Slap someone!")
+    async def slap(self, interaction: discord.Interaction, member: discord.Member):
         if member.id == 812808865728954399:
-            dodge = nextcord.Embed(title=interaction.user.name,
-                                   description=f"tried to slap me, but I dodged. 😑",
-                                   color=interaction.user.color)
-            await interaction.send(embed=dodge)
+            dodge = discord.Embed(title=interaction.user.name,
+                                  description=f"tried to slap me, but I dodged. 😑",
+                                  color=interaction.user.color)
+            await interaction.response.send_message(embed=dodge)
         elif interaction.user.id == member.id:
-            embed = nextcord.Embed(title=interaction.user.name,
-                                   description=f"tried to slap themselves, "
-                                               f"but hit too hard and went to a coma for 10 seconds. 😑",
-                                   color=interaction.user.color)
+            embed = discord.Embed(title=interaction.user.name,
+                                  description=f"tried to slap themselves, "
+                                              f"but hit too hard and went to a coma for 10 seconds. 😑",
+                                  color=interaction.user.color)
             try:
-                await interaction.user.edit(timeout=nextcord.utils.utcnow() + datetime.timedelta(seconds=10))
+                await interaction.user.edit(timed_out_until=datetime.datetime.now() + datetime.timedelta(seconds=10))
             except commands.MissingPermissions:
                 pass
-            await interaction.send(embed=embed)
+            await interaction.response.send_message(embed=embed)
         elif database.get_premium(member.id):
-            embed = nextcord.Embed(title=interaction.user.name,
-                                   description=f"tried to slap {member.name}, but had no strength to hit "
-                                               f"a premium user. 😑",
-                                   color=interaction.user.color)
-            await interaction.send(embed=embed)
+            embed = discord.Embed(title=interaction.user.name,
+                                  description=f"tried to slap {member.name}, but had no strength to hit "
+                                              f"a premium user. 😑",
+                                  color=interaction.user.color)
+            await interaction.response.send_message(embed=embed)
         else:
-            embed = nextcord.Embed(title=interaction.user.name,
-                                   description=f"just slapped {member.mention} in the face!",
-                                   color=interaction.user.color)
-            await interaction.send(embed=embed)
+            embed = discord.Embed(title=interaction.user.name,
+                                  description=f"just slapped {member.mention} in the face!",
+                                  color=interaction.user.color)
+            await interaction.response.send_message(embed=embed)
 
-    @nextcord.slash_command(name="8ball", guild_ids=guild_ids, description="Ask the magic 8ball a question!")
-    async def eightball(self, interaction: Interaction, *, question):
+    @app_commands.command(name="8ball", description="Ask the magic 8ball a question!")
+    async def eightball(self, interaction: discord.Interaction, *, question: str):
         responses = [
             "It is certain.",
             "It is decidedly so.",
@@ -113,12 +111,12 @@ class Games(commands.Cog, description="Game Commands"):
             "uwu",
             "no, not today!",
             "Very doubtful."]
-        embed = nextcord.Embed(title="Magic 8ball",
-                               description=f"{interaction.user.mention} asked: {question}\n"
-                                           f"Magic 8ball: **{random.choice(responses)}**",
-                               color=interaction.user.color)
-        await interaction.send(embed=embed)
+        embed = discord.Embed(title="Magic 8ball",
+                              description=f"{interaction.user.mention} asked: {question}\n"
+                                          f"Magic 8ball: **{random.choice(responses)}**",
+                              color=interaction.user.color)
+        await interaction.response.send_message(embed=embed)
 
 
-def setup(bot):
-    bot.add_cog(Games(bot))
+async def setup(bot):
+    await bot.add_cog(Games(bot))

@@ -7,8 +7,8 @@
 # -----------------------------------------------------------
 import json
 
-import nextcord
-from nextcord.ext import commands
+import discord
+from discord.ext import commands
 
 from utils import database
 
@@ -30,14 +30,14 @@ async def add_exp_on_message(message):
 
         if data[str(message.author.id)]['level'] > 50 and not database.get_premium(message.author.id):
             database.set_premium(message.author.id, True)
-            user_level = nextcord.Embed(
+            user_level = discord.Embed(
                 title=f"EnSave Leveling",
                 description='Congratulations, you have earned EnSave Premium!',
                 color=message.author.color
             )
             await message.channel.send(embed=user_level)
         elif data[str(message.author.id)]['sent'] == 0:
-            user_level = nextcord.Embed(
+            user_level = discord.Embed(
                 title=f"EnSave Leveling",
                 description=f"Congratulations, you have leveled "
                             f"up to level {data[str(message.author.id)]['level']}!",
@@ -80,7 +80,7 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
     @commands.command(name='level', help="Check your level.")
     async def level(self, ctx):
         if ctx.guild.id == 770634445370687519:
-            user_level = nextcord.Embed(
+            user_level = discord.Embed(
                 title=f"{ctx.author.name}'s level",
                 description="This user has gotten premium." if database.get_premium(ctx.author.id)
                 else "This person is still reaching premium.",
@@ -92,14 +92,14 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
             await ctx.send(embed=user_level)
 
     @commands.command(name='addexp', help="Add experience to somebody.", hidden=True, guild_ids=[770634445370687519])
-    async def add_exp(self, ctx, user: nextcord.Member, amount: int):
+    async def add_exp(self, ctx, user: discord.Member, amount: int):
         if ctx.author.id in database.get_owners_id():
             with open("db/users.json", "r+") as f:
                 data = json.load(f)
                 data[str(user.id)]['experience'] = data[str(user.id)]['experience'] + amount
                 f.seek(0)
                 json.dump(data, f, indent=4)
-            new_exp_embed = nextcord.Embed(
+            new_exp_embed = discord.Embed(
                 title=f"Admin",
                 description=f"{ctx.author.name} has added {amount} experience to {user.name}.",
                 color=ctx.author.color
@@ -107,14 +107,14 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
             await ctx.send(embed=new_exp_embed)
 
     @commands.command(name='setexp', help="Set experience to somebody.", hidden=True)
-    async def set_exp(self, ctx, user: nextcord.Member, amount: int):
+    async def set_exp(self, ctx, user: discord.Member, amount: int):
         if ctx.author.id in database.get_owners_id():
             with open("db/users.json", "r+") as f:
                 data = json.load(f)
                 data[str(user.id)]['experience'] = amount
                 f.seek(0)
                 json.dump(data, f, indent=4)
-            new_exp_embed = nextcord.Embed(
+            new_exp_embed = discord.Embed(
                 title=f"Admin",
                 description=f"{ctx.author.name} has set {user.name}'s experience to {amount}.",
                 color=ctx.author.color
@@ -122,14 +122,14 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
             await ctx.send(embed=new_exp_embed)
 
     @commands.command(name='setlevel', help="Set level to somebody.", hidden=True)
-    async def set_level(self, ctx, user: nextcord.Member, amount: int):
+    async def set_level(self, ctx, user: discord.Member, amount: int):
         if ctx.author.id in database.get_owners_id():
             with open("db/users.json", "r+") as f:
                 data = json.load(f)
                 data[str(user.id)]['level'] = amount
                 f.seek(0)
                 json.dump(data, f, indent=4)
-            new_level_embed = nextcord.Embed(
+            new_level_embed = discord.Embed(
                 title=f"Admin",
                 description=f"{ctx.author.name} has set {user.name}'s level to {amount}.",
                 color=ctx.author.color
@@ -137,14 +137,14 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
             await ctx.send(embed=new_level_embed)
 
     @commands.command(name='addlevel', help="Add levels to somebody.", hidden=True)
-    async def add_level(self, ctx, user: nextcord.Member, amount: int):
+    async def add_level(self, ctx, user: discord.Member, amount: int):
         if ctx.author.id in database.get_owners_id():
             with open("db/users.json", "r+") as f:
                 data = json.load(f)
                 data[str(user.id)]['level'] = data[str(user.id)]['level'] + amount
                 f.seek(0)
                 json.dump(data, f, indent=4)
-            new_level_embed = nextcord.Embed(
+            new_level_embed = discord.Embed(
                 title=f"Admin",
                 description=f"{ctx.author.name} has added {amount} levels to {user.name}.",
                 color=ctx.author.color
@@ -152,12 +152,12 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
             await ctx.send(embed=new_level_embed)
 
     @commands.command(name='getlevel', help="Get a users level.", hidden=True)
-    async def get_level(self, ctx, user: nextcord.Member):
+    async def get_level(self, ctx, user: discord.Member):
         if ctx.author.id in database.get_owners_id():
             with open("db/users.json", "r") as f:
                 data = json.load(f)
                 level = data[str(user.id)]['level']
-            level_embed = nextcord.Embed(
+            level_embed = discord.Embed(
                 title=f"Admin",
                 description=f"{user.name}'s level is {level}.",
                 color=ctx.author.color
@@ -165,12 +165,12 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
             await ctx.send(embed=level_embed)
 
     @commands.command(name='getexp', help="Get a users experience.", hidden=True)
-    async def get_exp(self, ctx, user: nextcord.Member):
+    async def get_exp(self, ctx, user: discord.Member):
         if ctx.author.id in database.get_owners_id():
             with open("db/users.json", "r") as f:
                 data = json.load(f)
                 exp = data[str(user.id)]['experience']
-            exp_embed = nextcord.Embed(
+            exp_embed = discord.Embed(
                 title=f"Admin",
                 description=f"{user.name}'s experience is {exp}.",
                 color=ctx.author.color
@@ -178,5 +178,5 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
             await ctx.send(embed=exp_embed)
 
 
-def setup(bot):
-    bot.add_cog(Experience(bot))
+async def setup(bot):
+    await bot.add_cog(Experience(bot))
