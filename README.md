@@ -23,7 +23,7 @@
     <img src="https://img.shields.io/badge/python-3.10-blue">
   </a>
    <a href="https://github.com/nextcord/nextcord/">
-     <img src="https://img.shields.io/badge/next-cord-blue.svg" alt="next-cord">
+     <img src="https://img.shields.io/badge/discord-py-blue.svg" alt="discord-py">
   <a href="https://creativecommons.org/licenses/by-nc/4.0/">
     <img src="https://img.shields.io/static/v1?label=license&message=BY-NC%204.0&color=orange&logo=creative%20commons&logoColor=white">
   <a href="https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2FArikSquad%2FEnSave-Discord">
@@ -48,6 +48,7 @@
 # Overview
 This is an open-source discord bot developed by [ArikSquad](https://github.com/Ariksquad) and [Mhilkos](https://github.com/Mhilkos).
 We also have documented files in this project, so feel free to check the files and see the documentation over there!
+EnSave uses discord.py library which has been unarchived. If you would like to use this as your own bot, please give us some credit.
 
 # Installation
 1. Clone this repository.
