@@ -7,167 +7,151 @@
 
 from __future__ import division
 
-import math
-import operator
-from datetime import datetime
-
 import discord
 from discord.ext import commands
-from pyparsing import (
-    CaselessLiteral,
-    Combine,
-    Forward,
-    Group,
-    Literal,
-    Optional,
-    Word,
-    ZeroOrMore,
-    alphas,
-    nums,
-    oneOf
-)
+from simpcalc import simpcalc
 
 
-class NumericStringParser(object):
-    """
-    Most of this code comes from the fourFn.py pyparsing example
-    """
-
-    def pushfirst(self, strg, loc, toks):
-        self.exprStack.append(toks[0])
-
-    def pushuminus(self, strg, loc, toks):
-        if toks and toks[0] == "-":
-            self.exprStack.append("unary -")
-
+# noinspection PyUnusedLocal
+class InteractiveView(discord.ui.View):
     def __init__(self):
-        """
-        expop   :: '^'
-        multop  :: 'x' | '*' | '/'
-        addop   :: '+' | '-'
-        integer :: ['+' | '-'] '0'..'9'+
-        atom    :: PI | E | real | fn '(' expr ')' | '(' expr ')'
-        factor  :: atom [ expop factor ]*
-        term    :: factor [ multop factor ]*
-        expr    :: term [ addop term ]*
-        """
-        point = Literal(".")
-        e = CaselessLiteral("E")
-        fnumber = Combine(
-            Word("+-" + nums, nums) + Optional(point + Optional(Word(nums))) + Optional(e + Word("+-" + nums, nums))
-        )
-        ident = Word(alphas, alphas + nums + "_$")
-        plus = Literal("+")
-        minus = Literal("-")
-        mult = Literal("x")
-        div = Literal("/")
-        lpar = Literal("(").suppress()
-        rpar = Literal(")").suppress()
-        addop = plus | minus
-        multop = mult | div
-        expop = Literal("^")
-        pi = CaselessLiteral("PI")
-        expr = Forward()
-        atom = (
-                (Optional(oneOf("- +")) + (pi | e | fnumber | ident + lpar + expr + rpar).setParseAction(
-                    self.pushfirst))
-                | Optional(oneOf("- +")) + Group(lpar + expr + rpar)
-        ).setParseAction(self.pushuminus)
-        # by defining exponentiation as "atom [ ^ factor ]..." instead of
-        # "atom [ ^ atom ]...", we get right-to-left exponents, instead of left-to-right
-        # that is, 2^3^2 = 2^(3^2), not (2^3)^2.
-        factor = Forward()
-        factor << atom + ZeroOrMore((expop + factor).setParseAction(self.pushfirst))
-        term = factor + ZeroOrMore((multop + factor).setParseAction(self.pushfirst))
-        expr << term + ZeroOrMore((addop + term).setParseAction(self.pushfirst))
-        # addop_term = ( addop + term ).setParseAction( self.pushFirst )
-        # general_term = term + ZeroOrMore( addop_term ) | OneOrMore( addop_term)
-        # expr <<  general_term
-        self.bnf = expr
-        # map operator symbols to corresponding arithmetic operations
-        epsilon = 1e-12
-        # You can add more operators here
-        self.opn = {
-            "+": operator.add,
-            "-": operator.sub,
-            "x": operator.mul,
-            "**": operator.pow,
-            "*": operator.mul,
-            "/": operator.truediv,
-            "^": operator.pow,
-        }
-        # functions, You can add more functions here
-        self.fn = {
-            "sin": math.sin,
-            "cos": math.cos,
-            "tan": math.tan,
-            "abs": abs,
-            "trunc": int,
-            "round": round,
-            "floor": math.floor,
-            "ceil": math.ceil,
-        }
+        super().__init__()
+        self.expr = ""
+        self.calc = simpcalc.Calculate()
 
-    def evaluatestack(self, s):
-        op = s.pop()
-        if op == "unary -":
-            return -self.evaluatestack(s)
-        if op in "+-x/^":
-            op2 = self.evaluatestack(s)
-            op1 = self.evaluatestack(s)
-            return self.opn[op](op1, op2)
-        elif op == "PI":
-            return math.pi  # 3.1415926535
-        elif op == "E":
-            return math.e  # 2.718281828
-        elif op in self.fn:
-            return self.fn[op](self.evaluatestack(s))
-        elif op[0].isalpha():
-            return 0
-        else:
-            return float(op)
+    @discord.ui.button(style=discord.ButtonStyle.blurple, label="1", row=0)
+    async def one(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.expr += "1"
+        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.response.defer()
 
-    def eval(self, num_string, parseall=True):
-        self.exprStack = []
-        results = self.bnf.parseString(num_string, parseall)
-        val = self.evaluatestack(self.exprStack[:])
-        print(results)
-        return val
+    @discord.ui.button(style=discord.ButtonStyle.blurple, label="2", row=0)
+    async def two(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.expr += "2"
+        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.response.defer()
+
+    @discord.ui.button(style=discord.ButtonStyle.blurple, label="3", row=0)
+    async def three(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.expr += "3"
+        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.response.defer()
+
+    @discord.ui.button(style=discord.ButtonStyle.green, label="+", row=0)
+    async def plus(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.expr += "+"
+        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.response.defer()
+
+    @discord.ui.button(style=discord.ButtonStyle.blurple, label="4", row=1)
+    async def last(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.expr += "4"
+        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.response.defer()
+
+    @discord.ui.button(style=discord.ButtonStyle.blurple, label="5", row=1)
+    async def five(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.expr += "5"
+        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.response.defer()
+
+    @discord.ui.button(style=discord.ButtonStyle.blurple, label="6", row=1)
+    async def six(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.expr += "6"
+        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.response.defer()
+
+    @discord.ui.button(style=discord.ButtonStyle.green, label="/", row=1)
+    async def divide(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.expr += "/"
+        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.response.defer()
+
+    @discord.ui.button(style=discord.ButtonStyle.blurple, label="7", row=2)
+    async def seven(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.expr += "7"
+        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.response.defer()
+
+    @discord.ui.button(style=discord.ButtonStyle.blurple, label="8", row=2)
+    async def eight(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.expr += "8"
+        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.response.defer()
+
+    @discord.ui.button(style=discord.ButtonStyle.blurple, label="9", row=2)
+    async def nine(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.expr += "9"
+        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.response.defer()
+
+    @discord.ui.button(style=discord.ButtonStyle.green, label="*", row=2)
+    async def multiply(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.expr += "*"
+        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.response.defer()
+
+    @discord.ui.button(style=discord.ButtonStyle.blurple, label=".", row=3)
+    async def dot(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.expr += "."
+        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.response.defer()
+
+    @discord.ui.button(style=discord.ButtonStyle.blurple, label="0", row=3)
+    async def zero(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.expr += "0"
+        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.response.defer()
+
+    @discord.ui.button(style=discord.ButtonStyle.green, label="=", row=3)
+    async def equal(self, button: discord.ui.Button, interaction: discord.Interaction):
+        try:
+            self.expr = await self.calc.calculate(self.expr)
+        except simpcalc.BadArgument:
+            await interaction.response.defer()
+            return await interaction.message.edit(content=f"```\nNaaw bro why me? I can't do that hard calculations?"
+                                                          f" WHAT DO YOU THINK I AM? A MACHINE?\n```")
+        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.response.defer()
+
+    @discord.ui.button(style=discord.ButtonStyle.green, label="-", row=3)
+    async def minus(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.expr += "-"
+        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.response.defer()
+
+    @discord.ui.button(style=discord.ButtonStyle.green, label="(", row=4)
+    async def left_bracket(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.expr += "("
+        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.response.defer()
+
+    @discord.ui.button(style=discord.ButtonStyle.green, label=")", row=4)
+    async def right_bracket(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.expr += ")"
+        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.response.defer()
+
+    @discord.ui.button(style=discord.ButtonStyle.red, label="C", row=4)
+    async def clear(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.expr = ""
+        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.response.defer()
+
+    @discord.ui.button(style=discord.ButtonStyle.danger, label="DEL", row=4)
+    async def delete(self, button: discord.ui.Button, interaction: discord.Interaction):
+        self.expr = self.expr[:-1]
+        await interaction.message.delete()
 
 
-class Calculator(commands.Cog, description="Math commands"):
-    """Calculator calculates stuff (math)"""
-
-    COG_EMOJI = "📚"
-
-    # Init with the bot reference, and a reference to the settings var
+class Calculator(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.nsp = NumericStringParser()
 
-    @commands.command(name="calculator", aliases=["calc"], help="Evaluate math expressions.")
-    async def calculator(self, ctx, *, formula):
-        try:
-            answer = self.nsp.eval(formula)
-        except Exception as e:
-            execute_error = discord.Embed(
-                color=discord.Colour(0xff0000),
-                title=f"Could not parse formula. {e}",
-                timestamp=datetime.utcnow()
-            )
-            return await ctx.send(embed=execute_error)
-
-        if int(answer) == answer:
-            # Check if it's a whole number and cast to int.
-            answer = int(answer)
-
-        # Send the calculated answer
-        answers = discord.Embed(
-            color=discord.Colour.gold(),
-            title=f"{formula} = {answer}"
-        )
-        answers.set_footer(text=f"Requested by {ctx.author.display_name}", icon_url=ctx.author.avatar_url)
-        await ctx.send(embed=answers)
+    @commands.command(name="calculate", aliases=["calc"])
+    async def interactive_calc(self, ctx):
+        view = InteractiveView()
+        await ctx.send("```\n```", view=view)
 
 
 async def setup(bot):
