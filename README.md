@@ -51,29 +51,35 @@ We also have documented files in this project, so feel free to check the files a
 EnSave uses discord.py library which has been unarchived. If you would like to use this as your own bot, please give us some credit.
 
 # Installation
-1. Clone this repository.
-```
+1. Clone this repository using this command:
+```commandline
 git clone https://github.com/ArikSquad/EnSave-Discord.git
 ```
-  
 2. Open Command Prompt or Terminal. Then go into the folder with this command: 
-  ```
+```commandline
   cd EnSave-Discord
-  ```
- 
-3. Then install requirements in your shell.
+ ```
+3. Then install requirements in your terminal. This is very easy and done by this command:
+```commandline
+python3 -m pip install -r requirements.txt
 ```
-pip install -r requirements.txt
+6. After all that you should create a file named .env and put this inside it, but change "(your token)" to your discord bot token.
 ```
+TOKEN="(your token)"
+MUSIC="(your lavalink ip)"
+HYPIXELAPI="(your hypixel api key)"
+DBHAPI="(if you host this in danbot, then put your api key here)"
+```
+7. Good! Now you can run the bot by opening a new terminal and running this command:
+```commandline
+python3 main.py
+```
+8. If you want to use Music commands you need to follow [this](https://github.com/PythonistaGuild/Wavelink#lavalink-installation) guide
+9. If you need more help with this then feel free to join our discord server. [Click here](https://discord.gg/WKTcnb86b7) to join the support server.
 
-5. If you want to use Music commands you need to follow [this](https://github.com/PythonistaGuild/Wavelink#lavalink-installation) guide
- 
-6. After that you can just run the main.py, and you are good to go!
+## Reporting a Vulnerability or an Issue
 
-
-## Reporting a Vulnerability
-
-If you found any vulnerabilities please open an issue at the [Issues](https://github.com/ArikSquad/EnSave-Discord/issues) tab.
+If you found any vulnerabilities or issues please open an issue at the [Issues](https://github.com/ArikSquad/EnSave-Discord/issues) tab.
  
 # License
 This work is licensed under the [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. You are allowed to fork the project and distribute it, if you give credit. You may not sell any code protected by the license. Not all source files are protected by this license - Some third party libraries may be under different copyright.
