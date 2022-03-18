@@ -10,6 +10,7 @@ better_profanity
 mcstatus
 danbot-hosting
 psutil
+simpcalci
 
 # These libraries are used in the music commands.
 PyNaCl
