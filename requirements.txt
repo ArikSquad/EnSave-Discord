@@ -8,7 +8,7 @@ python-dotenv
 requests
 better_profanity
 mcstatus
-danbot-hosting
+danbot-hosting-py
 psutil
 simpcalci
 
