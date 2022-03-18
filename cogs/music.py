@@ -32,7 +32,6 @@ class Music(commands.Cog, description="Music commands"):
         self.bot.loop.create_task(self.connect_nodes())
 
     async def connect_nodes(self):
-        print("ready")
         await wavelink.NodePool.create_node(bot=self.bot, host=host_server, port=443, password='thisisarik', https=True)
 
     @commands.Cog.listener()
