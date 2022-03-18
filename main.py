@@ -37,19 +37,17 @@ bot = commands.Bot(command_prefix=database.get_prefix,
 
 
 # Load all the cogs, then print the cog names that have been loaded.
-async def load_cogs():
+# Also run the bot with token from .env file.
+async def main():
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py'):
             loader = filename[:-3]
             await bot.load_extension(f'cogs.{loader}')
             logger.print_color(f'{loader.capitalize()} has been loaded', 'HEADER')
-asyncio.run(load_cogs())
 
-
-# Run the bot with token (.env file)
-async def main():
     async with bot:
         await bot.start(token, reconnect=True)
+
 
 if __name__ == "__main__":
     asyncio.run(main())
