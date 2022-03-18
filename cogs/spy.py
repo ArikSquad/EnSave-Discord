@@ -111,7 +111,7 @@ class Spy(commands.Cog, description="Spying commands."):
                     data[str(ctx.guild.id)]["spy_edit"] = True
                 embed = discord.Embed(
                     title="Spy",
-                    description="Spying is now disabled for " + desc + ".",
+                    description="Spying is now disabled for " + desc + " messages.",
                     color=discord.Color.green(),
                 )
                 await ctx.send(embed=embed)
@@ -128,7 +128,7 @@ class Spy(commands.Cog, description="Spying commands."):
                     data[str(ctx.guild.id)]["spy_edit"] = False
                 embed = discord.Embed(
                     title="Spy",
-                    description="Spying is now disabled for " + desc + ".",
+                    description="Spying is now disabled for " + desc + " messages.",
                     color=discord.Color.red(),
                 )
                 await ctx.send(embed=embed)
