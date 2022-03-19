@@ -1,11 +1,12 @@
+
 <h1 align="center">
   <br>
   <br>
-  EnSave Discord Bot
+  EnSave Discord
   <br>
 </h1>
 
-<h4 align="center">Moderation, Memes, Dogs.</h4>
+<h4 align="center">True bot for everything you need from a bot.</h4>
 
 <p align="center">
   <a href="https://discord.gg/Z5N5AWJmrA">
@@ -19,10 +20,10 @@
 <p align="center">
 
  <a href="https://www.python.org/downloads/">
-    <img src="https://img.shields.io/badge/python-3.10-blue">
+    <img src="https://img.shields.io/badge/Python-3.8%20%7C%203.9%20%7C%203.10-blue.svg">
   </a>
-   <a href="https://github.com/Rapptz/discord.py/">
-     <img src="https://img.shields.io/badge/discord-py-blue.svg" alt="discord.py">
+   <a href="https://github.com/nextcord/nextcord/">
+     <img src="https://img.shields.io/badge/discord-py-blue.svg" alt="discord-py">
   <a href="https://creativecommons.org/licenses/by-nc/4.0/">
     <img src="https://img.shields.io/static/v1?label=license&message=BY-NC%204.0&color=orange&logo=creative%20commons&logoColor=white">
   <a href="https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2FArikSquad%2FEnSave-Discord">
@@ -45,32 +46,40 @@
 
 
 # Overview
-This is an open-source discord bot developed by [ArikSquad](http://github.com/Ariksquad) and [Mhilkos](http://github.com/Mhilkos).
+This is an open-source discord bot developed by [ArikSquad](https://github.com/Ariksquad) and [Mhilkos](https://github.com/Mhilkos).
+We also have documented files in this project, so feel free to check the files and see the documentation over there!
+EnSave uses discord.py library which has been unarchived. If you would like to use this as your own bot, please give us some credit.
 
 # Installation
-1. Clone this repository.
-```
+1. Clone this repository using this command:
+```commandline
 git clone https://github.com/ArikSquad/EnSave-Discord.git
 ```
-  
-2. Open Command Prompt or Terminal. Here is an example if you have it on your desktop: 
-  ```
-  cd Desktop/EnSave-Discord
-  ```
- 
-3. Then install requirements in your shell.
+2. Open Command Prompt or Terminal. Then go into the folder with this command: 
+```commandline
+  cd EnSave-Discord
+ ```
+3. Then install requirements in your terminal. This is very easy and done by this command:
+```commandline
+python3 -m pip install -r requirements.txt
 ```
-pip install -r requirements.txt
+6. After all that you should create a file named .env and put this inside it, but change "(your token)" to your discord bot token.
 ```
+TOKEN="(your token)"
+MUSIC="(your lavalink ip)"
+HYPIXELAPI="(your hypixel api key)"
+DBHAPI="(if you host this in danbot, then put your api key here)"
+```
+7. Good! Now you can run the bot by opening a new terminal and running this command:
+```commandline
+python3 main.py
+```
+8. If you want to use Music commands you need to follow [this](https://github.com/PythonistaGuild/Wavelink#lavalink-installation) guide
+9. If you need more help with this then feel free to join our discord server. [Click here](https://discord.gg/WKTcnb86b7) to join the support server.
 
-5. If you want to use Music commands you need to follow <a href="https://github.com/PythonistaGuild/Wavelink#installation">this</a> guide
+## Reporting a Vulnerability or an Issue
 
-6. After that you can just run the main.py, and you are good to go!
-
-
-## Reporting a Vulnerability
-
-If you found any vulnerabilities please open an issue at the <a href="https://github.com/ArikSquad/EnSave-Discord/issues">Issues</a> tab.
+If you found any vulnerabilities or issues please open an issue at the [Issues](https://github.com/ArikSquad/EnSave-Discord/issues) tab.
  
 # License
 This work is licensed under the [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. You are allowed to fork the project and distribute it, if you give credit. You may not sell any code protected by the license. Not all source files are protected by this license - Some third party libraries may be under different copyright.
