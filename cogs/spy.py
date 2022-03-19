@@ -29,7 +29,7 @@ class Spy(commands.Cog, description="Spying commands."):
                     return
                 embed = discord.Embed(
                     title="Message edited",
-                    description=f"{before.author.mention} edited their message.",
+                    description=f"{before.author.mention}s message was edited",
                     color=discord.Color.blue(),
                 )
                 embed.add_field(name="Before", value=before.content)
@@ -65,7 +65,7 @@ class Spy(commands.Cog, description="Spying commands."):
                     return
                 embed = discord.Embed(
                     title="Message deleted",
-                    description=f"{message.author.mention} deleted their message.",
+                    description=f"{message.author.mention}s message was deleted.",
                     color=discord.Color.red(),
                 )
                 embed.add_field(name="Message", value=message.content)
