@@ -22,7 +22,7 @@ class Webserver(commands.Cog, description="Webserver to handle pings."):
         async def welcome(request):
             return web.Response(text="Hello, world")
 
-        self.webserver_port = 5000
+        self.webserver_port = 1331
         app.add_routes(routes)
 
     @tasks.loop()
