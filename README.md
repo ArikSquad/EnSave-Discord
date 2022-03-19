@@ -2,11 +2,11 @@
 <h1 align="center">
   <br>
   <br>
-  EnSave Discord Bot
+  EnSave Discord
   <br>
 </h1>
 
-<h4 align="center">Moderation, Memes, Dogs.</h4>
+<h4 align="center">True bot for everything you need from a bot.</h4>
 
 <p align="center">
   <a href="https://discord.gg/Z5N5AWJmrA">
@@ -20,7 +20,7 @@
 <p align="center">
 
  <a href="https://www.python.org/downloads/">
-    <img src="https://img.shields.io/badge/python-3.10-blue">
+    <img src="https://img.shields.io/badge/Python-3.8%20%7C%203.9%20%7C%203.10-blue.svg">
   </a>
    <a href="https://github.com/nextcord/nextcord/">
      <img src="https://img.shields.io/badge/discord-py-blue.svg" alt="discord-py">
