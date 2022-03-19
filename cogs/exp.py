@@ -8,7 +8,9 @@
 import json
 
 import discord
+from PIL import Image, ImageDraw, ImageFont
 from discord.ext import commands
+from tabulate import tabulate
 
 from utils import database
 
@@ -176,6 +178,68 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
                 color=ctx.author.color
             )
             await ctx.send(embed=exp_embed)
+
+    @commands.command(name='leaderboard', help="Get the leaderboard.", hidden=True)
+    async def leaderboard(self, ctx):
+        with open("db/users.json", "r") as f:
+            data = json.load(f)
+
+        user_ids = list(data.keys())
+        user_exp = [data[user_id]['experience'] for user_id in user_ids]
+        user_level = [data[user_id]['level'] for user_id in user_ids]
+
+        new_leaderboard = []
+
+        for index, user_id in enumerate(user_ids, 1):
+            new_leaderboard.append([user_id, user_level[index - 1], user_exp[index - 1]])
+
+        new_leaderboard.sort(key=lambda x: (x[1], x[2]), reverse=True)
+
+        user_rank_column = []
+        user_name_column = []
+        user_level_column = []
+        user_exp_column = []
+
+        for index, rank_value in enumerate(new_leaderboard[:10]):
+            user_rank_column.append([index + 1])
+
+        for index, name_value in enumerate(new_leaderboard[:10]):
+            user_name_column.append([await self.bot.fetch_user(name_value[0])])
+
+        for level_index, level_value in enumerate(new_leaderboard[:10]):
+            user_level_column.append([level_value[1]])
+
+        for exp_index, exp_value in enumerate(new_leaderboard[:10]):
+            user_exp_column.append([exp_value[2]])
+
+        user_rank_table = tabulate(user_rank_column, tablefmt='plain', headers=['#\n'], numalign="left")
+        user_name_table = tabulate(user_name_column, tablefmt='plain', headers=['Name\n'], numalign="left")
+        user_level_table = tabulate(user_level_column, tablefmt='plain', headers=['Levels\n'], numalign="left")
+        user_exp_table = tabulate(user_exp_column, tablefmt='plain', headers=['Experience\n'], numalign="left")
+
+        image_template = Image.open("assets/leaderboard_temp.png")
+        font = ImageFont.truetype("assets/leaderboard_temp.ttf", 160)
+
+        rank_text_position = 90, 50
+        name_text_position = 400, 50
+        level_text_position = 1990, 50
+        exp_text_position = 2750, 50
+
+        draw_on_image = ImageDraw.Draw(image_template)
+        draw_on_image.text(rank_text_position, user_rank_table, 'white', font=font)
+        draw_on_image.text(name_text_position, user_name_table, 'white', font=font)
+        draw_on_image.text(level_text_position, user_level_table, 'white', font=font)
+        draw_on_image.text(exp_text_position, user_exp_table, 'white', font=font)
+
+        image_template.convert('RGB').save("assets/current_leaderboard.jpg", 'JPEG')
+
+        embed = discord.Embed(
+            title="Leaderboard",
+            description=f"Here is the current leaderboard.",
+            color=ctx.author.color
+        )
+        embed.set_image(url="attachment://current_leaderboard.jpg")
+        await ctx.send(file=discord.File("assets/current_leaderboard.jpg"), embed=embed)
 
 
 async def setup(bot):
