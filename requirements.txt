@@ -11,6 +11,8 @@ mcstatus
 danbot-hosting-py
 psutil
 simpcalci
+Tabulate
+Pillow
 
 # These libraries are used in the music commands.
 PyNaCl
