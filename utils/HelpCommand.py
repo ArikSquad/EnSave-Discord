@@ -81,7 +81,6 @@ class MyHelpCommand(commands.MinimalHelpCommand):
             avatar = self.context.bot.user.avatar or self.context.bot.user.default_avatar
             embed.set_author(name=self.context.bot.user.name, icon_url=avatar.url)
         if command_set:
-            # show help about all commands in the set
             filtered = await self.filter_commands(command_set, sort=True)
             for command in filtered:
                 embed.add_field(
@@ -90,15 +89,12 @@ class MyHelpCommand(commands.MinimalHelpCommand):
                     inline=False
                 )
         elif mapping:
-            # add a short description of commands in each cog
             for cog, command_set in mapping.items():
                 filtered = await self.filter_commands(command_set, sort=True)
                 if not filtered:
                     continue
                 name = cog.qualified_name if cog else "Other"
-                # emoji = getattr(cog, "COG_EMOJI", None)
                 cog_label = f"{name}"
-                # \u2002 is an en-space
                 cmd_list = "\u2002".join(
                     f"`{self.context.clean_prefix}{cmd.name}`" for cmd in filtered
                 )
@@ -151,5 +147,4 @@ class MyHelpCommand(commands.MinimalHelpCommand):
         embed = await self.cog_help_embed(cog)
         await self.get_destination().send(embed=embed)
 
-    # Use the same function as command help for group help
     send_group_help = send_command_help

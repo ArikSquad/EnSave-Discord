@@ -40,7 +40,7 @@ bot = commands.Bot(command_prefix=database.get_prefix,
 # Also run the bot with token from .env file.
 async def main():
     for filename in os.listdir('./cogs'):
-        if filename.endswith('.py'):
+        if filename.endswith('.py') and not filename.startswith('_'):
             loader = filename[:-3]
             await bot.load_extension(f'cogs.{loader}')
             logger.print_color(f'{loader.capitalize()} has been loaded', 'HEADER')
