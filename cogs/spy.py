@@ -12,6 +12,8 @@ from discord.ext import commands
 
 
 class Spy(commands.Cog, description="Spying commands."):
+    COG_EMOJI = "🕵️"
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -29,11 +31,11 @@ class Spy(commands.Cog, description="Spying commands."):
                     return
                 embed = discord.Embed(
                     title="Message edited",
-                    description=f"{before.author.mention}s message was edited",
+                    description=f"{before.author.mention} message was edited",
                     color=discord.Color.blue(),
                 )
-                embed.add_field(name="Before", value=before.content)
-                embed.add_field(name="After", value=after.content)
+                embed.add_field(name="Before", value=before.content, inline=False)
+                embed.add_field(name="After", value=after.content, inline=False)
                 embed.set_footer(text=f"Message ID: {before.id}")
                 try:
                     get_channel = discord.utils.get(before.guild.channels, name="ensave-guard")
@@ -65,7 +67,7 @@ class Spy(commands.Cog, description="Spying commands."):
                     return
                 embed = discord.Embed(
                     title="Message deleted",
-                    description=f"{message.author.mention}s message was deleted.",
+                    description=f"{message.author.mention} message was deleted.",
                     color=discord.Color.red(),
                 )
                 embed.add_field(name="Message", value=message.content)

@@ -18,6 +18,8 @@ from utils import database
 
 
 class Admin(commands.Cog, description="Gather information."):
+    COG_EMOJI = "📜"
+
     def __init__(self, bot):
         self.bot = bot
 
