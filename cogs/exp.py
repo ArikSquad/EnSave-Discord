@@ -24,29 +24,39 @@ async def add_exp_on_message(message):
         if data[str(message.author.id)]['experience'] > 1000:
             data[str(message.author.id)]['experience'] = 0
             data[str(message.author.id)]['level'] = data[str(message.author.id)]['level'] + 1
-            data[str(message.author.id)]['sent'] = 0
+            data[str(message.author.id)]['sent'] = False
         else:
             data[str(message.author.id)]['experience'] = data[str(message.author.id)]['experience'] + amount
         f.seek(0)
         json.dump(data, f, indent=4)
+        f.close()
 
-        if data[str(message.author.id)]['level'] > 50 and not database.get_premium(message.author.id):
-            database.set_premium(message.author.id, True)
-            user_level = discord.Embed(
-                title=f"EnSave Leveling",
-                description='Congratulations, you have earned EnSave Premium!',
-                color=message.author.color
-            )
-            await message.channel.send(embed=user_level)
-        elif data[str(message.author.id)]['sent'] == 0:
-            user_level = discord.Embed(
-                title=f"EnSave Leveling",
-                description=f"Congratulations, you have leveled "
-                            f"up to level {data[str(message.author.id)]['level']}!",
-                color=message.author.color
-            )
-            await message.channel.send(embed=user_level)
-            data[str(message.author.id)]['sent'] = 1
+        check_add_level(message)
+
+
+def check_add_level(message):
+    with open('db/users.json', 'r+') as f:
+        data = json.load(f)
+        level = data[str(message.author.id)]['level']
+        sent = data[str(message.author.id)]['sent']
+    if level > 50 and not database.get_premium(message.author.id):
+        database.set_premium(message.author.id, True)
+        user_level = discord.Embed(
+            title=f"EnSave Leveling",
+            description='Congratulations, you have earned EnSave Premium!',
+            color=message.author.color
+        )
+        await message.channel.send(embed=user_level)
+    elif not sent:
+        user_level = discord.Embed(
+            title=f"EnSave Leveling",
+            description=f"Congratulations, {message.author.mention} has leveled "
+                        f"up to level {level}!",
+            color=message.author.color
+        )
+        await message.channel.send(embed=user_level)
+        with open('db/users.json', 'r+') as f:
+            data[str(message.author.id)]['sent'] = True
             f.seek(0)
             json.dump(data, f, indent=4)
 
