@@ -31,10 +31,10 @@ async def add_exp_on_message(message):
         json.dump(data, f, indent=4)
         f.close()
 
-        check_add_level(message)
+        await check_add_level(message)
 
 
-def check_add_level(message):
+async def check_add_level(message):
     with open('db/users.json', 'r+') as f:
         data = json.load(f)
         level = data[str(message.author.id)]['level']
