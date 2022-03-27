@@ -15,30 +15,43 @@ from tabulate import tabulate
 from utils import database
 
 
-async def add_exp_on_message(message):
+async def check_exp(message):
     amount = 3.5 * len(message.clean_content)
     if amount > 75:
         amount = 75
+
     with open('db/users.json', 'r+') as f:
         data = json.load(f)
+    if str(message.author.id) in data:
+        exp = data[str(message.author.id)]['experience']
+        level = data[str(message.author.id)]['level']
+
         if data[str(message.author.id)]['experience'] > 1000:
             data[str(message.author.id)]['experience'] = 0
-            data[str(message.author.id)]['level'] = data[str(message.author.id)]['level'] + 1
+            data[str(message.author.id)]['level'] = level + 1
             data[str(message.author.id)]['sent'] = False
         else:
-            data[str(message.author.id)]['experience'] = data[str(message.author.id)]['experience'] + amount
+            data[str(message.author.id)]['experience'] = exp + amount
         f.seek(0)
         json.dump(data, f, indent=4)
-        f.close()
+        await message_check(message)
+    else:
+        data[str(message.author.id)] = {
+            'experience': amount,
+            'level': 0,
+            'sent': True
+        }
+        f.seek(0)
+        json.dump(data, f, indent=4)
 
-        await check_add_level(message)
 
-
-async def check_add_level(message):
+async def message_check(message):
     with open('db/users.json', 'r+') as f:
         data = json.load(f)
-        level = data[str(message.author.id)]['level']
-        sent = data[str(message.author.id)]['sent']
+
+    level = data[str(message.author.id)]['level']
+    sent = data[str(message.author.id)]['sent']
+
     if level > 50 and not database.get_premium(message.author.id):
         database.set_premium(message.author.id, True)
         user_level = discord.Embed(
@@ -47,6 +60,7 @@ async def check_add_level(message):
             color=message.author.color
         )
         await message.channel.send(embed=user_level)
+
     elif not sent:
         user_level = discord.Embed(
             title=f"EnSave Leveling",
@@ -55,22 +69,24 @@ async def check_add_level(message):
             color=message.author.color
         )
         await message.channel.send(embed=user_level)
+
         with open('db/users.json', 'r+') as f:
             data[str(message.author.id)]['sent'] = True
-            f.seek(0)
-            json.dump(data, f, indent=4)
+
+        f.seek(0)
+        json.dump(data, f, indent=4)
 
 
 def get_level(author_id):
     with open('db/users.json', 'r') as f:
         data = json.load(f)
-        return data[str(author_id)]['level']
+    return data[str(author_id)]['level']
 
 
 def get_xp(author_id):
     with open('db/users.json', 'r') as f:
         data = json.load(f)
-        return data[str(author_id)]['experience']
+    return data[str(author_id)]['experience']
 
 
 class Experience(commands.Cog, description="Gain levels to get more commands!"):
@@ -87,7 +103,7 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
             prefix = prefixes[str(message.guild.id)]
         if not message.content.startswith(prefix) and message.author.id != 812808865728954399 \
                 and not message.author.bot and message.guild.id == 770634445370687519:
-            await add_exp_on_message(message)
+            await check_exp(message)
 
     @commands.command(name='level', help="Check your level.")
     async def level(self, ctx):

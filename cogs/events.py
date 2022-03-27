@@ -27,6 +27,7 @@ class Events(commands.Cog, description="Add the events to the bot"):
     async def on_ready(self):
         # Send information to DanBot.
         # DanBotClient(bot, key=danbot, autopost=True)
+
         # Print some information about the bot.
         print("Logging in... at the time of " + str(datetime.datetime.now()))
         print(f'{logger.WARNING}{self.bot.user} has connected to Discord!{logger.END}')
@@ -34,18 +35,6 @@ class Events(commands.Cog, description="Add the events to the bot"):
         print(f"ID: {logger.CYAN}{self.bot.user.id}{logger.END}")
         print(f'{logger.BOLD}###########################################{logger.END}')
         print(f"Connected to {logger.GREEN}{len(self.bot.guilds)} guilds{logger.END}")
-
-        with open("db/users.json", "r") as f:
-            data = json.load(f)
-        guild = self.bot.get_guild(770634445370687519)
-        async for member in guild.fetch_members():
-            if str(member.id) not in data and not member.bot:
-                data[str(member.id)] = {}
-                data[str(member.id)]["experience"] = 0
-                data[str(member.id)]["level"] = 0
-                data[str(member.id)]["sent"] = 1
-        with open("db/users.json", 'w') as f:
-            json.dump(data, f, indent=4)
 
     # This even will be run after the bot leaves a guild.
     @commands.Cog.listener()
