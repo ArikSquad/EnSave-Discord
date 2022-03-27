@@ -227,7 +227,7 @@ class Experience(commands.Cog, description="Gain levels to get more commands!"):
         user_level_table = tabulate(user_level_column, tablefmt='plain', headers=['Levels\n'], numalign="left")
         user_exp_table = tabulate(user_exp_column, tablefmt='plain', headers=['Experience\n'], numalign="left")
 
-        image_template = Image.open("assets/leaderboard_temp.png")
+        image_template = Image.open("assets/background.png")
         font = ImageFont.truetype("assets/leaderboard_temp.ttf", 160)
 
         rank_text_position = 90, 50
