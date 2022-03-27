@@ -60,12 +60,11 @@ class Welcome(commands.Cog, description="Welcome commands."):
                 json.dump(data, f, indent=4)
 
         if toggle:
-            try:
-                get_channel = discord.utils.get(member.guild.channels, name="ensave-guard")
-                channel_id = get_channel.id
-                channel = self.bot.get_channel(channel_id)
-            except AttributeError:
+            if welcome_channel is not None:
                 channel = self.bot.get_channel(welcome_channel)
+            else:
+                get_channel = member.guild.system_channel.id
+                channel = self.bot.get_channel(get_channel)
 
             if member.id == 537237654207725568:
                 return
@@ -87,7 +86,7 @@ class Welcome(commands.Cog, description="Welcome commands."):
                 with open("db/config.json", "r") as f:
                     data = json.load(f)
                 data[str(ctx.guild.id)] = {}
-                data[str(ctx.guild.id)]["welcome_channel"] = channel.id if channel else None
+                data[str(ctx.guild.id)]["welcome_channel"] = channel.id if channel else ctx.guild.system_channel.id
                 with open("db/config.json", "w") as f:
                     json.dump(data, f, indent=4)
         else:
