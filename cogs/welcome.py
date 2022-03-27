@@ -68,21 +68,31 @@ class Welcome(commands.Cog, description="Welcome commands."):
 
     @commands.command(name="welcome-channel")
     @commands.has_permissions(manage_guild=True)
-    async def welcome_channel(self, ctx, channel: discord.TextChannel):
-        try:
-            with open("db/config.json", "r") as f:
-                data = json.load(f)
-            data[str(ctx.guild.id)]["welcome_channel"] = channel.id
-            await ctx.send(f"Welcome channel set to {channel.mention}.")
-            with open("db/config.json", "w") as f:
-                json.dump(data, f, indent=4)
-        except KeyError:
-            with open("db/config.json", "r") as f:
-                data = json.load(f)
-            data[str(ctx.guild.id)] = {}
-            data[str(ctx.guild.id)]["welcome_channel"] = channel.id if channel else None
-            with open("db/config.json", "w") as f:
-                json.dump(data, f, indent=4)
+    async def welcome_channel(self, ctx, channel: discord.TextChannel = None):
+        if channel is not None:
+            try:
+                with open("db/config.json", "r") as f:
+                    data = json.load(f)
+                data[str(ctx.guild.id)]["welcome_channel"] = channel.id
+                await ctx.send(f"Welcome channel set to {channel.mention}.")
+                with open("db/config.json", "w") as f:
+                    json.dump(data, f, indent=4)
+            except KeyError:
+                with open("db/config.json", "r") as f:
+                    data = json.load(f)
+                data[str(ctx.guild.id)] = {}
+                data[str(ctx.guild.id)]["welcome_channel"] = channel.id if channel else None
+                with open("db/config.json", "w") as f:
+                    json.dump(data, f, indent=4)
+        else:
+            try:
+                with open("db/config.json", "r") as f:
+                    data = json.load(f)
+                channel_id = data[str(ctx.guild.id)]["welcome_channel"]
+                channel = self.bot.get_channel(channel_id)
+                await ctx.send(f"Welcome channel is currently set to {channel.mention}.")
+            except KeyError:
+                await ctx.send("Welcome channel is currently set to None.")
 
     @commands.command(name="welcome-toggle")
     @commands.has_permissions(manage_guild=True)
