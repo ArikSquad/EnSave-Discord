@@ -73,13 +73,6 @@ def set_premium(user_id, premium: bool = True):
     return False
 
 
-def premium_embed(ctx, title: str):
-    return discord.Embed(title=title,
-                         description="You need to be a premium user to use this command.",
-                         color=ctx.author.color,
-                         timestamp=get_time())
-
-
 # noinspection PyUnusedLocal
 class Resume(discord.ui.View):
     def __init__(self):

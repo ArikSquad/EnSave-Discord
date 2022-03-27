@@ -25,7 +25,6 @@ class Music(commands.Cog, description="Music commands"):
 
     def __init__(self, bot):
         self.bot = bot
-        self.loop = False
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -41,12 +40,9 @@ class Music(commands.Cog, description="Music commands"):
     # noinspection PyUnusedLocal
     @commands.Cog.listener()
     async def on_wavelink_track_end(self, player: wavelink.Player, track, reason):
-        if not self.loop:
-            if not player.queue.is_empty:
-                new = player.queue.get()
-                await player.play(new)
-        if self.loop:
-            await player.play(player.track)
+        if not player.queue.is_empty:
+            new = player.queue.get()
+            await player.play(new)
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member: discord.Member,
@@ -293,44 +289,6 @@ class Music(commands.Cog, description="Music commands"):
                                       color=ctx.author.color,
                                       timestamp=database.get_time())
         await ctx.send(embed=not_connected)
-
-    @commands.command(name="loop", help="Make the song loop.")
-    async def loop_command(self, ctx: commands.Context):
-        voice: wavelink.Player = ctx.voice_client
-        if database.get_premium(ctx.author.id):
-            if not ctx.author.voice:
-                not_connected = discord.Embed(title="Music",
-                                              description=f"You are not connected to the voice channel.",
-                                              color=ctx.author.color,
-                                              timestamp=database.get_time())
-                return ctx.send(embed=not_connected)
-            if not ctx.voice_client:
-                not_connected = discord.Embed(title="Music",
-                                              description="I am not connected to a voice channel",
-                                              color=ctx.author.color,
-                                              timestamp=database.get_time())
-                return await ctx.send(embed=not_connected)
-            if not voice.is_playing():
-                no_tracks = discord.Embed(title="Music",
-                                          description=f"No tracks are queued for **{ctx.guild.name}**",
-                                          color=ctx.author.color,
-                                          timestamp=database.get_time())
-                return await ctx.send(embed=no_tracks)
-            self.loop ^= True
-            if self.loop:
-                loop_enabled = discord.Embed(title="Music",
-                                             description="Looping has been enabled",
-                                             color=ctx.author.color,
-                                             timestamp=database.get_time())
-                return await ctx.send(embed=loop_enabled)
-            else:
-                loop_disabled = discord.Embed(title="Music",
-                                              description="Looping has been disabled",
-                                              color=ctx.author.color,
-                                              timestamp=database.get_time())
-                return await ctx.send(embed=loop_disabled)
-
-        await ctx.reply(embed=database.premium_embed(ctx, "Music"))
 
     @commands.command(name="shuffle", help="Shuffle the queue.")
     async def shuffle_command(self, ctx: commands.Context):
