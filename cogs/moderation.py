@@ -18,7 +18,7 @@ class Moderation(commands.Cog, description="Moderation commands.."):
         self.bot = bot
 
     @commands.command(name="lock", help="Locks the channel.", aliases=['lockdown'])
-    @commands.has_permissions(manage_channels=True, manage_messgaes=True)
+    @commands.has_permissions(manage_channels=True, manage_messages=True)
     async def lock(self, ctx, channel: discord.TextChannel = None, reason: str = None):
         channel = ctx.channel or channel
         await channel.set_permissions(ctx.guild.default_role, send_messages=False, add_reactions=False)
