@@ -35,7 +35,7 @@ class Moderation(commands.Cog, description="Moderation commands.."):
         await channel.send(embed=embed)
 
     @commands.command(name='unlock', aliases=['unlockdown'], help="Unlocks the channel.")
-    @commands.has_permissions(manage_channels=True, manage_messgaes=True)
+    @commands.has_permissions(manage_channels=True, manage_messages=True)
     async def unlock(self, ctx):
         await ctx.message.delete()
         await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=True, add_reactions=True)
