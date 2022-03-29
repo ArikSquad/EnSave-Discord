@@ -77,7 +77,7 @@ class Debug(commands.Cog, description="Debug commands."):
             except commands.ExtensionAlreadyLoaded:
                 await ctx.send('The extension is already loaded.')
 
-    @commands.command(name='cog-restart', aliases=['reload_cog'], help='Restart a cog', hidden=True)
+    @commands.command(name='cog-restart', aliases=['cog-reload'], help='Restart a cog', hidden=True)
     async def restart_cog(self, ctx, cog):
         if ctx.author.id in database.get_owners_id():
             try:
