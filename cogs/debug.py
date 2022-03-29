@@ -68,6 +68,7 @@ class Debug(commands.Cog, description="Debug commands."):
             try:
                 await self.bot.unload_extension(f'cogs.{cog}')
                 await ctx.send(f"`{cog}` unloaded.")
+                print(f"Unloaded extension {cog}")
             except commands.ExtensionNotFound:
                 await ctx.send(f'There is no extension called {profanity.censor(cog)}')
             except commands.ExtensionNotLoaded:
@@ -79,6 +80,7 @@ class Debug(commands.Cog, description="Debug commands."):
             try:
                 await self.bot.load_extension(f'cogs.{cog}')
                 await ctx.send(f'Loaded extension {cog}')
+                print(f'Loaded extension {cog}')
             except commands.ExtensionNotFound:
                 await ctx.send(f'There is no extension called {profanity.censor(cog)}')
             except commands.ExtensionAlreadyLoaded:
@@ -90,6 +92,7 @@ class Debug(commands.Cog, description="Debug commands."):
             try:
                 await self.bot.reload_extension(f'cogs.{cog}')
                 await ctx.send(f"Successfully reloaded {cog}.")
+                print(f"Reloaded extension {cog}")
             except commands.ExtensionNotFound:
                 await ctx.send(f'There is no extension called {profanity.censor(cog)}')
             except commands.ExtensionFailed:
