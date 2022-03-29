@@ -6,7 +6,6 @@
 #
 # -----------------------------------------------------------
 import json
-import platform
 
 import discord
 import psutil as psutil
@@ -33,12 +32,9 @@ class Admin(commands.Cog, description="Gather information."):
             embed.add_field(name="Guilds", value=len(self.bot.guilds))
             embed.add_field(name="Users", value=len(self.bot.users))
             embed.add_field(name="Latency", value=f"{self.bot.latency * 1000:.2f}ms")
-            embed.add_field(name="Python", value=f"{platform.python_version()}")
-            embed.add_field(name="Processor", value=f"{platform.processor()}", inline=False)
             embed.add_field(name="Memory", value=str(round(psutil.virtual_memory().total / (1024.0 ** 3))) + " GB",
                             inline=False)
             embed.add_field(name="OS Last Boot", value=f"{psutil.boot_time()}")
-            embed.add_field(name="Bit Version", value=f"{platform.machine()}")
             embed.add_field(name="CPU Percentage", value=f"{psutil.cpu_percent()}%")
             return await ctx.send(embed=embed)
         elif user is not None and ctx.author.id in database.get_owners_id():
