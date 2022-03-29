@@ -20,7 +20,14 @@ class Debug(commands.Cog, description="Debug commands."):
     @commands.command(name="profanity-test", aliases=["p-t"], hidden=True)
     async def profanity_test(self, ctx, *, text):
         if ctx.author.id in database.get_owners_id():
-            await ctx.send(f"Results of the debug profanity-test: `{profanity.censor(text)}`")
+
+            embed = discord.Embed(title="Profanity Test",
+                                  description="Results of the debug profanity-test",
+                                  color=0x00ff00)
+
+            embed.add_field(name="Original", value=text)
+            embed.add_field(name="Censored", value=profanity.censor(text))
+            await ctx.send(embed=embed)
 
     @commands.command(name="eval", help="Evaluate code", hidden=True)
     async def eval(self, ctx, *, code):
