@@ -20,7 +20,7 @@ class Debug(commands.Cog, description="Debug commands."):
     @commands.command(name="profanity-test", aliases=["p-t"], hidden=True)
     async def profanity_test(self, ctx, *, text):
         if ctx.author.id in database.get_owners_id():
-            await ctx.send(f"`{profanity.censor(text)}`")
+            await ctx.send(f"Results of the debug profanity-test: `{profanity.censor(text)}`")
 
     @commands.command(name="eval", help="Evaluate code", hidden=True)
     async def eval(self, ctx, *, code):
