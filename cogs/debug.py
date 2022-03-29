@@ -87,6 +87,8 @@ class Debug(commands.Cog, description="Debug commands."):
                 await ctx.send(f'There is no extension called {profanity.censor(cog)}')
             except commands.ExtensionFailed:
                 await ctx.send('The extension failed.')
+            except commands.ExtensionNotLoaded:
+                await ctx.send('The extension is not loaded.')
 
 
 async def setup(bot):
