@@ -20,7 +20,7 @@ async def check_exp(message):
     if amount > 75:
         amount = 75
 
-    with open('db/users.json', 'r+') as f:
+    with open('db/users.json', 'r') as f:
         data = json.load(f)
     if str(message.author.id) in data:
         exp = data[str(message.author.id)]['experience']
@@ -32,8 +32,10 @@ async def check_exp(message):
             data[str(message.author.id)]['sent'] = False
         else:
             data[str(message.author.id)]['experience'] = exp + amount
-        f.seek(0)
-        json.dump(data, f, indent=4)
+
+        with open('db/users.json', 'w') as f:
+            f.seek(0)
+            json.dump(data, f, indent=4)
         await message_check(message)
     else:
         data[str(message.author.id)] = {
@@ -70,11 +72,11 @@ async def message_check(message):
         )
         await message.channel.send(embed=user_level)
 
-        with open('db/users.json', 'r+') as f:
+        with open('db/users.json', 'r+') as file:
             data[str(message.author.id)]['sent'] = True
 
-        f.seek(0)
-        json.dump(data, f, indent=4)
+        file.seek(0)
+        json.dump(data, file, indent=4)
 
 
 def get_level(author_id):
