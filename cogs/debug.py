@@ -17,6 +17,11 @@ class Debug(commands.Cog, description="Debug commands."):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.command(name="profanity-test", aliases=["p-t"], hidden=True)
+    async def profanity_test(self, ctx, *, text):
+        if ctx.author.id in database.get_owners_id():
+            await ctx.send(f"`{profanity.censor(text)}`")
+
     @commands.command(name="eval", help="Evaluate code", hidden=True)
     async def eval(self, ctx, *, code):
         if ctx.author.id in database.get_owners_id():
@@ -50,7 +55,7 @@ class Debug(commands.Cog, description="Debug commands."):
                 await message.delete()
                 await self.bot.close()
 
-    @commands.command(name='unload_cog', help='Unload a cog.', hidden=True)
+    @commands.command(name='cog-unload', help='Unload a cog.', hidden=True)
     async def unload_cog(self, ctx, cog):
         if ctx.author.id in database.get_owners_id():
             try:
@@ -61,7 +66,7 @@ class Debug(commands.Cog, description="Debug commands."):
             except commands.ExtensionNotLoaded:
                 await ctx.send('The extension is already unloaded.')
 
-    @commands.command(name='load_cog', help='Load a cog.', hidden=True)
+    @commands.command(name='cog-load', help='Load a cog.', hidden=True)
     async def load_cog(self, ctx, cog):
         if ctx.author.id in database.get_owners_id():
             try:
@@ -72,7 +77,7 @@ class Debug(commands.Cog, description="Debug commands."):
             except commands.ExtensionAlreadyLoaded:
                 await ctx.send('The extension is already loaded.')
 
-    @commands.command(name='restart_cog', aliases=['reload_cog'], help='Restart a cog', hidden=True)
+    @commands.command(name='cog-restart', aliases=['reload_cog'], help='Restart a cog', hidden=True)
     async def restart_cog(self, ctx, cog):
         if ctx.author.id in database.get_owners_id():
             try:

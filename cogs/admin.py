@@ -61,7 +61,7 @@ class Admin(commands.Cog, description="Gather information."):
                             inline=False)
             await ctx.send(embed=embed)
 
-    @commands.command(name='set_premium', help='Set premium state of a user.', hidden=True)
+    @commands.command(name='set-premium', help='Set premium state of a user.', hidden=True)
     async def set_premium(self, ctx, user: discord.Member, state: bool = None):
         if ctx.author.id in database.get_owners_id():
             if user.id in database.get_owners_id():
