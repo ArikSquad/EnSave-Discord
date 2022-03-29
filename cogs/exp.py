@@ -43,8 +43,9 @@ async def check_exp(message):
             'level': 0,
             'sent': True
         }
-        f.seek(0)
-        json.dump(data, f, indent=4)
+        with open('db/users.json', 'w') as f:
+            f.seek(0)
+            json.dump(data, f, indent=4)
 
 
 async def message_check(message):
