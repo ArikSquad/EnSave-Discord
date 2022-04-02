@@ -9,10 +9,9 @@ import datetime
 import json
 import os
 
+from colorama import Fore
 from discord.ext import commands
 from dotenv import load_dotenv
-
-from utils import logger
 
 load_dotenv()
 danbot = os.getenv('DBHAPI')
@@ -30,11 +29,11 @@ class Events(commands.Cog, description="Add the events to the bot"):
 
         # Print some information about the bot.
         print("Logging in... at the time of " + str(datetime.datetime.now()))
-        print(f'{logger.WARNING}{self.bot.user} has connected to Discord!{logger.END}')
-        print(f"Name: {logger.CYAN}{self.bot.user.name}{logger.END}")
-        print(f"ID: {logger.CYAN}{self.bot.user.id}{logger.END}")
-        print(f'{logger.BOLD}###########################################{logger.END}')
-        print(f"Connected to {logger.GREEN}{len(self.bot.guilds)} guilds{logger.END}")
+        print(f'{Fore.LIGHTRED_EX}{self.bot.user} has connected to Discord!')
+        print(f"Name: {Fore.CYAN}{self.bot.user.name}")
+        print(f"ID: {Fore.CYAN}{self.bot.user.id}")
+        print(f'{Fore.CYAN}###########################################')
+        print(f"Connected to {Fore.LIGHTGREEN_EX}{len(self.bot.guilds)} guilds")
 
     # This even will be run after the bot leaves a guild.
     @commands.Cog.listener()
