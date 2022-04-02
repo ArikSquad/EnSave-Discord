@@ -6,44 +6,60 @@
 #
 # -----------------------------------------------------------
 
-# The libraries that are for the bot.
+# This first file is mostly documented but the others aren't.
+# If you want to help me add comments then open a PR on GitHub.
+
 import asyncio
 import os
 
+import colorama
 import discord
-from discord.ext import commands
+from colorama import Fore
+from discord.ext import commands, ipc
 from dotenv import load_dotenv
 
-# Coloured text from logger file and Prefix from database file.
-from utils import logger, database
+from utils import database
+
+# Auto reset settings in colorama.
+colorama.init(autoreset=True)
 
 # Load the bot token. You should create a file named .env and write the token.
 # Example: TOKEN='(your token)'
 load_dotenv()
 token = os.getenv('TOKEN')
 
-# Create the activity for Discord. Idle looks cool.
+
+class Main(commands.Bot):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.ipc = ipc.Server(self, secret_key=os.getenv('SECRET_KEY'))
+
+
+# Create the activity for Discord. Idle looks cool for me.
 activity = discord.Activity(type=discord.ActivityType.watching,
                             name=f'24/7', status=discord.Status.idle)
 
-# Selects all intents and prefix, case-insensitive, description.
-bot = commands.Bot(command_prefix=database.get_prefix,
-                   case_insensitive=True,
-                   description="EnSave is a Discord bot, that adds some cool utility commands and some music commands. "
-                               "Have fun and explore the commands of EnSave.",
-                   activity=activity,
-                   status=discord.Status.idle,
-                   intents=discord.Intents.all())
+# Create the bot
+bot = Main(command_prefix=database.get_prefix,
+           case_insensitive=True,
+           description="EnSave offers you moderation, fun and utility commands. "
+                       "We have frequent updates and fix bugs almost instantly. "
+                       "This includes everything you need from a discord bot.",
+           activity=activity,
+           status=discord.Status.idle,
+           intents=discord.Intents.all())
 
 
 # Load all the cogs, then print the cog names that have been loaded.
 # Also run the bot with token from .env file.
 async def main():
+    await bot.ipc.start()
+
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py') and not filename.startswith('_'):
             loader = filename[:-3]
             await bot.load_extension(f'cogs.{loader}')
-            logger.print_color(f'{loader.capitalize()} has been loaded', 'HEADER')
+            print(f'{Fore.LIGHTMAGENTA_EX}{loader.capitalize()} has been loaded')
 
     async with bot:
         await bot.start(token, reconnect=True)

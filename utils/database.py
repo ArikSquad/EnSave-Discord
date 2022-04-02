@@ -34,19 +34,35 @@ def get_owners_id():
 
 
 def get_prefix(ctx, message):
-    try:
-        with open('db/prefixes.json', 'r') as f:
-            prefixes = json.load(f)
-
+    with open('db/prefixes.json', 'r') as f:
+        prefixes = json.load(f)
+    if str(message.guild.id) in prefixes:
         return prefixes[str(message.guild.id)]
-    except KeyError:
-        with open('db/prefixes.json', 'r') as f:
-            prefixes = json.load(f)
-
+    else:
         prefixes[str(message.guild.id)] = '.'
-
         with open('db/prefixes.json', 'w') as f:
             json.dump(prefixes, f, indent=4)
+        return prefixes[str(message.guild.id)]
+
+
+def get_prefix_by_id(guild_id):
+    with open('db/prefixes.json', 'r') as f:
+        prefixes = json.load(f)
+    if str(guild_id) in prefixes:
+        return prefixes[str(guild_id)]
+    else:
+        prefixes[str(guild_id)] = '.'
+        with open('db/prefixes.json', 'w') as f:
+            json.dump(prefixes, f, indent=4)
+        return prefixes[str(guild_id)]
+
+
+def set_prefix(guild_id, prefix):
+    with open('db/prefixes.json', 'r+') as f:
+        data = json.load(f)
+    data[str(guild_id)] = prefix
+    with open('db/prefixes.json', 'w') as f:
+        json.dump(data, f, indent=4)
 
 
 def get_premium(user_id):

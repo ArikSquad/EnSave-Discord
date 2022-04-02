@@ -66,9 +66,15 @@ python3 -m pip install -r requirements.txt
 6. After all that you should create a file named .env and put this inside it, but change "(your token)" to your discord bot token.
 ```
 TOKEN="(your token)"
+
 MUSIC="(your lavalink ip)"
 HYPIXELAPI="(your hypixel api key)"
 DBHAPI="(if you host this in danbot, then put your api key here)"
+
+CLIENT_ID="(you only need this for dashboard)"
+CLIENT_SECRET="(you only need this for dashboard)"
+SECRET_KEY="(you only need this for dashboard)"
+LOGIN_URL="(you only need this for dashboard)"
 ```
 7. Good! Now you can run the bot by opening a new terminal and running this command:
 ```commandline

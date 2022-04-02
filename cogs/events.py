@@ -30,9 +30,9 @@ class Events(commands.Cog, description="Add the events to the bot"):
         # Print some information about the bot.
         print("Logging in... at the time of " + str(datetime.datetime.now()))
         print(f'{Fore.LIGHTRED_EX}{self.bot.user} has connected to Discord!')
-        print(f"Name: {Fore.CYAN}{self.bot.user.name}")
-        print(f"ID: {Fore.CYAN}{self.bot.user.id}")
-        print(f'{Fore.CYAN}###########################################')
+        print(f"Name: {Fore.LIGHTCYAN_EX}{self.bot.user.name}")
+        print(f"ID: {Fore.LIGHTCYAN_EX}{self.bot.user.id}")
+        print(f'{Fore.LIGHTWHITE_EX}###########################################')
         print(f"Connected to {Fore.LIGHTGREEN_EX}{len(self.bot.guilds)} guilds")
 
     # This even will be run after the bot leaves a guild.

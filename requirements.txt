@@ -14,6 +14,14 @@ simpcalci
 Tabulate
 Pillow
 
+# This is for logging
+Colorama
+
+# These are for the dashboard
+Quart
+Quart_discord
+git+https://github.com/ArikSquad/discord-ext-ipc
+
 # These libraries are used in the music commands.
 PyNaCl
 Wavelink
