@@ -20,31 +20,30 @@ class Moderation(commands.Cog, description="Moderation commands.."):
 
     @commands.command(name="lock", help="Locks the channel.", aliases=['lockdown'])
     @commands.has_permissions(manage_channels=True, manage_messages=True)
-    async def lock(self, ctx, channel: discord.TextChannel = None, reason: str = None):
+    async def lock(self, ctx, channel: discord.TextChannel = None, reason: str = None, notify: bool = True):
         channel = ctx.channel or channel
         await channel.set_permissions(ctx.guild.default_role, send_messages=False, add_reactions=False)
-        await ctx.send(f"Successfully locked {channel.mention}",
-                       ephemeral=True)
-
+        vanish_name = "nobody"
         embed = discord.Embed(
             title="Channel locked",
-            description=f"This channel was locked by {ctx.author.mention} 🔒",
+            description=f"This channel was locked by {ctx.author.mention if notify else vanish_name} 🔒",
             color=discord.Color.dark_red()
         )
-        embed.add_field(name="Reason", value=reason.capitalize())
+        embed.add_field(name="Reason", value=str(reason).capitalize() if not None else "No reason given.")
         embed.timestamp = datetime.datetime.utcnow()
         await channel.send(embed=embed)
 
     @commands.command(name='unlock', aliases=['unlockdown'], help="Unlocks the channel.")
     @commands.has_permissions(manage_channels=True, manage_messages=True)
-    async def unlock(self, ctx):
-        await ctx.message.delete()
-        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=True, add_reactions=True)
+    async def unlock(self, ctx, channel: discord.TextChannel = None):
+        channel = ctx.channel or channel
+        await channel.set_permissions(ctx.guild.default_role, send_messages=True, add_reactions=True)
 
         embed = discord.Embed(title="Channel Unlocked",
-                              description="Channel has been unlocked.",
+                              description="This channel has been unlocked.",
                               color=discord.Color.green())
-        await ctx.send(embed=embed)
+        embed.timestamp = datetime.datetime.utcnow()
+        await channel.send(embed=embed)
 
     @commands.command(name='clear', aliases=['purge'], help="Clears the channel.")
     @commands.has_permissions(manage_messages=True)
@@ -80,7 +79,7 @@ class Moderation(commands.Cog, description="Moderation commands.."):
                   ("Users", len(list(filter(lambda m: not m.bot, ctx.guild.members))), True),
                   ("Bots", len(list(filter(lambda m: m.bot, ctx.guild.members))), True),
                   ("Banned members", len(await ctx.guild.bans()), True),
-                  ("Statuses", f"🟢 {statuses[0]} 🟠 {statuses[1]} 🔴 {statuses[2]} ⚪ {statuses[3]}", True),
+                  ("Statuses", f"🟢 {statuses[0]} 🟠 {statuses[1]} \n🔴 {statuses[2]} ⚪ {statuses[3]}", True),
                   ("Text channels", len(ctx.guild.text_channels), True),
                   ("Voice channels", len(ctx.guild.voice_channels), True),
                   ("Categories", len(ctx.guild.categories), True),
