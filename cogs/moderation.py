@@ -12,7 +12,7 @@ import discord
 from discord.ext import commands
 
 
-class Moderation(commands.Cog, description="Moderation commands.."):
+class Moderation(commands.Cog, description="Moderating"):
     COG_EMOJI = "📏"
 
     def __init__(self, bot):

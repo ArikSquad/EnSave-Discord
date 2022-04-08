@@ -20,7 +20,7 @@ host_server = str(os.getenv('MUSIC'))
 
 
 # noinspection PyTypeChecker
-class Music(commands.Cog, description="Music commands"):
+class Music(commands.Cog, description="Music"):
     COG_EMOJI = "🎵"
 
     def __init__(self, bot):

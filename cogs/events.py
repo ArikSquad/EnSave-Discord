@@ -12,7 +12,7 @@ from colorama import Fore
 from discord.ext import commands
 
 
-class Events(commands.Cog, description="Add the events to the bot"):
+class Events(commands.Cog, description="Events"):
     def __init__(self, bot):
         self.bot = bot
 

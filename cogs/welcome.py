@@ -11,7 +11,7 @@ import discord
 from discord.ext import commands
 
 
-class Welcome(commands.Cog, description="Welcome commands."):
+class Welcome(commands.Cog, description="Welcome messages"):
     def __init__(self, bot):
         self.bot = bot
 

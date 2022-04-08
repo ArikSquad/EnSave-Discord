@@ -92,7 +92,7 @@ def get_xp(author_id):
     return data[str(author_id)]['experience']
 
 
-class Experience(commands.Cog, description="Gain levels to get more commands!"):
+class Experience(commands.Cog, description="Gain exp to gain levels"):
     COG_EMOJI = "📈"
 
     def __init__(self, bot):

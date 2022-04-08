@@ -16,7 +16,7 @@ from discord.ext import commands
 from utils import database
 
 
-class Games(commands.Cog, description="Game Commands"):
+class Games(commands.Cog, description="Fun game commands"):
     def __init__(self, bot) -> None:
         self.bot = bot
 

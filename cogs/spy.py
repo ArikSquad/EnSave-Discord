@@ -11,7 +11,7 @@ import discord
 from discord.ext import commands
 
 
-class Spy(commands.Cog, description="Spying commands."):
+class Spy(commands.Cog, description="Spying"):
     COG_EMOJI = "🕵️"
 
     def __init__(self, bot):

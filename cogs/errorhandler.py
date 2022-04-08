@@ -23,7 +23,7 @@ def error_formatter(error, maxlength):
         return v
 
 
-class ErrorHandler(commands.Cog):
+class ErrorHandler(commands.Cog, description="Error handler"):
     def __init__(self, bot):
         self.bot = bot
 

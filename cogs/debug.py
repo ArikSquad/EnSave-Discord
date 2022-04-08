@@ -13,7 +13,7 @@ from discord.ext import commands
 from utils import database
 
 
-class Debug(commands.Cog, description="Debug commands."):
+class Debug(commands.Cog, description="Debugging"):
     def __init__(self, bot):
         self.bot = bot
 

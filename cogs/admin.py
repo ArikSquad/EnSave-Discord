@@ -14,7 +14,7 @@ from discord.ext import commands
 from utils import database
 
 
-class Admin(commands.Cog, description="Gather information."):
+class Admin(commands.Cog, description="Gather information"):
     COG_EMOJI = "📜"
 
     def __init__(self, bot):

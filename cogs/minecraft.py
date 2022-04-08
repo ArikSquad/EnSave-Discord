@@ -18,7 +18,7 @@ load_dotenv()
 apikey = os.getenv('HYPIXELAPI')
 
 
-class Minecraft(commands.Cog, description="Minecraft tool commands."):
+class Minecraft(commands.Cog, description="Minecraft tools"):
     COG_EMOJI = "🎮"
 
     def __init__(self, bot):

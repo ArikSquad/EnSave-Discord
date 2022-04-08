@@ -144,7 +144,7 @@ class InteractiveView(discord.ui.View):
         await interaction.message.delete()
 
 
-class Calculator(commands.Cog):
+class Calculator(commands.Cog, description="Calculator"):
     COG_EMOJI = "🧮"
 
     def __init__(self, bot):

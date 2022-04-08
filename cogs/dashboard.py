@@ -12,7 +12,7 @@ from utils import database
 from utils.website import dashboard
 
 
-class Dashboard(commands.Cog, description="Customizing dashboard."):
+class Dashboard(commands.Cog, description="Custom dashboard"):
     def __init__(self, bot):
         self.bot = bot
 

@@ -15,7 +15,7 @@ from discord import app_commands
 from discord.ext import commands
 
 
-class Misc(commands.Cog, description="Misc Commands"):
+class Misc(commands.Cog, description="Random commands"):
     def __init__(self, bot) -> None:
         self.bot = bot
 

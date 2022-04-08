@@ -10,7 +10,7 @@ import discord
 from discord.ext import commands
 
 
-class Mail(commands.Cog, description="Mailing commands."):
+class Mail(commands.Cog, description="Mailing"):
     def __init__(self, bot):
         self.bot = bot
 
