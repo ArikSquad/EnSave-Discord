@@ -69,7 +69,6 @@ TOKEN="(your token)"
 
 MUSIC="(your lavalink ip)"
 HYPIXELAPI="(your hypixel api key)"
-DBHAPI="(if you host this in danbot, then put your api key here)"
 
 CLIENT_ID="(you only need this for dashboard)"
 CLIENT_SECRET="(you only need this for dashboard)"
