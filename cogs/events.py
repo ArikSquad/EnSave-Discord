@@ -10,6 +10,7 @@ import json
 import os
 
 from colorama import Fore
+from danbot_api import DanBotClient
 from discord.ext import commands
 from dotenv import load_dotenv
 
@@ -24,8 +25,7 @@ class Events(commands.Cog, description="Add the events to the bot"):
     # This will be run, after the bot is ready.
     @commands.Cog.listener()
     async def on_ready(self):
-        # Send information to DanBot.
-        # DanBotClient(bot, key=danbot, autopost=True)
+        DanBotClient(self.bot, key=danbot, autopost=True)
 
         # Print some information about the bot.
         print("Logging in... at the time of " + str(datetime.datetime.now()))

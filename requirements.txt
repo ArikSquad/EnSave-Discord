@@ -14,6 +14,9 @@ simpcalci
 Tabulate
 Pillow
 
+# This is optional, but for danbot hosting.
+danbot-hosting-py
+
 # This is for logging
 Colorama
 
