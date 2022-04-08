@@ -8,7 +8,6 @@ python-dotenv
 requests
 better_profanity
 mcstatus
-danbot-hosting-py
 psutil
 simpcalci
 Tabulate
