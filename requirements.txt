@@ -1,10 +1,10 @@
-# For the essential for discord bot.
+# For the essential for discord bot
 git+https://github.com/Rapptz/discord.py
 asyncio
 aiohttp
 python-dotenv
 
-# These libraries are for some special commands, that the bot includes.
+# These libraries are for some special commands
 requests
 better_profanity
 mcstatus
@@ -14,7 +14,7 @@ simpcalci
 Tabulate
 Pillow
 
-# This is optional, but for danbot hosting.
+# This is optional, but for danbot hosting
 danbot-hosting-py
 
 # This is for logging
@@ -25,6 +25,6 @@ Quart
 Quart_discord
 git+https://github.com/ArikSquad/discord-ext-ipc
 
-# These libraries are used in the music commands.
+# These libraries are used in the music commands
 PyNaCl
 Wavelink
