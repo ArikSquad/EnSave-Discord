@@ -38,8 +38,8 @@ class Misc(commands.Cog, description="Misc Commands"):
                 embed.set_image(url=data['url'])
                 await interaction.response.send_message(embed=embed)
 
-    @app_commands.command(name="bot-invite", description='Get the invite link of the bot.')
-    async def bot_invite(self, interaction: discord.Interaction):
+    @app_commands.command(name="invite-bot", description='Get the invite link of the bot.')
+    async def invite_bot(self, interaction: discord.Interaction):
         embed = discord.Embed(
             title='Info',
             description=f'Invite me by clicking '

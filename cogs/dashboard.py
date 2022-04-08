@@ -18,7 +18,7 @@ class Dashboard(commands.Cog, description="Customizing dashboard."):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        self.bot.loop.create_task(dashboard.app.run_task(port=1331))
+        self.bot.loop.create_task(dashboard.app.run_task(port=1201))
 
     @ipc.server.route()
     async def get_guild_count(self, data):
