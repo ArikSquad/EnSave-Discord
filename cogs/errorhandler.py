@@ -6,6 +6,7 @@
 # -----------------------------------------------------------
 import traceback
 
+import aiohttp
 import discord
 from discord.ext import commands
 
@@ -27,25 +28,18 @@ class ErrorHandler(commands.Cog, description="Error handler"):
     def __init__(self, bot):
         self.bot = bot
 
-    async def traceback(self, ctx: commands.Context, embed: discord.Embed):
-        cfg_value = 770677608836366356
+    @staticmethod
+    async def traceback(ctx: commands.Context, embed: discord.Embed):
+        app_info = await ctx.bot.application_info()
 
-        if not cfg_value:
+        channel = app_info.owner.dm_channel if app_info.owner.dm_channel else await app_info.owner.create_dm()
+
+        if not channel:
             return
 
-        if cfg_value == 1:
-            app_info = await ctx.bot.application_info()
-
-            channel = app_info.owner.dm_channel if app_info.owner.dm_channel else await app_info.owner.create_dm()
-        else:
-            channel = self.bot.get_channel(cfg_value)
-
-            if not channel:
-                return
-
-            perms = channel.permissions_for(ctx.guild.me if ctx.guild else None)
-            if not perms.view_channel or not perms.send_messages or not perms.embed_links:
-                return
+        perms = channel.permissions_for(ctx.guild.me if ctx.guild else None)
+        if not perms.view_channel or not perms.send_messages or not perms.embed_links:
+            return
 
         await channel.send(embed=embed)
 
@@ -62,7 +56,8 @@ class ErrorHandler(commands.Cog, description="Error handler"):
         commands.BadArgument: 'Invalid argument given! (See `{ctx.prefix}help {ctx.command.qualified_name}` '
                               'for info on how to use this command).',
         commands.CommandNotFound: None,
-        commands.UserInputError: 'Invalid command usage! (See `{ctx.prefix}help {ctx.command.qualified_name}` '
+        commands.UserInputError: 'Invalid command usage! (See `{ctx.prefix}help {ctx.command.qualified_name}` ',
+        aiohttp.ContentTypeError: 'Something went wrong. This usually happens when you use music commands.',
     }
 
     @commands.Cog.listener()
