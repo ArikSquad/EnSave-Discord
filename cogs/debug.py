@@ -23,7 +23,7 @@ class Debug(commands.Cog, description="Debugging"):
     async def admin(self, ctx):
         if ctx.invoked_subcommand is None:
             if ctx.author.id in database.get_owners_id():
-                await ctx.send('Wow, an admin!')
+                await ctx.send('Wow, an admin user!')
 
     @admin.command(name="profanity-test", aliases=["p-t"], hidden=True)
     async def profanity_test(self, ctx, *, text):
