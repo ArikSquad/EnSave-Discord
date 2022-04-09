@@ -55,7 +55,7 @@ class Debug(commands.Cog, description="Debugging"):
             except Exception as e:
                 await ctx.send(f"```py\n{e}```")
 
-    @admin.command(name="shutdown", help="Shutdown the bot.", hidden=True)
+    @admin.command(name="shutdown", help="Shutdown the bot.", aliases=["logout"], hidden=True)
     async def shutdown(self, ctx):
         if ctx.author.id in database.get_owners_id():
             view = database.YesNo()
