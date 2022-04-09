@@ -13,6 +13,9 @@ simpcalci
 Tabulate
 Pillow
 
+# Autoupdating the bot from github
+gitpython
+
 # This is for logging
 Colorama
 
