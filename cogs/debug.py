@@ -14,6 +14,8 @@ from utils import database
 
 
 class Debug(commands.Cog, description="Debugging"):
+    EMOJI = "🔧"
+
     def __init__(self, bot):
         self.bot = bot
 

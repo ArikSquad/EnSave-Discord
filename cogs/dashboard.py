@@ -13,6 +13,8 @@ from utils.website import dashboard
 
 
 class Dashboard(commands.Cog, description="Custom dashboard"):
+    EMOJI = "📊"
+
     def __init__(self, bot):
         self.bot = bot
 

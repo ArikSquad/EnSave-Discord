@@ -6,20 +6,18 @@
 #
 # -----------------------------------------------------------
 
-import discord
 from discord.ext import commands
 
+from utils import helpCommand
 
-class Mail(commands.Cog, description="Mailing"):
-    EMOJI = "📬"
+
+class Help(commands.Cog, description="Help"):
+    EMOJI = "📖"
 
     def __init__(self, bot):
         self.bot = bot
-
-    @commands.command(name="mail", aliases=["m"], description="Send a message to a user.")
-    async def mail(self, ctx, user: discord.Member, *, message):
-        await user.send(f"{ctx.author.mention} sent you a message: {message}")
+        self.bot.help_command = helpCommand.HelpCommand()
 
 
 async def setup(bot):
-    await bot.add_cog(Mail(bot))
+    await bot.add_cog(Help(bot))

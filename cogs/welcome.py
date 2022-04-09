@@ -12,6 +12,8 @@ from discord.ext import commands
 
 
 class Welcome(commands.Cog, description="Welcome messages"):
+    EMOJI = "📩"
+
     def __init__(self, bot):
         self.bot = bot
 

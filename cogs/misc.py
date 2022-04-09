@@ -16,6 +16,8 @@ from discord.ext import commands
 
 
 class Misc(commands.Cog, description="Random commands"):
+    EMOJI = "🤖"
+
     def __init__(self, bot) -> None:
         self.bot = bot
 

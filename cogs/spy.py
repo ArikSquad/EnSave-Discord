@@ -12,7 +12,7 @@ from discord.ext import commands
 
 
 class Spy(commands.Cog, description="Spying"):
-    COG_EMOJI = "🕵️"
+    EMOJI = "🕵️"
 
     def __init__(self, bot):
         self.bot = bot

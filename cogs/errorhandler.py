@@ -25,6 +25,8 @@ def error_formatter(error, maxlength):
 
 
 class ErrorHandler(commands.Cog, description="Error handler"):
+    EMOJI = "❌"
+
     def __init__(self, bot):
         self.bot = bot
 

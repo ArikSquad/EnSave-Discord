@@ -93,7 +93,7 @@ def get_xp(author_id):
 
 
 class Experience(commands.Cog, description="Gain exp to gain levels"):
-    COG_EMOJI = "📈"
+    EMOJI = "📈"
 
     def __init__(self, bot):
         self.bot = bot

@@ -145,7 +145,7 @@ class InteractiveView(discord.ui.View):
 
 
 class Calculator(commands.Cog, description="Calculator"):
-    COG_EMOJI = "🧮"
+    EMOJI = "🧮"
 
     def __init__(self, bot):
         self.bot = bot

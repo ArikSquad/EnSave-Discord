@@ -22,7 +22,7 @@ host_pass = str(os.getenv('MUSIC_PASSWORD'))
 
 # noinspection PyTypeChecker
 class Music(commands.Cog, description="Music"):
-    COG_EMOJI = "🎵"
+    EMOJI = "🎵"
 
     def __init__(self, bot):
         self.bot = bot

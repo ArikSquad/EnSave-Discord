@@ -17,6 +17,8 @@ from utils import database
 
 
 class Games(commands.Cog, description="Fun game commands"):
+    EMOJI = "🕹️"
+
     def __init__(self, bot) -> None:
         self.bot = bot
 
