@@ -19,7 +19,13 @@ class Debug(commands.Cog, description="Debugging"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="profanity-test", aliases=["p-t"], hidden=True)
+    @commands.group(name='admin', description="Admin debug", hidden=True)
+    async def admin(self, ctx):
+        if ctx.invoked_subcommand is None:
+            if ctx.author.id in database.get_owners_id():
+                await ctx.send('Wow, an admin!')
+
+    @admin.command(name="profanity-test", aliases=["p-t"], hidden=True)
     async def profanity_test(self, ctx, *, text):
         if ctx.author.id in database.get_owners_id():
 
@@ -31,7 +37,7 @@ class Debug(commands.Cog, description="Debugging"):
             embed.add_field(name="Censored", value=profanity.censor(text))
             await ctx.send(embed=embed)
 
-    @commands.command(name="eval", help="Evaluate code", hidden=True)
+    @admin.command(name="eval", help="Evaluate code", hidden=True)
     async def eval(self, ctx, *, code):
         if ctx.author.id in database.get_owners_id():
             try:
@@ -41,7 +47,7 @@ class Debug(commands.Cog, description="Debugging"):
             except Exception as e:
                 await ctx.send(f"```py\n{e}```")
 
-    @commands.command(name="exec", help="Execute code", hidden=True)
+    @admin.command(name="exec", help="Execute code", hidden=True)
     async def exec(self, ctx, *, code):
         if ctx.author.id in database.get_owners_id():
             try:
@@ -49,7 +55,7 @@ class Debug(commands.Cog, description="Debugging"):
             except Exception as e:
                 await ctx.send(f"```py\n{e}```")
 
-    @commands.command(name="shutdown", help="Shutdown the bot.", hidden=True)
+    @admin.command(name="shutdown", help="Shutdown the bot.", hidden=True)
     async def shutdown(self, ctx):
         if ctx.author.id in database.get_owners_id():
             view = database.YesNo()
@@ -64,7 +70,7 @@ class Debug(commands.Cog, description="Debugging"):
                 await message.delete()
                 await self.bot.close()
 
-    @commands.command(name='cog-unload', help='Unload a cog.', hidden=True)
+    @admin.command(name='cog-unload', help='Unload a cog.', hidden=True)
     async def unload_cog(self, ctx, cog):
         if ctx.author.id in database.get_owners_id():
             try:
@@ -76,7 +82,7 @@ class Debug(commands.Cog, description="Debugging"):
             except commands.ExtensionNotLoaded:
                 await ctx.send('The extension is already unloaded.')
 
-    @commands.command(name='cog-load', help='Load a cog.', hidden=True)
+    @admin.command(name='cog-load', help='Load a cog.', hidden=True)
     async def load_cog(self, ctx, cog):
         if ctx.author.id in database.get_owners_id():
             try:
@@ -88,7 +94,7 @@ class Debug(commands.Cog, description="Debugging"):
             except commands.ExtensionAlreadyLoaded:
                 await ctx.send('The extension is already loaded.')
 
-    @commands.command(name='cog-restart', aliases=['cog-reload'], help='Restart a cog', hidden=True)
+    @admin.command(name='cog-restart', aliases=['cog-reload'], help='Restart a cog', hidden=True)
     async def restart_cog(self, ctx, cog):
         if ctx.author.id in database.get_owners_id():
             try:
