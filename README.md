@@ -68,6 +68,7 @@ python3 -m pip install -r requirements.txt
 TOKEN="(your token)"
 
 MUSIC="(your lavalink ip)"
+MUSIC_PASSWORD="(your lavalink password)"
 HYPIXELAPI="(your hypixel api key)"
 
 CLIENT_ID="(you only need this for dashboard)"
