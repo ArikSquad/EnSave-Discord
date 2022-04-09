@@ -24,7 +24,7 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="mcstatus", aliases=["mcs"], description="Get the status of a Minecraft server.")
+    @commands.command(name="mcstatus", aliases=["mcs"], help="Get the status of a Minecraft server.")
     async def mcstatus(self, ctx, server: str):
         try:
             status = mcstatus.MinecraftServer.lookup(server).status()
@@ -42,7 +42,7 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
                                     color=0xFF0000)
             await ctx.send(embed=offline)
 
-    @commands.command(name="bedwars", aliases=["bw"], description="Get the status of Hypixel Bedwars player.")
+    @commands.command(name="bedwars", aliases=["bw"], help="Get the status of Hypixel Bedwars player.")
     async def hypixel_bedwars(self, ctx, username):
         url = f"https://api.hypixel.net/player?key={apikey}&name=" + username
 
@@ -70,7 +70,7 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
         embed.set_thumbnail(url="https://minotar.net/helm/" + username)
         await ctx.send(embed=embed)
 
-    @commands.command(name="skin", aliases=["mcskin", "minecraftskin"], description="Get the skin of a player.")
+    @commands.command(name="skin", aliases=["mcskin", "minecraftskin"], help="Get the skin of a player.")
     async def get_skin(self, ctx, username: str):
         embed = discord.Embed(title=f"{username}'s skin",
                               description=f"Loading the skin of {username}...",
