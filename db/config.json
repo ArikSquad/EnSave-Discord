@@ -1,8 +1,9 @@
 {
     "770634445370687519": {
         "spy_edit": true,
-        "spy_delete": true,
-        "spy_channel": 770677608836366356
+        "spy_delete": false,
+        "spy_channel": 770677608836366356,
+        "welcome_channel": 852834628698898452
     },
     "895329617613815920": {
         "spy_edit": true,
