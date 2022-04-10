@@ -102,7 +102,7 @@ class ErrorHandler(commands.Cog, description="Error handler"):
             embed.add_field(name='Sender', value=f'{ctx.author} (`{ctx.author.id}`)')
             embed.add_field(name='Exception', value=str(error))
             formatted_traceback = error_formatter(error.original, 4094)
-            embed.description = f'```py\n{ctx.cog.qualified_name}.py\n{formatted_traceback}```'
+            embed.description = f'```py\nCog {ctx.cog.qualified_name}\n{formatted_traceback}```'
 
             await self.traceback(ctx, embed)
 
