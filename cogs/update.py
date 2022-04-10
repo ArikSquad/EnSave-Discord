@@ -6,16 +6,14 @@
 #
 # -----------------------------------------------------------
 
-import git
 from discord.ext import commands
+from git import Repo
 
 from utils import database
 
 
-async def pull(bot):
-    repo = git.Repo(".git")
-    repo.remotes.origin.pull()
-    print("[Git] Pulled from remote.")
+async def clone(bot):
+    Repo.clone_from('https://github.com/ArikSquad/EnSave-Discord', '../')
     await bot.close()
 
 
@@ -28,7 +26,7 @@ class Git(commands.Cog, description="Github"):
     @commands.command(name="pull", hidden=True)
     async def pull(self, ctx):
         if ctx.author.id in database.get_owners_id():
-            await pull(self.bot)
+            await clone(self.bot)
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -36,7 +34,7 @@ class Git(commands.Cog, description="Github"):
             if message.author.id == 962313982746714142:
                 emoji = self.bot.get_emoji(854963304227930123)
                 await message.add_reaction(emoji)
-                await pull(self.bot)
+                await clone(self.bot)
 
 
 async def setup(bot):
