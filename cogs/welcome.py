@@ -28,6 +28,7 @@ class Welcome(commands.Cog, description="Welcome messages"):
             with open("db/config.json", "r") as f:
                 data = json.load(f)
             data[str(member.guild.id)]["welcome_channel"] = None
+            data[str(member.guild.id)]["welcome_toggle"] = True
             with open("db/config.json", "w") as f:
                 json.dump(data, f, indent=4)
         if toggle:
@@ -45,14 +46,22 @@ class Welcome(commands.Cog, description="Welcome messages"):
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
-        toggle = None
+        toggle = True
         welcome_channel = None
         with open("db/config.json", "r") as f:
             data = json.load(f)
 
-        if data[str(member.guild.id)] in data:
-            welcome_channel = data[str(member.guild.id)]["welcome_channel"]
-            toggle = data[str(member.guild.id)]["welcome_toggle"]
+        if str(member.guild.id) in data:
+            if data[str(member.guild.id)]["welcome_toggle"]:
+                welcome_channel = data[str(member.guild.id)]["welcome_channel"]
+                toggle = data[str(member.guild.id)]["welcome_toggle"]
+            else:
+                with open("db/config.json", "r") as f:
+                    data = json.load(f)
+                data[str(member.guild.id)]["welcome_channel"] = None
+                data[str(member.guild.id)]["welcome_toggle"] = True
+                with open("db/config.json", "w") as f:
+                    json.dump(data, f, indent=4)
         else:
             with open("db/config.json", "r") as f:
                 data = json.load(f)
@@ -103,19 +112,21 @@ class Welcome(commands.Cog, description="Welcome messages"):
 
     @commands.command(name="welcome-toggle", help="Toggles welcome messages.")
     @commands.has_permissions(manage_guild=True)
-    async def welcome_toggle(self, ctx, toggle: bool = None):
+    async def welcome_toggle(self, ctx, toggle: bool):
         with open("db/config.json", "r") as f:
             data = json.load(f)
         if str(ctx.guild.id) in data:
-            welcome_toggle = data[str(ctx.guild.id)]["welcome_toggle"]
-            data[str(ctx.guild.id)]["welcome_toggle"] = not welcome_toggle if not toggle else toggle
-            await ctx.send(f"Welcome toggle set to {data[str(ctx.guild.id)]['welcome_toggle']}.")
-            with open("db/config.json", "w") as f:
-                json.dump(data, f, indent=4)
+            if data[str(ctx.guild.id)]["welcome_channel"] is not None:
+                data[str(ctx.guild.id)]["welcome_toggle"] = toggle
+                await ctx.send(f"Welcome toggle set to {data[str(ctx.guild.id)]['welcome_toggle']}.")
+                with open("db/config.json", "w") as f:
+                    json.dump(data, f, indent=4)
+            else:
+                data[str(ctx.guild.id)]["welcome_toggle"] = True
+                with open("db/config.json", "w") as f:
+                    json.dump(data, f, indent=4)
         else:
-            data[str(ctx.guild.id)] = {}
             data[str(ctx.guild.id)]["welcome_toggle"] = True
-
             with open("db/config.json", "w") as f:
                 json.dump(data, f, indent=4)
 
