@@ -22,12 +22,12 @@ class Debug(commands.Cog, description="Debugging"):
     @commands.group(name='admin', description="Admin debug", hidden=True)
     async def admin(self, ctx):
         if ctx.invoked_subcommand is None:
-            if ctx.author.id in database.get_owners_id():
+            if ctx.author.id in database.get_owner_ids():
                 await ctx.send('Wow, an admin user!')
 
     @admin.command(name="profanity-test", aliases=["p-t"], hidden=True)
     async def profanity_test(self, ctx, *, text):
-        if ctx.author.id in database.get_owners_id():
+        if ctx.author.id in database.get_owner_ids():
 
             embed = discord.Embed(title="Profanity Test",
                                   description="Results of the debug profanity-test",
@@ -39,7 +39,7 @@ class Debug(commands.Cog, description="Debugging"):
 
     @admin.command(name="eval", help="Evaluate code", hidden=True)
     async def eval(self, ctx, *, code):
-        if ctx.author.id in database.get_owners_id():
+        if ctx.author.id in database.get_owner_ids():
             try:
                 result = eval(code)
                 if result is not None:
@@ -49,7 +49,7 @@ class Debug(commands.Cog, description="Debugging"):
 
     @admin.command(name="exec", help="Execute code", hidden=True)
     async def exec(self, ctx, *, code):
-        if ctx.author.id in database.get_owners_id():
+        if ctx.author.id in database.get_owner_ids():
             try:
                 exec(code)
             except Exception as e:
@@ -57,7 +57,7 @@ class Debug(commands.Cog, description="Debugging"):
 
     @admin.command(name="shutdown", help="Shutdown the bot.", aliases=["logout"], hidden=True)
     async def shutdown(self, ctx):
-        if ctx.author.id in database.get_owners_id():
+        if ctx.author.id in database.get_owner_ids():
             view = database.YesNo()
             sure = discord.Embed(title="Are you sure?", description="This will logout "
                                                                     "from discord and exit the python program.",
@@ -72,7 +72,7 @@ class Debug(commands.Cog, description="Debugging"):
 
     @admin.command(name='cog-unload', help='Unload a cog.', hidden=True)
     async def unload_cog(self, ctx, cog):
-        if ctx.author.id in database.get_owners_id():
+        if ctx.author.id in database.get_owner_ids():
             try:
                 await self.bot.unload_extension(f'cogs.{cog}')
                 await ctx.send(f"`{cog}` unloaded.")
@@ -84,7 +84,7 @@ class Debug(commands.Cog, description="Debugging"):
 
     @admin.command(name='cog-load', help='Load a cog.', hidden=True)
     async def load_cog(self, ctx, cog):
-        if ctx.author.id in database.get_owners_id():
+        if ctx.author.id in database.get_owner_ids():
             try:
                 await self.bot.load_extension(f'cogs.{cog}')
                 await ctx.send(f'Loaded extension {cog}')
@@ -96,7 +96,7 @@ class Debug(commands.Cog, description="Debugging"):
 
     @admin.command(name='cog-restart', aliases=['cog-reload'], help='Restart a cog', hidden=True)
     async def restart_cog(self, ctx, cog):
-        if ctx.author.id in database.get_owners_id():
+        if ctx.author.id in database.get_owner_ids():
             try:
                 await self.bot.reload_extension(f'cogs.{cog}')
                 await ctx.send(f"Successfully reloaded {cog}.")

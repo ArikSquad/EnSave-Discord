@@ -25,7 +25,7 @@ class Git(commands.Cog, description="Github"):
 
     @commands.command(name="pull", hidden=True)
     async def pull(self, ctx):
-        if ctx.author.id in database.get_owners_id():
+        if ctx.author.id in database.get_owner_ids():
             await clone(self.bot)
 
     @commands.Cog.listener()

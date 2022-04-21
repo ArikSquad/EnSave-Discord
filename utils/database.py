@@ -13,10 +13,6 @@ import discord
 from discord import Interaction
 
 
-def get_bot_name():
-    return "EnSave"
-
-
 def get_time():
     return datetime.datetime.utcnow()
 
@@ -29,8 +25,8 @@ def get_owners_discord():
     return ["ArikSquad#6222", "Mhilkos#7676"]
 
 
-def get_owners_id():
-    return [549152470194978817, 537237654207725568]
+def get_owner_ids():
+    return [549152470194978817]
 
 
 def get_prefix(ctx, message):
@@ -66,14 +62,18 @@ def set_prefix(guild_id, prefix):
 
 
 def get_premium(user_id):
-    try:
-        with open('db/users.json', 'r') as f:
-            data = json.load(f)
+    with open('db/users.json', 'r') as f:
+        data = json.load(f)
+
+    if user_id in data:
         if data[str(user_id)]['premium']:
             return True
         else:
+            with open('db/users.json', 'w') as f:
+                data[str(user_id)]['premium'] = False
+                json.dump(data, f, indent=4, sort_keys=True)
             return False
-    except KeyError:
+    else:
         with open('db/users.json', 'w') as f:
             data[str(user_id)]['premium'] = False
             json.dump(data, f, indent=4, sort_keys=True)

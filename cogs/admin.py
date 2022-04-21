@@ -23,10 +23,10 @@ class Admin(commands.Cog, description="Gather information"):
     @commands.command(name="info", aliases=["information", "about"], help="Gather information about the bot.",
                       hidden=True)
     async def info(self, ctx, user: discord.User = None):
-        if user is None and ctx.author.id in database.get_owners_id():
+        if user is None and ctx.author.id in database.get_owner_ids():
             embed = discord.Embed(title="Information", color=ctx.author.color)
             embed.add_field(name="Authors", value=str(database.get_owners_discord())[1:-1], inline=False)
-            embed.add_field(name="Author IDs", value=str(database.get_owners_id())[1:-1], inline=False)
+            embed.add_field(name="Author IDs", value=str(database.get_owner_ids())[1:-1], inline=False)
             embed.add_field(name="Library", value="discord")
             embed.add_field(name="Version", value=discord.__version__)
             embed.add_field(name="Guilds", value=len(self.bot.guilds))
@@ -37,7 +37,7 @@ class Admin(commands.Cog, description="Gather information"):
             embed.add_field(name="OS Last Boot", value=f"{psutil.boot_time()}")
             embed.add_field(name="CPU Percentage", value=f"{psutil.cpu_percent()}%")
             return await ctx.send(embed=embed)
-        elif user is not None and ctx.author.id in database.get_owners_id():
+        elif user is not None and ctx.author.id in database.get_owner_ids():
             with open("db/users.json", "r") as f:
                 data = json.load(f)
                 exp = data[str(ctx.author.id)]['experience']
@@ -53,14 +53,14 @@ class Admin(commands.Cog, description="Gather information"):
             embed.add_field(name="Premium", value="Yes" if database.get_premium(user.id) is True else "No",
                             inline=False)
             embed.add_field(name="Bot Status", value="Yes" if user.bot is True else "No", inline=False)
-            embed.add_field(name="Bot Owner", value="Yes" if user.id in database.get_owners_id() else "No",
+            embed.add_field(name="Bot Owner", value="Yes" if user.id in database.get_owner_ids() else "No",
                             inline=False)
             await ctx.send(embed=embed)
 
     @commands.command(name='set-premium', help='Set premium state of a user.', hidden=True)
     async def set_premium(self, ctx, user: discord.Member, state: bool = None):
-        if ctx.author.id in database.get_owners_id():
-            if user.id in database.get_owners_id():
+        if ctx.author.id in database.get_owner_ids():
+            if user.id in database.get_owner_ids():
                 await ctx.send("You can't set the premium state of an owner.")
             else:
                 if state:

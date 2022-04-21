@@ -103,7 +103,9 @@ class Experience(commands.Cog, description="Gain exp to gain levels"):
     async def on_message(self, message):
         with open('db/prefixes.json', 'r') as f:
             prefixes = json.load(f)
-            prefix = prefixes[str(message.guild.id)]
+
+        prefix = prefixes[str(message.guild.id)] if message.guild is not None else "."
+
         if not message.content.startswith(prefix) and message.author.id != 812808865728954399 \
                 and not message.author.bot and message.guild.id == 770634445370687519:
             await check_exp(message)
@@ -124,7 +126,7 @@ class Experience(commands.Cog, description="Gain exp to gain levels"):
 
     @commands.command(name='addexp', help="Add experience to somebody.", hidden=True, guild_ids=[770634445370687519])
     async def add_exp(self, ctx, user: discord.Member, amount: int):
-        if ctx.author.id in database.get_owners_id():
+        if ctx.author.id in database.get_owner_ids():
             with open("db/users.json", "r+") as f:
                 data = json.load(f)
                 data[str(user.id)]['experience'] = data[str(user.id)]['experience'] + amount
@@ -139,7 +141,7 @@ class Experience(commands.Cog, description="Gain exp to gain levels"):
 
     @commands.command(name='setexp', help="Set experience to somebody.", hidden=True)
     async def set_exp(self, ctx, user: discord.Member, amount: int):
-        if ctx.author.id in database.get_owners_id():
+        if ctx.author.id in database.get_owner_ids():
             with open("db/users.json", "r+") as f:
                 data = json.load(f)
                 data[str(user.id)]['experience'] = amount
@@ -154,7 +156,7 @@ class Experience(commands.Cog, description="Gain exp to gain levels"):
 
     @commands.command(name='setlevel', help="Set level to somebody.", hidden=True)
     async def set_level(self, ctx, user: discord.Member, amount: int):
-        if ctx.author.id in database.get_owners_id():
+        if ctx.author.id in database.get_owner_ids():
             with open("db/users.json", "r+") as f:
                 data = json.load(f)
                 data[str(user.id)]['level'] = amount
@@ -169,7 +171,7 @@ class Experience(commands.Cog, description="Gain exp to gain levels"):
 
     @commands.command(name='addlevel', help="Add levels to somebody.", hidden=True)
     async def add_level(self, ctx, user: discord.Member, amount: int):
-        if ctx.author.id in database.get_owners_id():
+        if ctx.author.id in database.get_owner_ids():
             with open("db/users.json", "r+") as f:
                 data = json.load(f)
                 data[str(user.id)]['level'] = data[str(user.id)]['level'] + amount
@@ -184,7 +186,7 @@ class Experience(commands.Cog, description="Gain exp to gain levels"):
 
     @commands.command(name='getlevel', help="Get a users level.", hidden=True)
     async def get_level(self, ctx, user: discord.Member):
-        if ctx.author.id in database.get_owners_id():
+        if ctx.author.id in database.get_owner_ids():
             with open("db/users.json", "r") as f:
                 data = json.load(f)
                 level = data[str(user.id)]['level']
@@ -197,7 +199,7 @@ class Experience(commands.Cog, description="Gain exp to gain levels"):
 
     @commands.command(name='getexp', help="Get a users experience.", hidden=True)
     async def get_exp(self, ctx, user: discord.Member):
-        if ctx.author.id in database.get_owners_id():
+        if ctx.author.id in database.get_owner_ids():
             with open("db/users.json", "r") as f:
                 data = json.load(f)
                 exp = data[str(user.id)]['experience']
