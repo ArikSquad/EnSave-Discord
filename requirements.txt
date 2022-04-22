@@ -1,4 +1,4 @@
-# For the essential for discord bot
+# The essential libraries for the project
 git+https://github.com/Rapptz/discord.py
 asyncio
 aiohttp
@@ -12,18 +12,15 @@ psutil
 simpcalci
 Tabulate
 Pillow
+Colorama
+PyNaCl
+Wavelink
 
-# This an addon for discord.py
+# This library is an addon for discord.py
 git+https://github.com/Rapptz/discord-ext-menus
 
-# This is for coloured logging
-Colorama
 
 # These are for the dashboard
 Quart
 Quart_discord
 git+https://github.com/ArikSquad/discord-ext-ipc
-
-# These libraries are used in the music commands
-PyNaCl
-Wavelink
