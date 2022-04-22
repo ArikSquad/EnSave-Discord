@@ -17,6 +17,7 @@ class Help(commands.Cog, description="Help"):
     def __init__(self, bot):
         self.bot = bot
         self.bot.help_command = helpCommand.HelpCommand()
+        self.bot.help_command.cog = self
 
 
 async def setup(bot):

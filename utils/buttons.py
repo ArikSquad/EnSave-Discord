@@ -22,7 +22,7 @@ class Resume(discord.ui.View):
         self.clear_items()
 
     @discord.ui.button(label="Resume", style=discord.ButtonStyle.blurple)
-    async def _resume(self, button: discord.ui.Button, interaction: Interaction):
+    async def _resume(self, interaction: Interaction, button: discord.ui.Button):
         paused = discord.Embed(title="Music",
                                description=f"The playback has been resumed.",
                                color=interaction.user.color,
@@ -42,12 +42,12 @@ class YesNo(discord.ui.View):
         self.clear_items()
 
     @discord.ui.button(label="Yes", style=discord.ButtonStyle.danger)
-    async def _yes(self, button: discord.ui.Button, interaction: Interaction):
+    async def _yes(self, interaction: Interaction, button: discord.ui.Button):
         self.value = True
         self.stop()
 
     @discord.ui.button(label="No", style=discord.ButtonStyle.green)
-    async def _no(self, button: discord.ui.Button, interaction: Interaction):
+    async def _no(self, interaction: Interaction, button: discord.ui.Button):
         await interaction.response.send_message(f"Okay, we won't do that then!", ephemeral=True)
         self.value = False
         self.stop()
