@@ -13,7 +13,10 @@ simpcalci
 Tabulate
 Pillow
 
-# This is for logging
+# This an addon for discord.py
+git+https://github.com/Rapptz/discord-ext-menus
+
+# This is for coloured logging
 Colorama
 
 # These are for the dashboard
