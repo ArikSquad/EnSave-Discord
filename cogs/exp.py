@@ -107,7 +107,7 @@ class Experience(commands.Cog, description="Gain exp to gain levels"):
         prefix = prefixes[str(message.guild.id)] if message.guild is not None else "."
 
         if not message.content.startswith(prefix) and message.author.id != 812808865728954399 \
-                and not message.author.bot and message.guild.id == 770634445370687519:
+                and not message.author.bot:
             await check_exp(message)
 
     @commands.command(name='level', help="Check your level.")
@@ -124,7 +124,7 @@ class Experience(commands.Cog, description="Gain exp to gain levels"):
 
             await ctx.send(embed=user_level)
 
-    @commands.command(name='addexp', help="Add experience to somebody.", hidden=True, guild_ids=[770634445370687519])
+    @commands.command(name='addexp', help="Add experience to somebody.", hidden=True)
     async def add_exp(self, ctx, user: discord.Member, amount: int):
         if ctx.author.id in database.get_owner_ids():
             with open("db/users.json", "r+") as f:
