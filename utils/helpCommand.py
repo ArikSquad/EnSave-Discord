@@ -90,7 +90,6 @@ class PageSource(menus.ListPageSource):
 
 
 class HelpCommand(commands.MinimalHelpCommand):
-
     # noinspection PyMethodMayBeStatic
     def get_command_brief(self, command):
         return command.short_doc or "This command has no description."
@@ -106,12 +105,16 @@ class HelpCommand(commands.MinimalHelpCommand):
         emoji = getattr(command.cog, "EMOJI", None)
         emoji_string = emoji if emoji is not None else ""
         embed = discord.Embed(
-            title=f'{emoji_string} {self.get_command_signature(command)}'
+            title=f'{emoji_string} {self.get_command_signature(command)}',
+            color=discord.Color.blue()
         )
         embed.add_field(name="Description", value=command.help)
         alias = command.aliases
+        brief = command.brief
         if alias:
             embed.add_field(name="Aliases", value=", ".join(alias), inline=False)
+        if brief:
+            embed.add_field(name="Small Explanation", value=brief)
 
         channel = self.get_destination()
         await channel.send(embed=embed)
@@ -120,15 +123,23 @@ class HelpCommand(commands.MinimalHelpCommand):
         emoji = getattr(group.cog, "EMOJI", None)
         emoji_string = emoji if emoji is not None else ""
         embed = discord.Embed(
-            title=f'{emoji_string} {self.get_command_signature(group)}'
+            title=f'{emoji_string} {self.get_command_signature(group)}',
+            color=discord.Color.blue()
         )
         embed.add_field(name="Description", value=group.help)
         embed.add_field(name="Subcommands", value=group.commands)
+        alias = group.aliases
+        brief = group.brief
+        if alias:
+            embed.add_field(name="Aliases", value=", ".join(alias), inline=False)
+        if brief:
+            embed.add_field(name="Small Explanation", value=brief)
 
     async def send_cog_help(self, cog):
         emoji = getattr(cog, "EMOJI", None)
         emoji_string = emoji if emoji is not None else ""
-        embed = discord.Embed(title=f'{emoji_string} {cog.qualified_name}')
+        embed = discord.Embed(title=f'{emoji_string} {cog.qualified_name}',
+                              color=discord.Color.blue())
         embed.add_field(name="Description", value=cog.description)
 
         channel = self.get_destination()

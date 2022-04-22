@@ -83,13 +83,17 @@ async def message_check(message):
 def get_level(author_id):
     with open('db/users.json', 'r') as f:
         data = json.load(f)
-    return data[str(author_id)]['level']
+    level = data[str(author_id)]['level']
+    f.close()
+    return level
 
 
 def get_xp(author_id):
     with open('db/users.json', 'r') as f:
         data = json.load(f)
-    return data[str(author_id)]['experience']
+    exp = data[str(author_id)]['experience']
+    f.close()
+    return exp
 
 
 class Experience(commands.Cog, description="Gain exp to gain levels"):
@@ -120,7 +124,7 @@ class Experience(commands.Cog, description="Gain exp to gain levels"):
                 color=ctx.author.color
             )
             user_level.add_field(name='Level', value=get_level(ctx.author.id), inline=False)
-            user_level.add_field(name='Experience', value=get_level(ctx.author.id), inline=False)
+            user_level.add_field(name='Experience', value=get_xp(ctx.author.id), inline=False)
 
             await ctx.send(embed=user_level)
 
@@ -184,7 +188,7 @@ class Experience(commands.Cog, description="Gain exp to gain levels"):
             )
             await ctx.send(embed=new_level_embed)
 
-    @commands.command(name='getlevel', help="Get a users level.", hidden=True)
+    @commands.command(name='getlevel', help="Get an user's level.", hidden=True)
     async def get_level(self, ctx, user: discord.Member):
         if ctx.author.id in database.get_owner_ids():
             with open("db/users.json", "r") as f:
@@ -197,7 +201,7 @@ class Experience(commands.Cog, description="Gain exp to gain levels"):
             )
             await ctx.send(embed=level_embed)
 
-    @commands.command(name='getexp', help="Get a users experience.", hidden=True)
+    @commands.command(name='getexp', help="Get an user's experience count.", hidden=True)
     async def get_exp(self, ctx, user: discord.Member):
         if ctx.author.id in database.get_owner_ids():
             with open("db/users.json", "r") as f:
@@ -210,7 +214,7 @@ class Experience(commands.Cog, description="Gain exp to gain levels"):
             )
             await ctx.send(embed=exp_embed)
 
-    @commands.command(name='leaderboard', help="Get the leaderboard.", hidden=True)
+    @commands.command(name='leaderboard', help="Get the top 10 leveled users of the bot.", hidden=True)
     async def leaderboard(self, ctx):
         with open("db/users.json", "r") as f:
             data = json.load(f)
