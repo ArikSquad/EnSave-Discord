@@ -73,11 +73,20 @@ class ErrorHandler(commands.Cog, description="Error handler"):
 
             if isinstance(error, (commands.CommandError, commands.CheckFailure)) \
                     and not isinstance(error, commands.CommandInvokeError):
-                return await ctx.send(f':x: {error}')
+                error_embed = discord.Embed(
+                    title=f'Something went wrong',
+                    description=f'{error}',
+                    color=discord.Color.red()
+                )
+                error_embed.add_field(name='Command Information', value=f'Command: {ctx.command}\n'
+                                                                        f'Description: {ctx.command.description}\n'
+                                                                        f'Cog: {ctx.command.cog.qualified_name}\n')
+                error_embed.set_footer(text=f'You can also try .help {ctx.command.qualified_name}')
+                return await ctx.send(embed=error_embed)
 
             execute_error = discord.Embed(
                 color=discord.Colour(0xff0000),
-                title=':rotating_light: An error occured while trying to execute that command, '
+                title='An error occured while trying to execute that command, '
                       'Please contact ArikSquad#6222',
                 timestamp=database.get_time()
             )
