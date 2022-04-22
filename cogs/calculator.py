@@ -150,7 +150,7 @@ class Calculator(commands.Cog, description="Calculator"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="calculate", aliases=["calc"])
+    @commands.command(name="calculate", help="Calculator simulator", aliases=["calc", "calculator"])
     async def interactive_calc(self, ctx):
         view = InteractiveView()
         await ctx.send("```\n```", view=view)

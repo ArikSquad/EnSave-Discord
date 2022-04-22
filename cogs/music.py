@@ -13,7 +13,7 @@ from better_profanity import profanity
 from discord.ext import commands
 from dotenv import load_dotenv
 
-from utils import database
+from utils import database, buttons
 
 load_dotenv()
 host_server = str(os.getenv('MUSIC'))
@@ -181,7 +181,7 @@ class Music(commands.Cog, description="Music"):
 
     @commands.command(name="pause", help="Pause voice channel")
     async def pause_command(self, ctx: commands.Context):
-        view = database.Resume()
+        view = buttons.Resume()
         voice: wavelink.Player = ctx.voice_client
         if voice and voice.is_connected():
             if not ctx.author.voice:

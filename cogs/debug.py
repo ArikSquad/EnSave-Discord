@@ -10,7 +10,7 @@ import discord
 from better_profanity import profanity
 from discord.ext import commands
 
-from utils import database
+from utils import database, buttons
 
 
 class Debug(commands.Cog, description="Debugging"):
@@ -58,7 +58,7 @@ class Debug(commands.Cog, description="Debugging"):
     @admin.command(name="shutdown", help="Shutdown the bot.", aliases=["logout"], hidden=True)
     async def shutdown(self, ctx):
         if ctx.author.id in database.get_owner_ids():
-            view = database.YesNo()
+            view = buttons.YesNo()
             sure = discord.Embed(title="Are you sure?", description="This will logout "
                                                                     "from discord and exit the python program.",
                                  color=ctx.author.color)
@@ -79,8 +79,6 @@ class Debug(commands.Cog, description="Debugging"):
                 print(f"Unloaded extension {cog}")
             except commands.ExtensionNotFound:
                 await ctx.send(f'There is no extension called {profanity.censor(cog)}')
-            except commands.ExtensionNotLoaded:
-                await ctx.send('The extension is already unloaded.')
 
     @admin.command(name='cog-load', help='Load a cog.', hidden=True)
     async def load_cog(self, ctx, cog):
@@ -105,8 +103,6 @@ class Debug(commands.Cog, description="Debugging"):
                 await ctx.send(f'There is no extension called {profanity.censor(cog)}')
             except commands.ExtensionFailed:
                 await ctx.send('The extension failed.')
-            except commands.ExtensionNotLoaded:
-                await ctx.send('The extension is not loaded.')
 
 
 async def setup(bot):

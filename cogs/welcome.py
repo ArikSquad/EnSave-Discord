@@ -46,8 +46,6 @@ class Welcome(commands.Cog, description="Welcome messages"):
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
-        toggle = True
-        welcome_channel = None
         with open("db/config.json", "r") as f:
             data = json.load(f)
 
@@ -62,6 +60,8 @@ class Welcome(commands.Cog, description="Welcome messages"):
                 data[str(member.guild.id)]["welcome_toggle"] = True
                 with open("db/config.json", "w") as f:
                     json.dump(data, f, indent=4)
+                toggle = True
+                welcome_channel = None
         else:
             with open("db/config.json", "r") as f:
                 data = json.load(f)
@@ -69,6 +69,8 @@ class Welcome(commands.Cog, description="Welcome messages"):
             data[str(member.guild.id)]["welcome_toggle"] = True
             with open("db/config.json", "w") as f:
                 json.dump(data, f, indent=4)
+            toggle = True
+            welcome_channel = None
 
         if toggle:
             if welcome_channel is not None:
