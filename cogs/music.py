@@ -56,16 +56,16 @@ class Music(commands.Cog, description="Music"):
     @commands.command(name="play", aliases=['youtube', 'yt'], help="Play a song.")
     async def play(self, ctx: commands.Context, *, search: wavelink.YouTubeTrack):
         if not ctx.voice_client:
-            voice: wavelink.Player = await ctx.author.voice.channel.connect(cls=wavelink.Player)
+            if ctx.author.voice:
+                voice: wavelink.Player = await ctx.author.voice.channel.connect(cls=wavelink.Player)
+            else:
+                not_connected = discord.Embed(title="Music",
+                                              description=f"You are not connected to a voice channel.",
+                                              color=ctx.author.color,
+                                              timestamp=database.get_time())
+                return await ctx.send(embed=not_connected)
         else:
             voice: wavelink.Player = ctx.voice_client
-
-        if not ctx.author.voice:
-            not_connected = discord.Embed(title="Music",
-                                          description=f"You are not connected to a voice channel.",
-                                          color=ctx.author.color,
-                                          timestamp=database.get_time())
-            return await ctx.send(embed=not_connected)
 
         if voice.queue.is_empty and not voice.is_playing():
             now_playing = discord.Embed(title="Music",
@@ -95,16 +95,16 @@ class Music(commands.Cog, description="Music"):
     @commands.command(name="soundcloud", aliases=['sc'], help="Play a song using soundcloud.")
     async def soundcloud(self, ctx: commands.Context, *, search: wavelink.SoundCloudTrack):
         if not ctx.voice_client:
-            voice: wavelink.Player = await ctx.author.voice.channel.connect(cls=wavelink.Player)
+            if ctx.author.voice:
+                voice: wavelink.Player = await ctx.author.voice.channel.connect(cls=wavelink.Player)
+            else:
+                not_connected = discord.Embed(title="Music",
+                                              description=f"You are not connected to a voice channel.",
+                                              color=ctx.author.color,
+                                              timestamp=database.get_time())
+                return await ctx.send(embed=not_connected)
         else:
             voice: wavelink.Player = ctx.voice_client
-
-        if not ctx.author.voice:
-            not_connected = discord.Embed(title="Music",
-                                          description=f"You are not connected to a voice channel.",
-                                          color=ctx.author.color,
-                                          timestamp=database.get_time())
-            return await ctx.send(embed=not_connected)
 
         if voice.queue.is_empty and not voice.is_playing():
             now_playing = discord.Embed(title="Music",
