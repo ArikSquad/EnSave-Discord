@@ -71,19 +71,19 @@ class Admin(commands.Cog, description="Gather information"):
     async def unload_cog(self, ctx, cog):
         if ctx.author.id in database.get_owner_ids():
             try:
-                await self.bot.unload_extension(f'{cog}')
-                await ctx.send(f"`{cog}` unloaded.")
+                await self.bot.unload_extension(f'cogs.{cog.lower()}')
+                await ctx.send(f"Unloaded `{cog}`.")
                 print(f"Unloaded extension {cog}")
-            except commands.ExtensionNotFound:
-                await ctx.send(f'There is no extension called {profanity.censor(cog)}')
+            except commands.ExtensionNotLoaded:
+                await ctx.send(f'The extension {profanity.censor(cog)} is not loaded or has not been found.')
 
     @admin.command(name='cog-load', help='Load a cog.', hidden=True,
                    brief='Enable a cog.')
     async def load_cog(self, ctx, cog):
         if ctx.author.id in database.get_owner_ids():
             try:
-                await self.bot.load_extension(f'{cog}')
-                await ctx.send(f'Loaded extension {cog}')
+                await self.bot.load_extension(f'cogs.{cog.lower()}')
+                await ctx.send(f'Loaded `{cog}`.')
                 print(f'Loaded extension {cog}')
             except commands.ExtensionNotFound:
                 await ctx.send(f'There is no extension called {profanity.censor(cog)}')
@@ -95,15 +95,14 @@ class Admin(commands.Cog, description="Gather information"):
     async def restart_cog(self, ctx, cog):
         if ctx.author.id in database.get_owner_ids():
             try:
-                await self.bot.reload_extension(f'{cog}')
-                await ctx.send(f"Successfully reloaded {cog}.")
+                await self.bot.unload_extension(f'cogs.{cog.lower()}')
+                await self.bot.load_extension(f'cogs.{cog.lower()}')
+                await ctx.send(f"Reloaded `{cog}`.")
                 print(f"Reloaded extension {cog}")
-            except commands.ExtensionNotFound:
-                await ctx.send(f'There is no extension called {profanity.censor(cog)}')
             except commands.ExtensionFailed:
                 await ctx.send('The extension failed.')
             except commands.ExtensionNotLoaded:
-                await ctx.send('The extension is not loaded.')
+                await ctx.send('The extension is not loaded or has not been found.')
 
     @admin.command(name="info", aliases=["information", "about"], help="Gather information about the bot.",
                    hidden=True, brief='See information about bot or a user')
