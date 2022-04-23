@@ -73,10 +73,10 @@ def get_premium(user_id):
         return False
 
 
-def set_premium(user_id, premium: bool = True):
+def set_premium(user_id, premium: bool = None):
     with open('db/users.json', 'r+') as f:
         data = json.load(f)
-        data[str(user_id)]['premium'] = premium
+        data[str(user_id)]['premium'] = premium if premium is not None else not data[str(user_id)]['premium']
         f.seek(0)
         json.dump(data, f, indent=4)
     return False

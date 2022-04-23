@@ -5,6 +5,7 @@
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
 # -----------------------------------------------------------
+import json
 import random
 
 import aiohttp
@@ -13,6 +14,8 @@ import requests
 from better_profanity import profanity
 from discord import app_commands
 from discord.ext import commands
+
+from utils import database
 
 
 class Misc(commands.Cog, description="Random commands"):
@@ -86,6 +89,44 @@ class Misc(commands.Cog, description="Random commands"):
             embed = discord.Embed(description="Something went wrong. Please try again later.",
                                   color=interaction.user.color)
             await interaction.response.send_message(embed=embed)
+
+    @commands.command(name='redeem', help="Redeem a code for a reward!", hidden=True)
+    async def redeem(self, ctx, code):
+        with open('db/codes.json', 'r') as f:
+            codes = json.load(f)
+
+        amount = 0
+        # check how many codes are in the file
+        for _ in codes["codes"]:
+            amount = amount + 1
+
+        # there is probably a better way, but I rushed this code
+        success = False
+        for i in range(amount):
+            if codes["codes"][str(i + 1)] == str(code):
+                success = True
+                codes["codes"][str(i + 1)] = None
+                with open('db/codes.json', 'w') as f:
+                    json.dump(codes, f, indent=4)
+
+        if success:
+            try:
+                database.set_premium(ctx.author.id, True)
+            except KeyError:
+                await ctx.send("Hey, please contact ArikSquad#6222 to redeem your code, there has been an error.")
+            embed = discord.Embed(
+                title="Success!",
+                description=f"You have redeemed your code for {codes[code]}!",
+                color=ctx.author.color
+            )
+            await ctx.reply(embed=embed)
+        else:
+            embed = discord.Embed(
+                title="Error",
+                description=f"{ctx.author.mention} You have entered an invalid code!",
+                color=ctx.author.color
+            )
+            await ctx.reply(embed=embed)
 
 
 async def setup(bot):

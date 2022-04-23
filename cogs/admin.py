@@ -5,7 +5,10 @@
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
 # -----------------------------------------------------------
+import asyncio
 import json
+import random
+import string
 
 import discord
 import psutil as psutil
@@ -13,6 +16,32 @@ from better_profanity import profanity
 from discord.ext import commands
 
 from utils import database, buttons
+
+
+def convert(time):
+    pos = ["s", "m", "h", "d"]
+
+    time_dict = {"s": 1, "m": 60, "h": 3600, "d": 3600 * 24}
+
+    unit = time[-1]
+
+    if unit not in pos:
+        return -1
+    try:
+        val = int(time[:-1])
+    except:
+        return -2
+
+    return val * time_dict[unit]
+
+
+def get_string():
+    letters = ''.join((random.choice(string.ascii_letters) for i in range(6)))
+    digits = ''.join((random.choice(string.digits) for i in range(2)))
+    sample_list = list(letters + digits)
+    random.shuffle(sample_list)
+    final_string = ''.join(sample_list)
+    return final_string
 
 
 class Admin(commands.Cog, description="Gather information"):
@@ -152,6 +181,39 @@ class Admin(commands.Cog, description="Gather information"):
                 else:
                     database.set_premium(user.id)
                 await ctx.send(f"{user.mention}'s new state of premium: {state}")
+
+    @admin.command(name='get-premium', help='Get premium state of a user.', hidden=True,
+                   brief='Get user premium state')
+    async def get_premium(self, ctx, user: discord.Member):
+        if ctx.author.id in database.get_owner_ids():
+            await ctx.send(f"{user.mention}'s premium state: {database.get_premium(user.id)}")
+
+    @admin.command(name='keydrop', help='Drop a key.', hidden=True,
+                   brief='Drop a key')
+    async def keydrop(self, ctx, time: str = "1m", key: str = get_string()):
+        if ctx.author.id in database.get_owner_ids():
+            embed = discord.Embed(title="Key", color=discord.Color.blue())
+            wait = convert(time)
+
+            with open('db/codes.json', 'r') as f:
+                data = json.load(f)
+
+            number = 0
+            for _ in data["codes"]:
+                number = number + 1
+
+            data["codes"][number] = key
+
+            with open('db/codes.json', 'w') as f:
+                json.dump(data, f, indent=4)
+
+            embed.add_field(name="Key", value=f"Coming in {wait} seconds")
+            embed.add_field(name="How to redeem?", value=f"Use `{ctx.prefix}redeem <key>`")
+            embed.set_footer(text=f"Created by {ctx.author.name}")
+            message = await ctx.send(embed=embed)
+            await asyncio.sleep(wait)
+            embed.set_field_at(0, name="Key", value=f"{key}")
+            await message.edit(embed=embed)
 
 
 async def setup(bot):
