@@ -146,8 +146,8 @@ class Messages(commands.Cog, description="Send messages and see how many you hav
         for index, name_value in enumerate(new_leaderboard[:10]):
             user_name_column.append([await self.bot.fetch_user(name_value[0])])
 
-        for exp_index, exp_value in enumerate(new_leaderboard[:10]):
-            user_msg_column.append([exp_value[2]])
+        for exp_index, msg_value in enumerate(new_leaderboard[:10]):
+            user_msg_column.append([msg_value[1]])
 
         user_rank_table = tabulate(user_rank_column, tablefmt='plain', headers=['#\n'], numalign="left")
         user_name_table = tabulate(user_name_column, tablefmt='plain', headers=['Name\n'], numalign="left")
@@ -158,7 +158,7 @@ class Messages(commands.Cog, description="Send messages and see how many you hav
 
         rank_text_position = 90, 50
         name_text_position = 400, 50
-        exp_text_position = 2750, 50  # 1990, 50
+        exp_text_position = 1990, 50  # Old: 2750, 50
 
         draw_on_image = ImageDraw.Draw(image_template)
         draw_on_image.text(rank_text_position, user_rank_table, 'white', font=font)
