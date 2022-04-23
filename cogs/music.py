@@ -21,7 +21,7 @@ host_pass = str(os.getenv('MUSIC_PASSWORD'))
 
 
 # noinspection PyTypeChecker
-class Music(commands.Cog, description="Music"):
+class Music(commands.Cog, description="Play songs in voice channels"):
     EMOJI = "🎵"
 
     def __init__(self, bot):
