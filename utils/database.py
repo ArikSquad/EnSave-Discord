@@ -58,7 +58,7 @@ def get_premium(user_id):
     with open('db/users.json', 'r') as f:
         data = json.load(f)
 
-    if user_id in data:
+    if str(user_id) in data:
         if data[str(user_id)]['premium']:
             return True
         else:
