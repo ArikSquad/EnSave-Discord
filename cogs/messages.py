@@ -134,7 +134,7 @@ class Messages(commands.Cog, description="Send messages and see how many you hav
         for index, user_id in enumerate(user_ids, 1):
             new_leaderboard.append([user_id, user_messages[index - 1]])
 
-        new_leaderboard.sort(key=lambda x: (x[1], x[2]), reverse=True)
+        new_leaderboard.sort(key=lambda x: x[1], reverse=True)
 
         user_rank_column = []
         user_name_column = []
