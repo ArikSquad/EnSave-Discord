@@ -14,10 +14,6 @@ def get_time():
     return datetime.datetime.utcnow()
 
 
-def get_guild_ids():
-    return [770634445370687519]
-
-
 def get_owners_discord():
     return ["ArikSquad#6222", "Mhilkos#7676"]
 

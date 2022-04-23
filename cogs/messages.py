@@ -73,16 +73,15 @@ class Messages(commands.Cog, description="Send messages and see how many you hav
 
     @commands.command(name='messages', help="Check your message count.")
     async def messages(self, ctx):
-        if ctx.guild.id == 770634445370687519:
-            user_level = discord.Embed(
-                title=f"{ctx.author.name}'s Message Count",
-                description="This user has gotten premium." if database.get_premium(ctx.author.id)
-                else "This person is still reaching premium.",
-                color=ctx.author.color
-            )
-            user_level.add_field(name='Messages', value=get_amount(ctx.author.id), inline=False)
+        user_level = discord.Embed(
+            title=f"{ctx.author.name}'s Message Count",
+            description="This user has gotten premium." if database.get_premium(ctx.author.id)
+            else "This person is still reaching premium.",
+            color=ctx.author.color
+        )
+        user_level.add_field(name='Messages', value=get_amount(ctx.author.id), inline=False)
 
-            await ctx.send(embed=user_level)
+        await ctx.send(embed=user_level)
 
     @commands.command(name='addexp', help="Add the count of messages an user has sent.",
                       hidden=True)
