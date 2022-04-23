@@ -18,39 +18,52 @@ class Events(commands.Cog, description="Events"):
     def __init__(self, bot):
         self.bot = bot
 
-    # This will be run, after the bot is ready.
     @commands.Cog.listener()
     async def on_ready(self):
-        # Print some information about the bot.
         print("Logging in... at the time of " + str(datetime.datetime.now()))
         print(f'{Fore.LIGHTRED_EX}{self.bot.user} has connected to Discord!')
         print(f"Name: {Fore.LIGHTCYAN_EX}{self.bot.user.name}")
         print(f"ID: {Fore.LIGHTCYAN_EX}{self.bot.user.id}")
         print(f'{Fore.LIGHTWHITE_EX}###########################################')
-        print(f"Connected to {Fore.LIGHTGREEN_EX}{len(self.bot.guilds)} guilds")
+        print(f"Currently in {Fore.LIGHTGREEN_EX}{len(self.bot.guilds)} guilds")
 
-    # This even will be run after the bot leaves a guild.
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
-        # This command just removed the prefix from the database.
         with open('db/prefixes.json', 'r') as f:
             prefixes = json.load(f)
         prefixes.pop(str(guild.id))
         with open('db/prefixes.json', 'w') as f:
             json.dump(prefixes, f, indent=4)
 
-    # This event will be run after bot joins a guild.
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
-        # Opens the prefixes.json to read the prefixes.
         with open('db/prefixes.json', 'r') as f:
             prefixes = json.load(f)
+        with open('db/guilds.json', 'r') as f:
+            guild = json.load(f)
 
-        # This is the default prefix. You can change it if you want to!
         prefixes[str(guild.id)] = '.'
-        # Opens the prefixes.json to write the prefixes.
+        guild[str(guild.id)] = {
+            "spy_edit": False,
+            "spy_delete": False,
+            "spy_channel": None
+        }
         with open('db/prefixes.json', 'w') as f:
             json.dump(prefixes, f, indent=4)
+
+    @commands.Cog.listener()
+    async def on_member_join(self, member):
+        with open('db/users.json', 'r') as f:
+            users = json.load(f)
+
+        users[str(member.id)] = {
+            "name": str(member.name),
+            "premium": False,
+            "messages": 0
+        }
+
+        with open('db/users.json', 'w') as f:
+            json.dump(users, f, indent=4)
 
 
 async def setup(bot):
