@@ -207,8 +207,8 @@ class Admin(commands.Cog, description="Gather information"):
             with open('db/codes.json', 'w') as f:
                 json.dump(data, f, indent=4)
 
-            embed.add_field(name="Key", value=f"Coming in {wait} seconds")
-            embed.add_field(name="How to redeem?", value=f"Use `{ctx.prefix}redeem <key>`")
+            embed.add_field(name="Key", value=f"Coming in {wait} seconds", inline=False)
+            embed.add_field(name="How to redeem?", value=f"Use `{ctx.prefix}redeem <key>`", inline=False)
             embed.set_footer(text=f"Created by {ctx.author.name}")
             message = await ctx.send(embed=embed)
             await asyncio.sleep(wait)
