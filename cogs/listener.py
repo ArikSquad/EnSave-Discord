@@ -59,14 +59,14 @@ class Events(commands.Cog, description="Events"):
         if member.bot:
             return
 
-        users[str(member.id)] = {
-            "name": str(member.name),
-            "premium": False,
-            "messages": 0
-        }
+        if member.id not in users:
+            users[str(member.id)] = {
+                "premium": False,
+                "messages": 0
+            }
 
-        with open('db/users.json', 'w') as f:
-            json.dump(users, f, indent=4)
+            with open('db/users.json', 'w') as f:
+                json.dump(users, f, indent=4)
 
 
 async def setup(bot):
