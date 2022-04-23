@@ -56,6 +56,9 @@ class Events(commands.Cog, description="Events"):
         with open('db/users.json', 'r') as f:
             users = json.load(f)
 
+        if member.bot:
+            return
+
         users[str(member.id)] = {
             "name": str(member.name),
             "premium": False,

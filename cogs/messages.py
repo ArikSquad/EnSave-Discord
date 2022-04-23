@@ -59,7 +59,6 @@ class Messages(commands.Cog, description="Send messages and see how many you hav
     def __init__(self, bot):
         self.bot = bot
 
-    # When a message is sent in a guild, add some xp to the user.
     @commands.Cog.listener()
     async def on_message(self, message):
         with open('db/prefixes.json', 'r') as f:

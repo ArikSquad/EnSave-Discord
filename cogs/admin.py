@@ -121,19 +121,18 @@ class Admin(commands.Cog, description="Gather information"):
             embed.add_field(name="OS Last Boot", value=f"{psutil.boot_time()}")
             embed.add_field(name="CPU Percentage", value=f"{psutil.cpu_percent()}%")
             return await ctx.send(embed=embed)
-        elif user is not None and ctx.author.id in database.get_owner_ids():
+        elif user is not None and not user.bot and ctx.author.id in database.get_owner_ids():
             with open("db/users.json", "r") as f:
                 data = json.load(f)
-                exp = data[str(ctx.author.id)]['experience']
-                level = data[str(ctx.author.id)]['level']
+                msg_count = data[str(ctx.author.id)]['messages']
             embed = discord.Embed(title="Information", color=user.color)
             embed.set_thumbnail(url=user.avatar.url)
             embed.add_field(name="Username", value=user.name)
             embed.add_field(name="Discriminator", value=user.discriminator, inline=False)
             embed.add_field(name="ID", value=user.id, inline=False)
             embed.add_field(name="Created at", value=user.created_at.strftime("%d/%m/%Y %H:%M:%S"), inline=False)
-            embed.add_field(name="Experience", value=exp if exp is not None else "None")
-            embed.add_field(name="Level", value=level if level is not None else "None")
+            embed.add_field(name="Messages sent", value=msg_count if msg_count is not None else "No messages sent yet",
+                            inline=False)
             embed.add_field(name="Premium", value="Yes" if database.get_premium(user.id) is True else "No",
                             inline=False)
             embed.add_field(name="Bot Status", value="Yes" if user.bot is True else "No", inline=False)

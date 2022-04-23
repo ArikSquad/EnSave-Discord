@@ -76,7 +76,7 @@ class Spy(commands.Cog, description="Spying"):
 
     # Toggle the spying on a server,
     # spy: bool (True/False)
-    # mode: int 1/2 (1 = edit, 2 = delete)
+    # mode: int 1 or 2 (1 = edit, 2 = delete)
     @commands.command(name="spy", aliases=["spy-edit", "spy-delete"], help="Toggle the spying on the server.")
     @commands.has_permissions(manage_guild=True)
     async def spy(self, ctx, mode: int = None):
