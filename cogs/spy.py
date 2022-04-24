@@ -75,9 +75,10 @@ class Spy(commands.Cog, description="Spying"):
                 pass
 
     # Toggle the spying on a server,
-    # spy: bool (True/False)
     # mode: int 1 or 2 (1 = edit, 2 = delete)
-    @commands.command(name="spy", aliases=["spy-edit", "spy-delete"], help="Toggle the spying on the server.")
+    @commands.command(name="spy", aliases=["spy-edit", "spy-delete"],
+                      help="Toggle spying. Modes are: 1 = edit, 2 = delete, None = both.",
+                      brief="Toggle spying when users edit or delete messages.")
     @commands.has_permissions(manage_guild=True)
     async def spy(self, ctx, mode: int = None):
         desc = "**Something went wrong...**"
@@ -92,7 +93,7 @@ class Spy(commands.Cog, description="Spying"):
             desc = "deleting"
             data[str(ctx.guild.id)]["spy_delete"] = not data[str(ctx.guild.id)]["spy_delete"]
             enabled = data[str(ctx.guild.id)]["spy_edit"]
-        elif mode is None:
+        elif mode is None or mode > 2 or mode < 1:
             desc = "editing and deleting"
             data[str(ctx.guild.id)]["spy_delete"] = not data[str(ctx.guild.id)]["spy_delete"]
             data[str(ctx.guild.id)]["spy_edit"] = not data[str(ctx.guild.id)]["spy_edit"]
