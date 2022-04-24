@@ -327,6 +327,12 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                                         color=ctx.author.color,
                                         timestamp=database.get_time())
                 await ctx.send(embed=shuffle)
+            else:
+                premium = discord.Embed(title="Music",
+                                        description="You need to be a premium member of this to use this command.",
+                                        color=ctx.author.color,
+                                        timestamp=database.get_time())
+                return await ctx.send(embed=premium)
         else:
             not_connected = discord.Embed(title="Music",
                                           description=f"You are not connected to the voice channel.",
