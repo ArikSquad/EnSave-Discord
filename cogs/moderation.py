@@ -5,6 +5,7 @@
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
 # -----------------------------------------------------------
+import asyncio
 import datetime
 import json
 
@@ -54,7 +55,9 @@ class Moderation(commands.Cog, description="Moderating"):
         embed = discord.Embed(title="Messages Cleared",
                               description=f"{amount} messages have been cleared.",
                               color=0x00ff00)
-        await ctx.send(embed=embed)
+        message = await ctx.send(embed=embed)
+        await asyncio.sleep(5)
+        await message.delete()
 
     @commands.command(name="prefix", help="Change the prefix of the guild.",
                       aliases=["changeprefix"])
