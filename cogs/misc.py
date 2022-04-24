@@ -103,23 +103,27 @@ class Misc(commands.Cog, description="Random commands"):
         # there is probably a better way, but I rushed this code
         success = False
         for i in range(amount):
-            if codes["codes"][str(i + 1)] == str(code):
+            if codes["codes"][str(i + 1)][0] == str(code):
                 success = True
-                codes["codes"][str(i + 1)] = None
+                codes["codes"][str(i + 1)][0] = None
                 with open('db/codes.json', 'w') as f:
                     json.dump(codes, f, indent=4)
 
         if success:
-            try:
-                database.set_premium(ctx.author.id, True)
-            except KeyError:
-                await ctx.send("Hey, please contact ArikSquad#6222 to redeem your code, there has been an error.")
-            embed = discord.Embed(
-                title="Success!",
-                description=f"You have redeemed your code for {codes[code]}!",
-                color=ctx.author.color
-            )
-            await ctx.reply(embed=embed)
+            if database.get_premium(ctx.author.id):
+                await ctx.reply("You already have the premium.")
+            else:
+                try:
+                    database.set_premium(ctx.author.id, True)
+                except KeyError:
+                    await ctx.send("Hey, please contact ArikSquad#6222 to get your price, "
+                                   "something went wrong when giving automatically.")
+                embed = discord.Embed(
+                    title="Success!",
+                    description=f"You have redeemed {code}.!",
+                    color=ctx.author.color
+                )
+                await ctx.reply(embed=embed)
         else:
             embed = discord.Embed(
                 title="Error",

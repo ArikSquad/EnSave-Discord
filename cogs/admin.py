@@ -9,6 +9,8 @@ import asyncio
 import json
 import random
 import string
+import time as tm
+from datetime import datetime, timedelta
 
 import discord
 import psutil as psutil
@@ -192,28 +194,43 @@ class Admin(commands.Cog, description="Gather information"):
                    brief='Drop a key')
     async def keydrop(self, ctx, time: str = "1m", key: str = get_string()):
         if ctx.author.id in database.get_owner_ids():
-            embed = discord.Embed(title="Key", color=discord.Color.blue())
+            # create  the embed and convert the wait time to seconds
+            embed = discord.Embed(title="Key", color=discord.Color.blue(), timestamp=database.get_time())
             wait = convert(time)
 
             with open('db/codes.json', 'r') as f:
                 data = json.load(f)
 
-            number = 0
-            for _ in data["codes"]:
-                number = number + 1
-
-            data["codes"][number] = key
-
-            with open('db/codes.json', 'w') as f:
-                json.dump(data, f, indent=4)
-
-            embed.add_field(name="Key", value=f"Coming in {wait} seconds", inline=False)
+            # send the message
+            formatted_time = datetime.utcnow() + timedelta(seconds=wait)
+            unix_time = tm.mktime(formatted_time.timetuple())
+            embed.add_field(name="Key drop!", value=f"Coming in <t:{int(unix_time)}>", inline=False)
             embed.add_field(name="How to redeem?", value=f"Use `{ctx.prefix}redeem <key>`", inline=False)
             embed.set_footer(text=f"Created by {ctx.author.name}")
             message = await ctx.send(embed=embed)
+
+            # let's put one, so it doesn't create the latest again
+            number = 1
+            # for every stuff in data["codes") it will add one to number
+            for _ in data["codes"]:
+                number = number + 1
+
+            # this is supposed to create the list
+            data["codes"][str(number)] = [key, message.id]
+
+            with open('db/codes.json', 'w') as f:
+                json.dump(data, f, indent=4)
+            f.close()
+
+            # wait for the converter time.
             await asyncio.sleep(wait)
-            embed.set_field_at(0, name="Key", value=f"{key}")
-            await message.edit(embed=embed)
+            # Change the field to show the code
+            embed.set_field_at(0, name="Code", value=f"{key}")
+            with open('db/codes.json', 'r') as f:
+                data = json.load(f)
+            # if the data["codes"][str(number)] second value is not none
+            if data["codes"][str(number)][1] is not None:
+                await message.edit(embed=embed)
 
 
 async def setup(bot):
