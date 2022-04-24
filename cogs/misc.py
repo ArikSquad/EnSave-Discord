@@ -92,27 +92,25 @@ class Misc(commands.Cog, description="Random commands"):
 
     @commands.command(name='redeem', help="Redeem a code for a reward!", hidden=True)
     async def redeem(self, ctx, code):
-        with open('db/codes.json', 'r') as f:
-            codes = json.load(f)
+        if not database.get_premium(ctx.author.id):
+            with open('db/codes.json', 'r') as f:
+                codes = json.load(f)
 
-        amount = 0
-        # check how many codes are in the file
-        for _ in codes["codes"]:
-            amount = amount + 1
+            amount = 0
+            # check how many codes are in the file
+            for _ in codes["codes"]:
+                amount = amount + 1
 
-        # there is probably a better way, but I rushed this code
-        success = False
-        for i in range(amount):
-            if codes["codes"][str(i + 1)][0] == str(code):
-                success = True
-                codes["codes"][str(i + 1)][0] = None
-                with open('db/codes.json', 'w') as f:
-                    json.dump(codes, f, indent=4)
+            # there is probably a better way, but I rushed this code
+            success = False
+            for i in range(amount):
+                if codes["codes"][str(i + 1)][0] == str(code):
+                    success = True
+                    codes["codes"][str(i + 1)][0] = None
+                    with open('db/codes.json', 'w') as f:
+                        json.dump(codes, f, indent=4)
 
-        if success:
-            if database.get_premium(ctx.author.id):
-                await ctx.reply("You already have the premium.")
-            else:
+            if success:
                 try:
                     database.set_premium(ctx.author.id, True)
                 except KeyError:
@@ -124,10 +122,18 @@ class Misc(commands.Cog, description="Random commands"):
                     color=ctx.author.color
                 )
                 await ctx.reply(embed=embed)
+                self.bot.get_message()
+            else:
+                embed = discord.Embed(
+                    title="Error",
+                    description=f"{ctx.author.mention} You have entered an invalid code!",
+                    color=ctx.author.color
+                )
+                await ctx.reply(embed=embed)
         else:
             embed = discord.Embed(
                 title="Error",
-                description=f"{ctx.author.mention} You have entered an invalid code!",
+                description=f"{ctx.author.mention} You are already a premium member!",
                 color=ctx.author.color
             )
             await ctx.reply(embed=embed)
