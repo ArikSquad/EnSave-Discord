@@ -204,7 +204,7 @@ class Admin(commands.Cog, description="Gather information"):
             # send the message
             formatted_time = datetime.utcnow() + timedelta(seconds=wait)
             unix_time = tm.mktime(formatted_time.timetuple())
-            embed.add_field(name="Key drop!", value=f"Coming in <t:{int(unix_time)}>", inline=False)
+            embed.add_field(name="Key drop!", value=f"Coming at <t:{int(unix_time)}:T>", inline=False)
             embed.add_field(name="How to redeem?", value=f"Use `{ctx.prefix}redeem <key>`", inline=False)
             embed.set_footer(text=f"Created by {ctx.author.name}")
             message = await ctx.send(embed=embed)
