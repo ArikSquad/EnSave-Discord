@@ -89,12 +89,12 @@ class Events(commands.Cog, description="Events"):
         found = False
         number = 0
         for i in range(amount):
-            if codes["codes"][str(i)][1] == int(message.id):
+            if codes["codes"][str(i + 1)][0] == int(message.id):
                 found = True
                 number = i
 
         if found:
-            codes["codes"][number][1] = None
+            codes["codes"][number][0] = None
             with open('db/codes.json', 'w') as f:
                 json.dump(codes, f, indent=4)
 
