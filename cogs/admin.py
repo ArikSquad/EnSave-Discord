@@ -38,12 +38,12 @@ def convert(time):
 
 
 def get_string():
-    letters = ''.join((random.choice(string.ascii_letters) for i in range(6)))
-    digits = ''.join((random.choice(string.digits) for i in range(2)))
+    letters = ''.join((random.choice(string.ascii_letters) for i in range(8)))
+    digits = ''.join((random.choice(string.digits) for i in range(4)))
     sample_list = list(letters + digits)
     random.shuffle(sample_list)
     final_string = ''.join(sample_list)
-    return final_string
+    return "a" + final_string
 
 
 class Admin(commands.Cog, description="Gather information"):
@@ -194,6 +194,9 @@ class Admin(commands.Cog, description="Gather information"):
                    brief='Drop a key')
     async def keydrop(self, ctx, time: str = "1m", key: str = get_string()):
         if ctx.author.id in database.get_owner_ids():
+            if not str(key).startswith("a"):
+                await ctx.message.delete()
+
             # create  the embed and convert the wait time to seconds
             embed = discord.Embed(title="Key", color=discord.Color.blue(), timestamp=database.get_time())
             wait = convert(time)
