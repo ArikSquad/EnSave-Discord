@@ -24,10 +24,10 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="mcstatus", aliases=["mcs"], help="Get the status of a Minecraft server.")
+    @commands.command(name="mcstatus", aliases=["mcs"], help="Get the status of a Java Minecraft server.")
     async def mcstatus(self, ctx, server: str):
         try:
-            status = mcstatus.MinecraftServer.lookup(server).status()
+            status = mcstatus.JavaServer.lookup(server).status()
             player = discord.Embed(title=f"Minecraft Server Status: {profanity.censor(server)}",
                                    description="Server is online",
                                    color=0x00ff00)
@@ -36,7 +36,7 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
             player.add_field(name="Protocol", value=status.version.protocol, inline=False)
             player.add_field(name="Description", value=status.description, inline=False)
             await ctx.send(embed=player)
-        except OSError:
+        except IOError:
             offline = discord.Embed(title=f"Minecraft Server Status: {profanity.censor(server)}",
                                     description=f"Server is offline.",
                                     color=0xFF0000)
