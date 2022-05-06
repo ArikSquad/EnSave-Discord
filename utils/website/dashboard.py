@@ -12,13 +12,15 @@ from dotenv import load_dotenv
 from quart import Quart, render_template, redirect, url_for
 from quart_discord import DiscordOAuth2Session
 
+from cogs import messages
+
 app = Quart(__name__)
 
 load_dotenv()
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 app.config['DISCORD_CLIENT_ID'] = os.getenv('CLIENT_ID')
 app.config['DISCORD_CLIENT_SECRET'] = os.getenv('CLIENT_SECRET')
-app.config['DISCORD_REDIRECT_URI'] = "http://127.0.0.1:1331/callback"
+app.config['DISCORD_REDIRECT_URI'] = "http://ensave.mikart.eu/callback"
 
 ipc_client = ipc.Client(secret_key=os.getenv('SECRET_KEY'))
 discord = DiscordOAuth2Session(app)
@@ -36,6 +38,7 @@ async def login():
 
 @app.route('/logout')
 async def logout():
+    discord.revoke()
     return redirect(url_for("index"))
 
 
@@ -66,7 +69,7 @@ async def dashboard():
 
     guilds.sort(key=lambda x: x.class_color == "red-border")
     name = (await discord.fetch_user()).name
-    return await render_template("dashboard.html", guild_count=guild_count, guilds=guilds, username=name)
+    return await render_template("selector.html", guild_count=guild_count, guilds=guilds, username=name)
 
 
 @app.route("/dashboard/<int:guild_id>")
@@ -80,4 +83,13 @@ async def dashboard_server(guild_id):
             f'https://discord.com/oauth2/authorize?&client_id={app.config["DISCORD_CLIENT_ID"]}'
             f'&scope=bot&permissions=8&guild_id={guild_id}'
             f'&response_type=code&redirect_uri={app.config["DISCORD_REDIRECT_URI"]}')
-    return await render_template("detailed.html", server_name=guild["name"], current_prefix=guild["prefix"])
+    leaderboard = await messages.get_leaderboard()
+    return await render_template("dashboard.html", server_name=guild["name"], current_prefix=guild["prefix"],
+                                 leaderboard=leaderboard, name=get_user_name)
+
+
+async def get_user_name(member_id):
+    name = await ipc_client.request("get_user_name", member_id=member_id)
+    if name is None:
+        return f"{member_id}"
+    return name

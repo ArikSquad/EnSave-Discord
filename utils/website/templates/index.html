@@ -6,21 +6,22 @@
     <title>EnSave - Main Page</title>
 </head>
 <body>
-<div class="title">
-    <h1>EnSave Dashboard</h1>
-</div>
-<div class="main">
-    <p align="center">
-        {% if not authorized %}
-        <a href="/login">
-            <button>Login with discord</button>
-        </a>
-        {% else %}
-        <a href="/dashboard">
-            <button>Open Dashboard</button>
-        </a>
-        {%endif %}
-    </p>
+    <div class="title">
+        <h1>EnSave Dashboard</h1>
+    </div>
+
+    <div class="main">
+        <p align="center">
+            {% if not authorized %}
+            <a href="/login">
+                <button>Login with discord</button>
+            </a>
+            {% else %}
+            <a href="/dashboard">
+                <button>Open Dashboard</button>
+            </a>
+            {%endif %}
+        </p>
 </div>
 </body>
 </html>

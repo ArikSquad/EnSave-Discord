@@ -15,6 +15,17 @@ from tabulate import tabulate
 from utils import database
 
 
+async def get_leaderboard():
+    with open('db/users.json', 'r') as f:
+        data = json.load(f)
+    users = []
+    for user in data:
+        users.append([user, data[user]['messages']])
+    users.sort(key=lambda x: x[1], reverse=True)
+    users_top = users[:10]
+    return users_top
+
+
 async def check_message(message):
     with open('db/users.json', 'r') as f:
         data = json.load(f)

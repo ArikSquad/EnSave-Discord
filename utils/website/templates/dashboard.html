@@ -1,34 +1,178 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="static/universal.css"/>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../static/dashboard.css"/>
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>EnSave - Dashboard</title>
 </head>
 <body>
-<h1>EnSave Dashboard!</h1>
-
-<h2>EnSave is taking care of {{guild_count}} guilds</h2>
-<div class="picker">
-    <h3>Hello, {{username}}! Please select a server to get started</h3>
-    <hr/>
-    <section class="cards">
-        {% for guild in guilds %}
-        <div class="card">
-            <a href="/dashboard/{{guild.id}}">
-                {% if guild.icon_url is not none %}
-                <img src="{{guild.icon_url}}" class="{{guild.class_color}}"/>
-                {% else %}
-                <img
-                        src="https://discordapp.com/assets/322c936a8c8be1b803cd94861bdfa868.png"
-                        class="{{guild.class_color}}"
-                />
-                {% endif %}
-            </a>
-            <br/>
-            {{ guild.name }}
+    <div class="sidebar">
+        <div class="logo-details">
+            <i class='bx'></i>
+            <span class="logo_name">MikArt</span>
         </div>
-        {% endfor %}
+        <ul class="nav-links">
+            <li>
+                <a href="#" class="active">
+                    <i class='bx bx-grid-alt'></i>
+                    <span class="links_name">Information</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-list-ul'></i>
+                    <span class="links_name">Customization</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-pie-chart-alt-2'></i>
+                    <span class="links_name">Analytics</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-cog'></i>
+                    <span class="links_name">Settings</span>
+                </a>
+            </li>
+            <li class="log_out">
+                <a href="/logout">
+                    <i class='bx bx-log-out'></i>
+                    <span class="links_name">Log out</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <section class="home-section">
+        <nav>
+            <div class="sidebar-button">
+                <i class='bx bx-menu sidebarBtn'></i>
+                <span class="dashboard">Dashboard</span>
+            </div>
+        </nav>
+
+        <div class="home-content">
+            <div class="overview-boxes">
+                <div class="box">
+                    <div class="right-side">
+                        <div class="box-topic">Prefix</div>
+                        <div class="number">{{current_prefix}}</div>
+                        <div class="indicator">
+                        </div>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="right-side">
+                        <div class="box-topic">No Data</div>
+                        <div class="number">none</div>
+                        <div class="indicator">
+                            <span class="text">no more data</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="right-side">
+                        <div class="box-topic">No Data</div>
+                        <div class="number">none</div>
+                        <div class="indicator">
+                            <span class="text">no more data</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="right-side">
+                        <div class="box-topic">No Data</div>
+                        <div class="number">none</div>
+                        <div class="indicator">
+                            <span class="text">no more data</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sales-boxes">
+                
+                <div class="recent-sales box">
+                    <div class="title">Recent Interactions</div>
+                    <div class="sales-details">
+                        <ul class="details">
+                            <li class="topic">Date</li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                        </ul>
+                        <ul class="details">
+                            <li class="topic">Interaction</li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                        </ul>
+                        <ul class="details">
+                            <li class="topic">User</li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                            <li><a href="#">no data</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="top-sales box">
+                    <div class="title">Leaderboard</div>
+                    <ul class="top-sales-details">
+                        <li>
+                            <a href="#">
+                                <span class="product">Users</span>
+                            </a>
+                            <span class="price">Messages</span>
+                        </li>
+                    </ul>
+                    <ul class="top-sales-details">
+                        {% for item in leaderboard %}
+                        <li>
+                            <a href="#">
+                                <span class="product">{{ name(item[0]) }}</span>
+                            </a>
+                            <span class="price">{{item[1]}}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
     </section>
-</div>
+
+    <script>
+           let sidebar = document.querySelector(".sidebar");
+            let sidebarBtn = document.querySelector(".sidebarBtn");
+            sidebarBtn.onclick = function() {
+              sidebar.classList.toggle("active");
+              if(sidebar.classList.contains("active")){
+              sidebarBtn.classList.replace("bx-menu" ,"bx-menu-alt-right");
+            }else
+              sidebarBtn.classList.replace("bx-menu-alt-right", "bx-menu");
+            }
+
+    </script>
 </body>
 </html>
