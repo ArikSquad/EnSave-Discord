@@ -38,8 +38,8 @@ def convert(time):
 
 
 def get_string():
-    letters = ''.join((random.choice(string.ascii_letters) for i in range(8)))
-    digits = ''.join((random.choice(string.digits) for i in range(4)))
+    letters = ''.join((random.choice(string.ascii_letters) for _ in range(8)))
+    digits = ''.join((random.choice(string.digits) for _ in range(4)))
     sample_list = list(letters + digits)
     random.shuffle(sample_list)
     final_string = ''.join(sample_list)
@@ -189,6 +189,11 @@ class Admin(commands.Cog, description="Gather information"):
     async def get_premium(self, ctx, user: discord.Member):
         if ctx.author.id in database.get_owner_ids():
             await ctx.send(f"{user.mention}'s premium state: {database.get_premium(user.id)}")
+
+    @admin.command(name="message", aliases=["msg"], description="Send an admin message to a user.")
+    async def message(self, ctx, user: discord.Member, *, message):
+        if ctx.author.id in database.get_owner_ids():
+            await user.send(message)
 
     @admin.command(name='keydrop', help='Drop a key.', hidden=True,
                    brief='Drop a key')
