@@ -12,7 +12,7 @@
     position: fixed;
     height: 100%;
     width: 240px;
-    background: #0A2558;
+    background: #405f8d; /*Old sidebar theme: #0A2558;*/
     transition: all 0.5s ease;
 }
 

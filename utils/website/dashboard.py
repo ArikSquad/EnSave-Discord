@@ -5,14 +5,16 @@
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
 # -----------------------------------------------------------
+import asyncio
 import os
 
 from discord.ext import ipc
 from dotenv import load_dotenv
-from quart import Quart, render_template, redirect, url_for
+from quart import Quart, render_template, redirect, url_for, request, flash
 from quart_discord import DiscordOAuth2Session
 
 from cogs import messages
+from utils import database
 
 app = Quart(__name__)
 
@@ -20,7 +22,7 @@ load_dotenv()
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 app.config['DISCORD_CLIENT_ID'] = os.getenv('CLIENT_ID')
 app.config['DISCORD_CLIENT_SECRET'] = os.getenv('CLIENT_SECRET')
-app.config['DISCORD_REDIRECT_URI'] = "http://ensave.mikart.eu/callback"
+app.config['DISCORD_REDIRECT_URI'] = "http://127.0.0.1:1201/callback"
 
 ipc_client = ipc.Client(secret_key=os.getenv('SECRET_KEY'))
 discord = DiscordOAuth2Session(app)
@@ -77,15 +79,135 @@ async def dashboard_server(guild_id):
     if not await discord.authorized:
         return redirect(url_for("login"))
 
+    return redirect(url_for(f"dashboard_server_information", guild_id=guild_id))
+
+
+@app.route("/dashboard/<int:guild_id>/information")
+async def dashboard_server_information(guild_id):
+    if not await discord.authorized:
+        return redirect(url_for("login"))
+
     guild = await ipc_client.request("get_guild", guild_id=guild_id)
-    if guild is None:
-        return redirect(
-            f'https://discord.com/oauth2/authorize?&client_id={app.config["DISCORD_CLIENT_ID"]}'
-            f'&scope=bot&permissions=8&guild_id={guild_id}'
-            f'&response_type=code&redirect_uri={app.config["DISCORD_REDIRECT_URI"]}')
-    leaderboard = await messages.get_leaderboard()
-    return await render_template("dashboard.html", server_name=guild["name"], current_prefix=guild["prefix"],
-                                 leaderboard=leaderboard, name=get_user_name)
+    user_guilds = await discord.fetch_guilds()
+
+    accessible = False
+    for gld in user_guilds:
+        if gld.permissions.administrator and gld.id == guild_id:
+            accessible = True
+            break
+
+    if accessible:
+        if guild is None:
+            return redirect(
+                f'https://discord.com/oauth2/authorize?&client_id={app.config["DISCORD_CLIENT_ID"]}'
+                f'&scope=bot&permissions=8&guild_id={guild_id}'
+                f'&response_type=code&redirect_uri={app.config["DISCORD_REDIRECT_URI"]}')
+
+        leaderboard = await messages.get_leaderboard()
+
+        return await render_template("information.html", guild_name=guild["name"], current_prefix=guild["prefix"],
+                                     guild_member_count=guild["member_count"], guild_description=guild["description"],
+                                     guild_icon=guild["icon"], leaderboard=leaderboard, name=get_user_name,
+                                     guild_id=guild["id"])
+    else:
+        return redirect(url_for("dashboard"))
+
+
+@app.route("/dashboard/<int:guild_id>/customization", methods=["GET", "POST"])
+async def dashboard_server_customization(guild_id):
+    if not await discord.authorized:
+        return redirect(url_for("login"))
+
+    guild = await ipc_client.request("get_guild", guild_id=guild_id)
+    user_guilds = await discord.fetch_guilds()
+
+    accessible = False
+    for gld in user_guilds:
+        if gld.permissions.administrator and gld.id == guild_id:
+            accessible = True
+            break
+
+    if accessible:
+        if request.method == 'POST':
+            prefix = await request.form
+            prefix = prefix["prefix"]
+
+            if len(prefix) == 0:
+                await flash('Prefix cannot be empty.', category='error')
+            else:
+                database.set_prefix(guild_id, prefix)
+                await flash(f'Changed prefix to {prefix}', category='success')
+                await asyncio.sleep(1)
+                return redirect(url_for("dashboard_server_customization", guild_id=guild_id))
+
+        if guild is None:
+            return redirect(
+                f'https://discord.com/oauth2/authorize?&client_id={app.config["DISCORD_CLIENT_ID"]}'
+                f'&scope=bot&permissions=8&guild_id={guild_id}'
+                f'&response_type=code&redirect_uri={app.config["DISCORD_REDIRECT_URI"]}')
+
+        return await render_template("customization.html", server_name=guild["name"],
+                                     current_prefix=guild["prefix"], guild_id=guild_id)
+    else:
+        return redirect(url_for("dashboard"))
+
+
+@app.route("/dashboard/<int:guild_id>/analytics")
+async def dashboard_server_analytics(guild_id):
+    if not await discord.authorized:
+        return redirect(url_for("login"))
+
+    guild = await ipc_client.request("get_guild", guild_id=guild_id)
+    user_guilds = await discord.fetch_guilds()
+
+    accessible = False
+    for gld in user_guilds:
+        if gld.permissions.administrator and gld.id == guild_id:
+            accessible = True
+            break
+
+    if accessible:
+        if guild is None:
+            return redirect(
+                f'https://discord.com/oauth2/authorize?&client_id={app.config["DISCORD_CLIENT_ID"]}'
+                f'&scope=bot&permissions=8&guild_id={guild_id}'
+                f'&response_type=code&redirect_uri={app.config["DISCORD_REDIRECT_URI"]}')
+
+        leaderboard = await messages.get_leaderboard()
+
+        return await render_template("analytics.html", server_name=guild["name"], current_prefix=guild["prefix"],
+                                     guild_id=guild_id)
+    else:
+        return redirect(url_for("dashboard"))
+
+
+@app.route("/dashboard/<int:guild_id>/settings")
+async def dashboard_server_settings(guild_id):
+    if not await discord.authorized:
+        return redirect(url_for("login"))
+
+    guild = await ipc_client.request("get_guild", guild_id=guild_id)
+    user_guilds = await discord.fetch_guilds()
+
+    accessible = False
+    for gld in user_guilds:
+        if gld.permissions.administrator and gld.id == guild_id:
+            accessible = True
+            break
+
+    if accessible:
+        if guild is None:
+            return redirect(
+                f'https://discord.com/oauth2/authorize?&client_id={app.config["DISCORD_CLIENT_ID"]}'
+                f'&scope=bot&permissions=8&guild_id={guild_id}'
+                f'&response_type=code&redirect_uri={app.config["DISCORD_REDIRECT_URI"]}')
+
+        leaderboard = await messages.get_leaderboard()
+
+        return await render_template("settings.html", server_name=guild["name"], current_prefix=guild["prefix"],
+                                     guild_id=guild_id)
+    else:
+        return redirect(url_for("dashboard"))
 
 
 async def get_user_name(member_id):

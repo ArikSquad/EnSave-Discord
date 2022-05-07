@@ -45,6 +45,8 @@ class Dashboard(commands.Cog, description="Custom dashboard"):
             "id": guild.id,
             "prefix": database.get_prefix_by_id(guild.id),
             "member_count": len(guild.members),
+            "description": guild.description,
+            "icon": guild.icon.url,
         }
 
         return guild_data
