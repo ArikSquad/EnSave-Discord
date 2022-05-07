@@ -44,19 +44,27 @@ class Dashboard(commands.Cog, description="Custom dashboard"):
             "name": guild.name,
             "id": guild.id,
             "prefix": database.get_prefix_by_id(guild.id),
-            "member_count": len(guild.members),
-            "description": guild.description,
-            "icon": guild.icon.url,
+            "member_count": len(guild.members)
         }
 
         return guild_data
 
     @ipc.server.route()
-    async def get_user_name(self, data):
-        user = self.bot.get_user(data)
+    async def get_member(self, data):
+        user = self.bot.get_user(data.member_id)
+
         if user is None:
             return None
-        return user.name
+
+        member_data = {
+            "name": user.name,
+            "id": user.id,
+            "discriminator": user.discriminator,
+            "avatar": user.avatar.url,
+            "bot": user.bot,
+        }
+
+        return member_data
 
     @commands.command(name="dashboard", aliases=["dash"], description="Open the dashboard")
     async def dashboard_command(self, ctx):

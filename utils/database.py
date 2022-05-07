@@ -43,7 +43,7 @@ def get_prefix_by_id(guild_id):
         prefixes[str(guild_id)] = '.'
         with open('db/prefixes.json', 'w') as f:
             json.dump(prefixes, f, indent=4)
-        return prefixes[str(guild_id)]
+        return '.'
 
 
 def set_prefix(guild_id, prefix):

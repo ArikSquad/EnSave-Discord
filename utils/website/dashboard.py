@@ -13,7 +13,6 @@ from dotenv import load_dotenv
 from quart import Quart, render_template, redirect, url_for, request, flash
 from quart_discord import DiscordOAuth2Session
 
-from cogs import messages
 from utils import database
 
 app = Quart(__name__)
@@ -22,7 +21,7 @@ load_dotenv()
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 app.config['DISCORD_CLIENT_ID'] = os.getenv('CLIENT_ID')
 app.config['DISCORD_CLIENT_SECRET'] = os.getenv('CLIENT_SECRET')
-app.config['DISCORD_REDIRECT_URI'] = "http://127.0.0.1:1201/callback"
+app.config['DISCORD_REDIRECT_URI'] = "https://ensave.mikart.eu/callback"
 
 ipc_client = ipc.Client(secret_key=os.getenv('SECRET_KEY'))
 discord = DiscordOAuth2Session(app)
@@ -103,12 +102,9 @@ async def dashboard_server_information(guild_id):
                 f'&scope=bot&permissions=8&guild_id={guild_id}'
                 f'&response_type=code&redirect_uri={app.config["DISCORD_REDIRECT_URI"]}')
 
-        leaderboard = await messages.get_leaderboard()
-
         return await render_template("information.html", guild_name=guild["name"], current_prefix=guild["prefix"],
-                                     guild_member_count=guild["member_count"], guild_description=guild["description"],
-                                     guild_icon=guild["icon"], leaderboard=leaderboard, name=get_user_name,
-                                     guild_id=guild["id"])
+                                     guild_member_count=guild["member_count"],
+                                     name=get_user_name, guild_id=guild["id"])
     else:
         return redirect(url_for("dashboard"))
 
@@ -173,8 +169,6 @@ async def dashboard_server_analytics(guild_id):
                 f'&scope=bot&permissions=8&guild_id={guild_id}'
                 f'&response_type=code&redirect_uri={app.config["DISCORD_REDIRECT_URI"]}')
 
-        leaderboard = await messages.get_leaderboard()
-
         return await render_template("analytics.html", server_name=guild["name"], current_prefix=guild["prefix"],
                                      guild_id=guild_id)
     else:
@@ -202,8 +196,6 @@ async def dashboard_server_settings(guild_id):
                 f'&scope=bot&permissions=8&guild_id={guild_id}'
                 f'&response_type=code&redirect_uri={app.config["DISCORD_REDIRECT_URI"]}')
 
-        leaderboard = await messages.get_leaderboard()
-
         return await render_template("settings.html", server_name=guild["name"], current_prefix=guild["prefix"],
                                      guild_id=guild_id)
     else:
@@ -211,7 +203,9 @@ async def dashboard_server_settings(guild_id):
 
 
 async def get_user_name(member_id):
-    name = await ipc_client.request("get_user_name", member_id=member_id)
-    if name is None:
-        return f"{member_id}"
-    return name
+    user = await ipc_client.request("get_user_name", member_id=member_id)
+    if user is None:
+        return member_id
+    else:
+        return user["name"]
+
