@@ -10,12 +10,15 @@ import random
 
 import aiohttp
 import discord
-import requests
-from better_profanity import profanity
 from discord import app_commands
 from discord.ext import commands
 
 from utils import database
+
+old_commands = [
+    'dice', 'slot', 'cookie', 'coinflip', 'dog', 'invite', 'clear', 'lock', 'unlock', 'changeprefix',
+    'mcserver'
+]
 
 
 class Misc(commands.Cog, description="Random commands"):
@@ -55,10 +58,7 @@ class Misc(commands.Cog, description="Random commands"):
         await interaction.response.send_message(embed=embed)
 
     @commands.command(name='old_dated_command',
-                      aliases=[
-                          'dice', 'slot', 'cookie',
-                          'coinflip', 'dog', 'invite'
-                      ],
+                      aliases=old_commands,
                       help='Remove commands that are unsupported from the list. (Slash commands)', hidden=True)
     async def old_dated(self, ctx):
         embed = discord.Embed(title=f"Slash Commands.",
@@ -66,29 +66,6 @@ class Misc(commands.Cog, description="Random commands"):
                                           f'supported without slash command.',
                               color=ctx.author.color)
         await ctx.reply(embed=embed)
-
-    @app_commands.command(name="define", description="Define a word!")
-    async def define(self, interaction: discord.Interaction, word: str):
-        if profanity.contains_profanity(word):
-            embed = discord.Embed(
-                title="Error",
-                description=f"{interaction.user.mention} The word you tried to check is inappropriate.!",
-                color=interaction.user.color
-            )
-            return await interaction.response.send_message(embed=embed)
-        response = requests.get(f"https://api.dictionaryapi.dev/api/v2/entries/en_Us/{word}")
-        if response.status_code == 200:
-            data = response.json()
-            meanings = data[0]["meanings"][0]["definitions"][0]
-            embed = discord.Embed(description=f"You asked for the definition of **{word}**!",
-                                  color=interaction.user.color)
-            embed.add_field(name="Definition", value=meanings["definition"], inline=False)
-            embed.add_field(name="Example", value=meanings["example"], inline=False)
-            await interaction.response.send_message(embed=embed)
-        else:
-            embed = discord.Embed(description="Something went wrong. Please try again later.",
-                                  color=interaction.user.color)
-            await interaction.response.send_message(embed=embed)
 
     @commands.command(name='redeem', help="Redeem a code for a reward!", hidden=True)
     async def redeem(self, ctx, code):
