@@ -109,8 +109,8 @@ class InteractiveView(discord.ui.View):
             self.expr = await self.calc.calculate(self.expr)
         except simpcalc.BadArgument:
             await interaction.response.defer()
-            return await interaction.message.edit(content=f"```\nNaaw bro why me? I can't do that hard calculations?"
-                                                          f" WHAT DO YOU THINK I AM? A MACHINE?\n```")
+            return await interaction.message.edit(content=f"```\nBroo, why meee? I can't do that hard calculations? "
+                                                          f"what DO YOU THINK I AM? A MACHINE?\n```")
         await interaction.message.edit(content=f"```\n{self.expr}\n```")
         await interaction.response.defer()
 
