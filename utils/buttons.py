@@ -4,6 +4,7 @@
 # (C) 2022 MikArt
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
+# This file is for the buttons, and it doesn't need comments
 # -----------------------------------------------------------
 
 import discord

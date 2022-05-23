@@ -15,6 +15,7 @@ from tabulate import tabulate
 from utils import database
 
 
+# Get the data from leaderboard
 async def get_leaderboard():
     with open('db/users.json', 'r') as f:
         data = json.load(f)
@@ -26,6 +27,7 @@ async def get_leaderboard():
     return users_top
 
 
+# Adds a new message to the list
 async def check_message(message):
     with open('db/users.json', 'r') as f:
         data = json.load(f)
@@ -36,6 +38,7 @@ async def check_message(message):
         json.dump(data, f, indent=4)
 
 
+# Get the amount of messages a user has sent
 def get_amount(author_id: discord.Member):
     with open('db/users.json', 'r') as f:
         data = json.load(f)
@@ -44,6 +47,7 @@ def get_amount(author_id: discord.Member):
     return level
 
 
+# Set the amount of messages a user has sent
 def set_amount(author_id: discord.Member, amount: int):
     with open('db/users.json', 'r') as f:
         data = json.load(f)
@@ -54,6 +58,7 @@ def set_amount(author_id: discord.Member, amount: int):
     f.close()
 
 
+# Add an amount of messages to a user
 def add_amount(author_id: discord.Member, amount: int):
     with open('db/users.json', 'r') as f:
         data = json.load(f)
@@ -70,6 +75,7 @@ class Messages(commands.Cog, description="Send messages and see how many you hav
     def __init__(self, bot):
         self.bot = bot
 
+    # When a message is sent, the bot will add a message to the user
     @commands.Cog.listener()
     async def on_message(self, message):
         with open('db/prefixes.json', 'r') as f:
@@ -81,8 +87,9 @@ class Messages(commands.Cog, description="Send messages and see how many you hav
                 and not message.author.bot:
             await check_message(message)
 
+    # Command to check the count of messages
     @commands.command(name='messages', help="Check your message count.")
-    async def messages(self, ctx):
+    async def messages(self, ctx: commands.Context):
         user_level = discord.Embed(
             title=f"{ctx.author.name}'s Message Count",
             description="This user has gotten premium." if database.get_premium(ctx.author.id)
@@ -93,9 +100,10 @@ class Messages(commands.Cog, description="Send messages and see how many you hav
 
         await ctx.send(embed=user_level)
 
-    @commands.command(name='addexp', help="Add the count of messages an user has sent.",
+    # Command to add the amount of messages a user has sent
+    @commands.command(name='addmessages', help="Add the count of messages a user has sent.",
                       hidden=True)
-    async def add_messages(self, ctx, user: discord.Member, amount: int):
+    async def add_messages(self, ctx: commands.Context, user: discord.Member, amount: int):
         if ctx.author.id in database.get_owner_ids():
             add_amount(user.id, amount)
             new_exp_embed = discord.Embed(
@@ -105,9 +113,10 @@ class Messages(commands.Cog, description="Send messages and see how many you hav
             )
             await ctx.send(embed=new_exp_embed)
 
-    @commands.command(name='setmessages', help="Set the count of messages an user has sent.",
+    # Command to set the amount of messages a user has sent
+    @commands.command(name='setmessages', help="Set the count of messages a user has sent.",
                       hidden=True)
-    async def set_messages(self, ctx, user: discord.Member, amount: int):
+    async def set_messages(self, ctx: commands.Context, user: discord.Member, amount: int):
         if ctx.author.id in database.get_owner_ids():
             set_amount(user.id, amount)
             new_exp_embed = discord.Embed(
@@ -117,8 +126,9 @@ class Messages(commands.Cog, description="Send messages and see how many you hav
             )
             await ctx.send(embed=new_exp_embed)
 
+    # Command to get the amount of messages a user has sent
     @commands.command(name='getmessages', help="Get an user's experience count.", hidden=True)
-    async def get_messages(self, ctx, user: discord.Member):
+    async def get_messages(self, ctx: commands.Context, user: discord.Member):
         if ctx.author.id in database.get_owner_ids():
             amount = get_amount(user.id)
             exp_embed = discord.Embed(
@@ -128,11 +138,12 @@ class Messages(commands.Cog, description="Send messages and see how many you hav
             )
             await ctx.send(embed=exp_embed)
 
+    # Command to see the top 10 users' of sending messages
     @commands.command(name='leaderboard',
                       help="Get the top 10 users who have messages the most in the servers that has this bot.",
                       brief="Leaderboard of 10 user's message count.",
                       hidden=True)
-    async def leaderboard(self, ctx):
+    async def leaderboard(self, ctx: commands.Context):
         with open("db/users.json", "r") as f:
             data = json.load(f)
 

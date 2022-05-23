@@ -27,24 +27,29 @@ class Music(commands.Cog, description="Play songs in voice channels"):
     def __init__(self, bot):
         self.bot = bot
 
+    # Create connect node task, when the bot is ready
     @commands.Cog.listener()
     async def on_ready(self):
         self.bot.loop.create_task(self.connect_nodes())
 
+    # Connect the bot to a lavalink server
     async def connect_nodes(self):
         await wavelink.NodePool.create_node(bot=self.bot, host=host_server, port=2333, password=host_pass)
 
+    # When a Wavelink node is ready this will be run
     @commands.Cog.listener()
     async def on_wavelink_node_ready(self, node: wavelink.Node):
         print(f"WaveLink node: {node.identifier} is ready.")
 
     # noinspection PyUnusedLocal
+    # If there is more songs after the track ends, plays a new one
     @commands.Cog.listener()
     async def on_wavelink_track_end(self, player: wavelink.Player, track, reason):
         if not player.queue.is_empty:
             new = player.queue.get()
             await player.play(new)
 
+    # When the bot joins a voice channel, it sets itself to be deafened
     @commands.Cog.listener()
     async def on_voice_state_update(self, member: discord.Member,
                                     before: discord.VoiceState,
@@ -53,6 +58,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
             if before.channel is None and after.channel is not None:
                 await member.edit(deafen=True)
 
+    # Command to play songs in a voice channel using YouTube
     @commands.command(name="play", aliases=['youtube', 'yt'], help="Play a song.")
     async def play(self, ctx: commands.Context, *, search: wavelink.YouTubeTrack):
         if not ctx.voice_client:
@@ -92,6 +98,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
         if profanity.contains_profanity(search.title):
             await ctx.message.delete()
 
+    # Command to play songs in a voice channel using Soundcloud
     @commands.command(name="soundcloud", aliases=['sc'], help="Play a song using soundcloud.")
     async def soundcloud(self, ctx: commands.Context, *, search: wavelink.SoundCloudTrack):
         if not ctx.voice_client:
@@ -129,6 +136,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
         if profanity.contains_profanity(search.title):
             await ctx.message.delete()
 
+    # Command for connecting to a voice channel. You can specify the channel or not, so it joins the channel you are in
     @commands.command(name="connect", aliases=["join"], help="Connect to a voice channel")
     async def connect_command(self, ctx: commands.Context, *, channel: discord.VoiceChannel = None):
         voice: wavelink.Player = ctx.voice_client
@@ -141,9 +149,8 @@ class Music(commands.Cog, description="Play songs in voice channels"):
             if channel:
                 await channel.connect(cls=wavelink.Player)
                 return await ctx.send(embed=connected_success)
-            elif ctx.author.voice is not None:
-                await ctx.author.voice.channel.connect(cls=wavelink.Player)
-                return await ctx.send(embed=connected_success)
+            await ctx.author.voice.channel.connect(cls=wavelink.Player)
+            return await ctx.send(embed=connected_success)
         else:
             connected_already = discord.Embed(title="Music",
                                               description="We are already in a voice channel or you aren't.",
@@ -151,6 +158,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                                               timestamp=database.get_time())
             return await ctx.reply(embed=connected_already)
 
+    # Command to leave from a voice channel
     @commands.command(name="disconnect", aliases=["leave"], help="Disconnect from a voice channel")
     async def disconnect_command(self, ctx: commands.Context):
         voice: wavelink.Player = ctx.voice_client
@@ -175,6 +183,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                                           timestamp=database.get_time())
             return ctx.send(embed=not_connected)
 
+    # Command for pausing your songs
     @commands.command(name="pause", help="Pause voice channel")
     async def pause_command(self, ctx: commands.Context):
         view = buttons.Resume()
@@ -213,6 +222,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                                           timestamp=database.get_time())
             return ctx.send(embed=not_connected)
 
+    # Command to resume listening to your songs
     @commands.command(name="resume", help="Resume voice channel")
     async def resume_command(self, ctx: commands.Context):
         voice: wavelink.Player = ctx.voice_client
@@ -244,6 +254,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                                           timestamp=database.get_time())
             return ctx.send(embed=not_connected)
 
+    # Command to stop the music and clear the queue
     @commands.command(name="stop", help="Stops the current song and clears the queue")
     async def stop_command(self, ctx: commands.Context):
         voice: wavelink.Player = ctx.voice_client
@@ -254,9 +265,10 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                                         color=ctx.author.color,
                                         timestamp=database.get_time())
 
-                # Clears the queue and stops the player
+                # This will clear the queue and stop the player
                 voice.queue.clear()
                 await voice.stop()
+
                 await ctx.send(embed=stopped)
             else:
                 not_connected = discord.Embed(title="Music",
@@ -271,6 +283,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                                           timestamp=database.get_time())
             return ctx.send(embed=not_connected)
 
+    # Command to change the volume of the player
     @commands.command(name="volume", description="Change the volume of the player",
                       help="Change the volume of the player")
     async def volume_command(self, ctx: commands.Context, volume: int):
@@ -304,6 +317,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                                           timestamp=database.get_time())
             return ctx.send(embed=not_connected)
 
+    # Command to shuffle the order of tracks. This command is limited to premium users
     @commands.command(name="shuffle", help="Shuffle the queue.")
     async def shuffle_command(self, ctx: commands.Context):
         voice: wavelink.Player = ctx.voice_client
@@ -340,12 +354,13 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                                           timestamp=database.get_time())
             return ctx.send(embed=not_connected)
 
+    # Command to see information about the current track.
     @commands.command(name="playing", help="Info about the current track.")
     async def playing_command(self, ctx: commands.Context):
         voice: wavelink.Player = ctx.voice_client
         if ctx.author.voice:
-            song = await voice.queue.get()
-            if voice.is_playing():
+            if voice.queue:
+                song = await voice.queue.get()
                 embed = discord.Embed(title="Music",
                                       description=f"**{song.title}**\n\n"
                                       )
@@ -366,7 +381,8 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                                           timestamp=database.get_time())
             return ctx.send(embed=not_connected)
 
-    @commands.command(name="skip", help="Skips the song.")
+    # Command to skip songs
+    @commands.command(name="skip", help="Skips the current song.")
     async def skip_command(self, ctx: commands.Context):
         voice: wavelink.Player = ctx.voice_client
         if ctx.author.voice:

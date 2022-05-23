@@ -17,6 +17,7 @@ class Spy(commands.Cog, description="Spying"):
     def __init__(self, bot):
         self.bot = bot
 
+    # When a message is edited, send a message in the spy channel
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
         with open("db/guilds.json", "r") as f:
@@ -47,6 +48,7 @@ class Spy(commands.Cog, description="Spying"):
             finally:
                 pass
 
+    # When a message is deleted, send a message in the spy channel
     @commands.Cog.listener()
     async def on_message_delete(self, message):
         with open("db/guilds.json", "r") as f:
@@ -77,10 +79,10 @@ class Spy(commands.Cog, description="Spying"):
     # Toggle the spying on a server,
     # mode: int 1 or 2 (1 = edit, 2 = delete)
     @commands.command(name="spy", aliases=["spy-edit", "spy-delete"],
-                      help="Toggle spying. Modes are: 1 = edit, 2 = delete, None = both.",
-                      brief="Toggle spying when users edit or delete messages.")
+                      help="Toggle spying on the server. Modes are: 1 = edit, 2 = delete, None = both.",
+                      brief="Spy your users.")
     @commands.has_permissions(manage_guild=True)
-    async def spy(self, ctx, mode: int = None):
+    async def spy(self, ctx: commands.Context, mode: int = None):
         desc = "**Something went wrong...**"
         enabled = "**Something went wrong...**"
         with open("db/guilds.json", "r") as f:
@@ -107,9 +109,11 @@ class Spy(commands.Cog, description="Spying"):
         with open("db/guilds.json", "w") as f:
             json.dump(data, f, indent=4)
 
-    @commands.command(name="spy-channel")
+    # Set a channel for the message to be sent
+    @commands.command(name="spy-channel", help="Set a channel for spying",
+                      brief="A safe channel, that you can see the messages from")
     @commands.has_permissions(manage_guild=True)
-    async def spy_channel(self, ctx, channel: discord.TextChannel):
+    async def spy_channel(self, ctx: commands.Context, channel: discord.TextChannel):
         with open("db/guilds.json", "r") as f:
             data = json.load(f)
         data[str(ctx.guild.id)]["spy_channel"] = channel.id

@@ -24,7 +24,8 @@ def error_formatter(error, maxlength):
         return v
 
 
-class ErrorHandler(commands.Cog, description="Error handler"):
+# This cog will send the message to the owner, when an error has ocurred.
+class Errorhandler(commands.Cog, description="Errorhandler"):
     EMOJI = "❌"
 
     def __init__(self, bot):
@@ -117,4 +118,4 @@ class ErrorHandler(commands.Cog, description="Error handler"):
 
 
 async def setup(bot):
-    await bot.add_cog(ErrorHandler(bot))
+    await bot.add_cog(Errorhandler(bot))

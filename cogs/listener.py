@@ -18,6 +18,7 @@ class Events(commands.Cog, description="Events"):
     def __init__(self, bot):
         self.bot = bot
 
+    # When the bot is ready, send information about the bot
     @commands.Cog.listener()
     async def on_ready(self):
         print("Logging in... at the time of " + str(datetime.datetime.now()))
@@ -27,6 +28,7 @@ class Events(commands.Cog, description="Events"):
         print(f'{Fore.LIGHTWHITE_EX}###########################################')
         print(f"Currently in {Fore.LIGHTGREEN_EX}{len(self.bot.guilds)} guilds")
 
+    # When the bot is removed from a guild, remove it from the database
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
         with open('db/prefixes.json', 'r') as f:
@@ -42,6 +44,7 @@ class Events(commands.Cog, description="Events"):
         with open('db/guilds.json', 'w') as f2:
             json.dump(guilds, f2, indent=4)
 
+    # When the bot joins a guild, it creates it in the database
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
         with open('db/prefixes.json', 'r') as f:
@@ -60,6 +63,7 @@ class Events(commands.Cog, description="Events"):
         with open('db/guilds.json', 'w') as f2:
             json.dump(guilds, f2, indent=4)
 
+    # When a member joins, it adds it to the database
     @commands.Cog.listener()
     async def on_member_join(self, member):
         with open('db/users.json', 'r') as f:
@@ -77,6 +81,7 @@ class Events(commands.Cog, description="Events"):
             with open('db/users.json', 'w') as f:
                 json.dump(users, f, indent=4)
 
+    # When a message is deleted
     @commands.Cog.listener()
     async def on_message_delete(self, message):
         with open('db/codes.json', 'r') as f:

@@ -60,7 +60,7 @@ class Misc(commands.Cog, description="Random commands"):
     @commands.command(name='old_dated_command',
                       aliases=old_commands,
                       help='Remove commands that are unsupported from the list. (Slash commands)', hidden=True)
-    async def old_dated(self, ctx):
+    async def old_dated(self, ctx: commands.Context):
         embed = discord.Embed(title=f"Slash Commands.",
                               description=f'The command you tried to run is no longer '
                                           f'supported without slash command.',

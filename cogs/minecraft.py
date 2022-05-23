@@ -25,8 +25,9 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
     def __init__(self, bot):
         self.bot = bot
 
+    # Command to get information about a Minecraft server
     @app_commands.command(name="mcserver", description="Get the status of a Java Minecraft server.")
-    async def mcstatus(self, ctx, server: str):
+    async def mcserver(self, ctx: commands.Context, server: str):
         try:
             status = mcstatus.JavaServer.lookup(server).status()
             player = discord.Embed(title=f"Minecraft Server Status: {profanity.censor(server)}",
@@ -43,8 +44,9 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
                                     color=0xFF0000)
             await ctx.send(embed=offline)
 
+    # Command to get data about Hypixel Bedwars players
     @app_commands.command(name="bedwars", description="Get the status of Hypixel Bedwars player.")
-    async def hypixel_bedwars(self, ctx, username):
+    async def hypixel_bedwars(self, ctx: commands.Context, username: str):
         url = f"https://api.hypixel.net/player?key={apikey}&name=" + username
 
         async with request("GET", url, headers={}) as response:
@@ -71,8 +73,9 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
         embed.set_thumbnail(url="https://minotar.net/helm/" + username)
         await ctx.send(embed=embed)
 
+    # Command to get a Minecraft user's skin
     @app_commands.command(name="skin", description="Get a Minecraft user skin.")
-    async def get_skin(self, ctx, username: str):
+    async def get_skin(self, ctx: commands.Context, username: str):
         embed = discord.Embed(title=f"{username}'s skin",
                               description=f"Loading the skin of {username}...",
                               color=discord.Color.orange())

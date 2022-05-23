@@ -14,6 +14,7 @@ class React(commands.Cog, description="React to messages"):
     def __init__(self, bot):
         self.bot = bot
 
+    # Reacts to a message inside MikArt when a new update comes.
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.channel.id == 962313825464504360:

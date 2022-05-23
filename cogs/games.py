@@ -22,6 +22,7 @@ class Games(commands.Cog, description="Fun game commands"):
     def __init__(self, bot) -> None:
         self.bot = bot
 
+    # Slash command to roll the slot machine
     @app_commands.command(name="slot", description="Roll the slot machine!")
     async def slot(self, interaction: discord.Interaction):
         emojis = "🍎🍊🍐🍋🍉🍇🍓🍒"
@@ -45,12 +46,14 @@ class Games(commands.Cog, description="Fun game commands"):
         else:
             await interaction.response.send_message(embed=embed3)
 
+    # Slash command to roll the dice
     @app_commands.command(name="dice", description="Roll the dice!")
     async def dice(self, interaction: discord.Interaction):
         embed1 = discord.Embed(title=f"Games", description="Rolled a {}!".format(random.randint(1, 6)),
                                color=discord.Color.green())
         await interaction.response.send_message(embed=embed1)
 
+    # Slash command to flip a coin
     @app_commands.command(name="coinflip", description="Flip a coin!")
     async def coinflip(self, interaction: discord.Interaction):
         determine_flip = [1, 0]
@@ -66,6 +69,7 @@ class Games(commands.Cog, description="Fun game commands"):
                                   color=interaction.user.color)
             await interaction.response.send_message(embed=embed)
 
+    # Slash command to slap someone
     @app_commands.command(name="slap", description="Slap someone!")
     async def slap(self, interaction: discord.Interaction, member: discord.Member):
         if member.id == 812808865728954399:
@@ -95,6 +99,7 @@ class Games(commands.Cog, description="Fun game commands"):
                                   color=interaction.user.color)
             await interaction.response.send_message(embed=embed)
 
+    # Slash command to ask the 8ball a question
     @app_commands.command(name="8ball", description="Ask the magic 8ball a question!")
     async def eightball(self, interaction: discord.Interaction, *, question: str):
         responses = [

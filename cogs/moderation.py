@@ -20,9 +20,11 @@ class Moderation(commands.Cog, description="Moderating"):
     def __init__(self, bot):
         self.bot = bot
 
+    # Command to lock a channel, so nobody else than moderators can send messages
     @app_commands.command(name="lock", description="Locks the channel, so people can't send messages.")
     @commands.has_permissions(manage_channels=True, manage_messages=True)
-    async def lock(self, ctx, channel: discord.TextChannel = None, reason: str = None, notify: bool = True):
+    async def lock(self, ctx: commands.Context, channel: discord.TextChannel = None,
+                   reason: str = None, notify: bool = True):
         channel = ctx.channel or channel
         await channel.set_permissions(ctx.guild.default_role, send_messages=False, add_reactions=False)
         vanish_name = "nobody"
@@ -35,9 +37,10 @@ class Moderation(commands.Cog, description="Moderating"):
         embed.timestamp = datetime.datetime.utcnow()
         await channel.send(embed=embed)
 
+    # Command to unlock a channel, so everybody can send messages again
     @app_commands.command(name='unlock', description="Unlocks the channel.")
     @commands.has_permissions(manage_channels=True, manage_messages=True)
-    async def unlock(self, ctx, channel: discord.TextChannel = None):
+    async def unlock(self, ctx: commands.Context, channel: discord.TextChannel = None):
         channel = ctx.channel or channel
         await channel.set_permissions(ctx.guild.default_role, send_messages=True, add_reactions=True)
 
@@ -47,9 +50,10 @@ class Moderation(commands.Cog, description="Moderating"):
         embed.timestamp = datetime.datetime.utcnow()
         await channel.send(embed=embed)
 
-    @app_commands.command(name='clear', description="Clear an amount of messages from the chat.")
+    # Command to delete messages in the channel
+    @app_commands.command(name='clear', description="Clear an amount of messages from the channel.")
     @commands.has_permissions(manage_messages=True)
-    async def clear(self, ctx, amount: int):
+    async def clear(self, ctx: commands.Context, amount: int):
         await ctx.message.delete()
         await ctx.channel.purge(limit=amount)
 
@@ -60,9 +64,10 @@ class Moderation(commands.Cog, description="Moderating"):
         await asyncio.sleep(5)
         await message.delete()
 
-    @app_commands.command(name="prefix", description="Change the prefix of the guild.")
+    # Command to change the bot prefix for a guild
+    @app_commands.command(name="change-prefix", description="Change the prefix of the guild.")
     @commands.has_permissions(administrator=True)
-    async def change_prefix(self, ctx, prefix):
+    async def change_prefix(self, ctx: commands.Context, prefix: str):
         embed = discord.Embed(title="Moderation",
                               description=f"Changed the prefix to: " + prefix,
                               color=discord.Color.gold())

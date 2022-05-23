@@ -4,6 +4,7 @@
 # (C) 2022 MikArt
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
+# Terrible code, so I won't be documenting this. I will probably fix this code to use a db file later
 # -----------------------------------------------------------
 
 import datetime

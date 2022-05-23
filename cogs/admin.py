@@ -20,6 +20,7 @@ from discord.ext import commands
 from utils import database, buttons
 
 
+# Convert input to time. example: 1h = 3600
 def convert(time):
     pos = ["s", "m", "h", "d"]
 
@@ -37,6 +38,7 @@ def convert(time):
     return val * time_dict[unit]
 
 
+# Get a randomized string
 def get_string():
     letters = ''.join((random.choice(string.ascii_letters) for _ in range(8)))
     digits = ''.join((random.choice(string.digits) for _ in range(4)))
@@ -52,17 +54,19 @@ class Admin(commands.Cog, description="Gather information"):
     def __init__(self, bot):
         self.bot = bot
 
+    # A group for the admin commands that devolopers can use
     @commands.group(name='admin', help="Admin commands for debugging", hidden=True,
                     brief='Debugging the features of the bot')
-    async def admin(self, ctx):
+    async def admin(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
             if ctx.author.id in database.get_owner_ids():
                 await ctx.send('Wow, an admin user!')
 
+    # Testing command for profanity, if something doesn't work with it
     @admin.command(name="profanity-test", aliases=["p-t"], hidden=True,
                    help="Test the profanity filter used in some commands",
                    brief="Profanity filter tester")
-    async def profanity_test(self, ctx, *, text):
+    async def profanity_test(self, ctx: commands.Context, *, text: str):
         if ctx.author.id in database.get_owner_ids():
             embed = discord.Embed(title="Profanity Test",
                                   description="Results of the debug profanity-test",
@@ -72,9 +76,10 @@ class Admin(commands.Cog, description="Gather information"):
             embed.add_field(name="Censored", value=profanity.censor(text))
             await ctx.send(embed=embed)
 
-    @admin.command(name="exec", help="Executing code using python eval", hidden=True,
+    # Execute code from Discord
+    @admin.command(name="exec", help="Executing code using python exec", hidden=True,
                    brief="Try python code")
-    async def exec(self, ctx, *, code):
+    async def exec(self, ctx: commands.Context, *, code: str):
         if ctx.author.id in database.get_owner_ids():
             try:
                 exec(code)
@@ -83,7 +88,7 @@ class Admin(commands.Cog, description="Gather information"):
 
     @admin.command(name="shutdown", help="Logout from discord.", aliases=["logout"], hidden=True,
                    brief="Close connection to discord")
-    async def shutdown(self, ctx):
+    async def shutdown(self, ctx: commands.Context):
         if ctx.author.id in database.get_owner_ids():
             view = buttons.YesNo()
             sure = discord.Embed(title="Are you sure?", description="This will logout "
@@ -99,7 +104,7 @@ class Admin(commands.Cog, description="Gather information"):
 
     @admin.command(name='cog-unload', help='Unload a cog.', hidden=True,
                    brief='Disable a cog.')
-    async def unload_cog(self, ctx, cog):
+    async def unload_cog(self, ctx: commands.Context, cog: str):
         if ctx.author.id in database.get_owner_ids():
             try:
                 await self.bot.unload_extension(f'cogs.{cog.lower()}')
@@ -110,7 +115,7 @@ class Admin(commands.Cog, description="Gather information"):
 
     @admin.command(name='cog-load', help='Load a cog.', hidden=True,
                    brief='Enable a cog.')
-    async def load_cog(self, ctx, cog):
+    async def load_cog(self, ctx: commands.Context, cog: str):
         if ctx.author.id in database.get_owner_ids():
             try:
                 await self.bot.load_extension(f'cogs.{cog.lower()}')
@@ -123,7 +128,7 @@ class Admin(commands.Cog, description="Gather information"):
 
     @admin.command(name='cog-restart', aliases=['cog-reload'], help='Restart a cog', hidden=True,
                    brief='Reload a cog.')
-    async def restart_cog(self, ctx, cog):
+    async def restart_cog(self, ctx: commands.Context, cog: str):
         if ctx.author.id in database.get_owner_ids():
             try:
                 await self.bot.unload_extension(f'cogs.{cog.lower()}')
@@ -137,7 +142,7 @@ class Admin(commands.Cog, description="Gather information"):
 
     @admin.command(name="info", aliases=["information", "about"], help="Gather information about the bot.",
                    hidden=True, brief='See information about bot or a user')
-    async def info(self, ctx, user: discord.User = None):
+    async def info(self, ctx: commands.Context, user: discord.User = None):
         if user is None and ctx.author.id in database.get_owner_ids():
             embed = discord.Embed(title="Information", color=ctx.author.color)
             embed.add_field(name="Authors", value=str(database.get_owners_discord())[1:-1], inline=False)
@@ -173,7 +178,7 @@ class Admin(commands.Cog, description="Gather information"):
 
     @admin.command(name='set-premium', help='Set premium state of a user.', hidden=True,
                    brief='Change user premium state')
-    async def set_premium(self, ctx, user: discord.Member, state: bool = None):
+    async def set_premium(self, ctx: commands.Context, user: discord.Member, state: bool = None):
         if ctx.author.id in database.get_owner_ids():
             if user.id in database.get_owner_ids():
                 await ctx.send("You can't set the premium state of an owner.")
@@ -186,30 +191,30 @@ class Admin(commands.Cog, description="Gather information"):
 
     @admin.command(name='get-premium', help='Get premium state of a user.', hidden=True,
                    brief='Get user premium state')
-    async def get_premium(self, ctx, user: discord.Member):
+    async def get_premium(self, ctx: commands.Context, user: discord.Member):
         if ctx.author.id in database.get_owner_ids():
             await ctx.send(f"{user.mention}'s premium state: {database.get_premium(user.id)}")
 
     @admin.command(name="message", aliases=["msg"], description="Send an admin message to a user.")
-    async def message(self, ctx, user: discord.Member, *, message):
+    async def message(self, ctx: commands.Context, user: discord.Member, *, message):
         if ctx.author.id in database.get_owner_ids():
             await user.send(message)
 
     @admin.command(name='keydrop', help='Drop a key.', hidden=True,
                    brief='Drop a key')
-    async def keydrop(self, ctx, time: str = "1m", key: str = get_string()):
+    async def keydrop(self, ctx: commands.Context, time: str = "1m", key: str = get_string()):
         if ctx.author.id in database.get_owner_ids():
             if not str(key).startswith("a"):
                 await ctx.message.delete()
 
-            # create  the embed and convert the wait time to seconds
+            # Create the embed and convert the wait time to seconds
             embed = discord.Embed(title="Key", color=discord.Color.blue(), timestamp=database.get_time())
             wait = convert(time)
 
             with open('db/codes.json', 'r') as f:
                 data = json.load(f)
 
-            # send the message
+            # Send the message
             formatted_time = datetime.utcnow() + timedelta(seconds=wait)
             unix_time = tm.mktime(formatted_time.timetuple())
             embed.add_field(name="Key drop!", value=f"Coming at <t:{int(unix_time)}:T>", inline=False)
@@ -217,26 +222,26 @@ class Admin(commands.Cog, description="Gather information"):
             embed.set_footer(text=f"Created by {ctx.author.name}")
             message = await ctx.send(embed=embed)
 
-            # let's put one, so it doesn't create the latest again
+            # Let's put one, so it doesn't create the latest again
             number = 1
             # for every stuff in data["codes") it will add one to number
             for _ in data["codes"]:
                 number = number + 1
 
-            # this is supposed to create the list
+            # This is supposed to create the list
             data["codes"][str(number)] = [key, message.id]
 
             with open('db/codes.json', 'w') as f:
                 json.dump(data, f, indent=4)
             f.close()
 
-            # wait for the converter time.
+            # Waiting for the converted time.
             await asyncio.sleep(wait)
             # Change the field to show the code
             embed.set_field_at(0, name="Code", value=f"{key}")
             with open('db/codes.json', 'r') as f:
                 data = json.load(f)
-            # if the data["codes"][str(number)] second value is not none
+            # If the data["codes"][str(number)] second value is not none
             if data["codes"][str(number)][1] is not None:
                 await message.edit(embed=embed)
 

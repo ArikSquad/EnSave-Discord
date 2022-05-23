@@ -1,5 +1,5 @@
 # -----------------------------------------------------------
-# This is a discord bot by ArikSquad and you are viewing the source code of it.
+# This is a discord bot by ArikSquad and you are viewing the source code of it
 #
 # (C) 2021-2022 MikArt
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
@@ -7,7 +7,7 @@
 # -----------------------------------------------------------
 
 # This first file is mostly documented but the others aren't.
-# If you want to help me add comments then open a PR on GitHub.
+# If you want to help me add comments then open a PR on GitHub
 
 import asyncio
 import os
@@ -20,7 +20,7 @@ from dotenv import load_dotenv
 
 from utils import database
 
-# Auto reset settings in colorama.
+# Auto reset settings in colorama
 colorama.init(autoreset=True)
 
 # Load the bot token. You should create a file named .env and write the token.
@@ -35,7 +35,7 @@ class Main(commands.Bot):
         self.ipc = ipc.Server(self, secret_key=os.getenv('SECRET_KEY'))
 
 
-# Create the activity for Discord. Idle looks cool for me.
+# Create the activity for idle
 activity = discord.Activity(type=discord.ActivityType.watching,
                             name=f'24/7', status=discord.Status.idle)
 
@@ -50,8 +50,8 @@ bot = Main(command_prefix=database.get_prefix,
            intents=discord.Intents.all())
 
 
-# Load all the cogs, then print the cog names that have been loaded.
-# Also run the bot with token from .env file.
+# Load all the cogs, then print the cog names that have been loaded
+# Also run the bot with token from .env file
 async def main():
     await bot.ipc.start()
 

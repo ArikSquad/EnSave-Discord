@@ -4,6 +4,7 @@
 # (C) 2022 MikArt
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
+# This file is for the help command, and it doesn't need comments
 # -----------------------------------------------------------
 from itertools import chain, starmap
 
@@ -91,7 +92,7 @@ class PageSource(menus.ListPageSource):
 
 class HelpCommand(commands.MinimalHelpCommand):
     # noinspection PyMethodMayBeStatic
-    def get_command_brief(self, command):
+    def get_command_brief(self, command: commands.Command):
         return command.short_doc or "This command has no description."
 
     async def send_bot_help(self, mapping):
@@ -101,7 +102,7 @@ class HelpCommand(commands.MinimalHelpCommand):
         menu = MenuPages(formatter, delete_message_after=True)
         await menu.start(self.context)
 
-    async def send_command_help(self, command):
+    async def send_command_help(self, command: commands.Command):
         emoji = getattr(command.cog, "EMOJI", None)
         emoji_string = emoji if emoji is not None else ""
         embed = discord.Embed(
@@ -119,7 +120,7 @@ class HelpCommand(commands.MinimalHelpCommand):
         channel = self.get_destination()
         await channel.send(embed=embed)
 
-    async def send_group_help(self, group) -> None:
+    async def send_group_help(self, group: commands.Group) -> None:
         emoji = getattr(group.cog, "EMOJI", None)
         emoji_string = emoji if emoji is not None else ""
         embed = discord.Embed(
@@ -135,7 +136,7 @@ class HelpCommand(commands.MinimalHelpCommand):
         if brief:
             embed.add_field(name="Small Explanation", value=brief)
 
-    async def send_cog_help(self, cog):
+    async def send_cog_help(self, cog: commands.Cog):
         emoji = getattr(cog, "EMOJI", None)
         emoji_string = emoji if emoji is not None else ""
         embed = discord.Embed(title=f'{emoji_string} {cog.qualified_name}',

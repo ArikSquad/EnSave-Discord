@@ -66,8 +66,9 @@ class Dashboard(commands.Cog, description="Custom dashboard"):
 
         return member_data
 
+    # Command to open the dashboard
     @commands.command(name="dashboard", aliases=["dash"], description="Open the dashboard")
-    async def dashboard_command(self, ctx):
+    async def dashboard_command(self, ctx: commands.Context):
         embed = discord.Embed(
             title="Dashboard",
             description="[Click here to open the dashboard](https://ensave.mikart.eu/)",

@@ -16,6 +16,7 @@ class Help(commands.Cog, description="Help"):
 
     def __init__(self, bot):
         self.bot = bot
+        # Create the help command
         self.bot.help_command = helpCommand.HelpCommand()
         self.bot.help_command.cog = self
 

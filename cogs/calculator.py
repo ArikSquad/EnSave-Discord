@@ -110,7 +110,7 @@ class InteractiveView(discord.ui.View):
         except simpcalc.BadArgument:
             await interaction.response.defer()
             return await interaction.message.edit(content=f"```\nBroo, why meee? I can't do that hard calculations? "
-                                                          f"what DO YOU THINK I AM? A MACHINE?\n```")
+                                                          f"WHAT DO YOU THINK I AM? A MACHINE?\n```")
         await interaction.message.edit(content=f"```\n{self.expr}\n```")
         await interaction.response.defer()
 
@@ -150,9 +150,10 @@ class Calculator(commands.Cog, description="Calculator"):
     def __init__(self, bot):
         self.bot = bot
 
+    # Calculate using buttons
     @commands.command(name="calculate", help="Calculator simulator", aliases=["calc", "calculator"],
                       brief='You can do calculations using this command')
-    async def interactive_calc(self, ctx):
+    async def interactive_calc(self, ctx: commands.Context):
         view = InteractiveView()
         await ctx.send("```\n```", view=view)
 
