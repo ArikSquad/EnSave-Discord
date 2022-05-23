@@ -95,7 +95,7 @@ class Messages(commands.Cog, description="Send messages and see how many you hav
 
     @commands.command(name='addexp', help="Add the count of messages an user has sent.",
                       hidden=True)
-    async def add_exp(self, ctx, user: discord.Member, amount: int):
+    async def add_messages(self, ctx, user: discord.Member, amount: int):
         if ctx.author.id in database.get_owner_ids():
             add_amount(user.id, amount)
             new_exp_embed = discord.Embed(
@@ -107,7 +107,7 @@ class Messages(commands.Cog, description="Send messages and see how many you hav
 
     @commands.command(name='setmessages', help="Set the count of messages an user has sent.",
                       hidden=True)
-    async def set_exp(self, ctx, user: discord.Member, amount: int):
+    async def set_messages(self, ctx, user: discord.Member, amount: int):
         if ctx.author.id in database.get_owner_ids():
             set_amount(user.id, amount)
             new_exp_embed = discord.Embed(
@@ -117,7 +117,7 @@ class Messages(commands.Cog, description="Send messages and see how many you hav
             )
             await ctx.send(embed=new_exp_embed)
 
-    @commands.command(name='getmessage', help="Get an user's experience count.", hidden=True)
+    @commands.command(name='getmessages', help="Get an user's experience count.", hidden=True)
     async def get_messages(self, ctx, user: discord.Member):
         if ctx.author.id in database.get_owner_ids():
             amount = get_amount(user.id)
