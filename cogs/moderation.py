@@ -10,6 +10,7 @@ import datetime
 import json
 
 import discord
+from discord import app_commands
 from discord.ext import commands
 
 
@@ -19,7 +20,7 @@ class Moderation(commands.Cog, description="Moderating"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="lock", help="Locks the channel.", aliases=['lockdown'])
+    @app_commands.command(name="lock", description="Locks the channel, so people can't send messages.")
     @commands.has_permissions(manage_channels=True, manage_messages=True)
     async def lock(self, ctx, channel: discord.TextChannel = None, reason: str = None, notify: bool = True):
         channel = ctx.channel or channel
@@ -34,7 +35,7 @@ class Moderation(commands.Cog, description="Moderating"):
         embed.timestamp = datetime.datetime.utcnow()
         await channel.send(embed=embed)
 
-    @commands.command(name='unlock', aliases=['unlockdown'], help="Unlocks the channel.")
+    @app_commands.command(name='unlock', description="Unlocks the channel.")
     @commands.has_permissions(manage_channels=True, manage_messages=True)
     async def unlock(self, ctx, channel: discord.TextChannel = None):
         channel = ctx.channel or channel
@@ -46,7 +47,7 @@ class Moderation(commands.Cog, description="Moderating"):
         embed.timestamp = datetime.datetime.utcnow()
         await channel.send(embed=embed)
 
-    @commands.command(name='clear', aliases=['purge'], help="Clears the channel.")
+    @app_commands.command(name='clear', description="Clear an amount of messages from the chat.")
     @commands.has_permissions(manage_messages=True)
     async def clear(self, ctx, amount: int):
         await ctx.message.delete()
@@ -59,8 +60,7 @@ class Moderation(commands.Cog, description="Moderating"):
         await asyncio.sleep(5)
         await message.delete()
 
-    @commands.command(name="prefix", help="Change the prefix of the guild.",
-                      aliases=["changeprefix"])
+    @app_commands.command(name="prefix", description="Change the prefix of the guild.")
     @commands.has_permissions(administrator=True)
     async def change_prefix(self, ctx, prefix):
         embed = discord.Embed(title="Moderation",
