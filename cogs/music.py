@@ -48,8 +48,10 @@ class Music(commands.Cog, description="Play songs in voice channels"):
     @commands.Cog.listener()
     async def on_wavelink_track_end(self, player: wavelink.Player, track, reason) -> None:
         if not player.queue.is_empty:
-            new = player.queue.get()
+            new = await player.queue.get_wait()
             await player.play(new)
+        else:
+            await player.stop()
 
     # When the bot joins a voice channel, it sets itself to be deafened
     @commands.Cog.listener()
@@ -63,19 +65,16 @@ class Music(commands.Cog, description="Play songs in voice channels"):
     # Command to play songs in a voice channel using YouTube
     @commands.command(name="play", aliases=['youtube', 'yt'], help="Play a song using YouTube.")
     async def play(self, ctx: commands.Context, *, search: wavelink.YouTubeTrack) -> None:
-        if not ctx.voice_client:
-            if ctx.author.voice:
-                voice: wavelink.Player = await ctx.author.voice.channel.connect(cls=wavelink.Player)
-            else:
-                not_connected = discord.Embed(title="Music",
-                                              description=f"You are not connected to a voice channel.",
-                                              color=ctx.author.color,
-                                              timestamp=datetime.datetime.utcnow())
-                return await ctx.send(embed=not_connected)
-        else:
-            voice: wavelink.Player = ctx.voice_client
+        if not ctx.author.voice:
+            not_connected = discord.Embed(title="Music",
+                                          description=f"You are not connected to a voice channel.",
+                                          color=ctx.author.color,
+                                          timestamp=datetime.datetime.utcnow())
+            return await ctx.send(embed=not_connected)
 
-        if voice.queue.is_empty:
+        voice: wavelink.Player = ctx.voice_client or await ctx.author.voice.channel.connect(cls=wavelink.Player)
+
+        if voice.queue.is_empty and not voice.is_playing():
             now_playing = discord.Embed(title="Queue",
                                         description=f'**Now playing**: [{profanity.censor(search.title)}]'
                                                     f'({search.uri})',
@@ -85,56 +84,52 @@ class Music(commands.Cog, description="Play songs in voice channels"):
             now_playing.set_thumbnail(url=search.thumbnail)
 
             await voice.play(search)
-            await ctx.reply(embed=now_playing)
-        else:
-            added_queue = discord.Embed(title="Queue",
-                                        description=f"Added [{profanity.censor(search.title)}]"
-                                                    f"({search.uri}) to the queue.",
-                                        color=ctx.author.color,
-                                        timestamp=datetime.datetime.utcnow())
-            added_queue.add_field(name="Author", value=f"{search.author}")
-            added_queue.set_thumbnail(url=search.thumbnail)
+            return await ctx.reply(embed=now_playing)
 
-            await voice.queue.put_wait(search)
-            await ctx.reply(embed=added_queue)
+        added_queue = discord.Embed(title="Queue",
+                                    description=f"Added [{profanity.censor(search.title)}]"
+                                                f"({search.uri}) to the queue.",
+                                    color=ctx.author.color,
+                                    timestamp=datetime.datetime.utcnow())
+        added_queue.add_field(name="Author", value=f"{search.author}")
+        added_queue.set_thumbnail(url=search.thumbnail)
+
+        await voice.queue.put_wait(search)
+        await ctx.reply(embed=added_queue)
         if profanity.contains_profanity(search.title):
             await ctx.message.delete()
 
     # Command to play songs in a voice channel using Soundcloud
     @commands.command(name="soundcloud", aliases=['sc'], help="Play a song using soundcloud.")
     async def soundcloud_command(self, ctx: commands.Context, *, search: wavelink.SoundCloudTrack) -> None:
-        if not ctx.voice_client:
-            if ctx.author.voice:
-                voice: wavelink.Player = await ctx.author.voice.channel.connect(cls=wavelink.Player)
-            else:
-                not_connected = discord.Embed(title="Music",
-                                              description=f"You are not connected to a voice channel.",
-                                              color=ctx.author.color,
-                                              timestamp=datetime.datetime.utcnow())
-                return await ctx.send(embed=not_connected)
-        else:
-            voice: wavelink.Player = ctx.voice_client
+        if not ctx.author.voice:
+            not_connected = discord.Embed(title="Music",
+                                          description=f"You are not connected to a voice channel.",
+                                          color=ctx.author.color,
+                                          timestamp=datetime.datetime.utcnow())
+            return await ctx.send(embed=not_connected)
 
-        if voice.queue.is_empty:
+        voice: wavelink.Player = ctx.voice_client or await ctx.author.voice.channel.connect(cls=wavelink.Player)
+
+        if voice.queue.is_empty and not voice.is_playing():
             now_playing = discord.Embed(title="Queue",
                                         description=f'**Now playing**: [{profanity.censor(search.title)}]'
                                                     f'({search.uri})',
                                         color=ctx.author.color,
                                         timestamp=datetime.datetime.utcnow())
             now_playing.add_field(name="Author", value=f"{search.author}")
-
             await voice.play(search)
-            await ctx.reply(embed=now_playing)
-        else:
-            added_queue = discord.Embed(title="Queue",
-                                        description=f"Added [{profanity.censor(search.title)}]"
-                                                    f"({search.uri}) to the queue.",
-                                        color=ctx.author.color,
-                                        timestamp=datetime.datetime.utcnow())
-            added_queue.add_field(name="Author", value=f"{search.author}")
+            return await ctx.reply(embed=now_playing)
 
-            await voice.queue.put_wait(search)
-            await ctx.reply(embed=added_queue)
+        added_queue = discord.Embed(title="Queue",
+                                    description=f"Added [{profanity.censor(search.title)}]"
+                                                f"({search.uri}) to the queue.",
+                                    color=ctx.author.color,
+                                    timestamp=datetime.datetime.utcnow())
+        added_queue.add_field(name="Author", value=f"{search.author}")
+
+        await voice.queue.put_wait(search)
+        await ctx.reply(embed=added_queue)
         if profanity.contains_profanity(search.title):
             await ctx.message.delete()
 
@@ -383,17 +378,17 @@ class Music(commands.Cog, description="Play songs in voice channels"):
     @commands.command(name="skip", help="Skips the current song.")
     async def skip_command(self, ctx: commands.Context):
         voice: wavelink.Player = ctx.voice_client
-        if ctx.author.voice and voice:
-            if voice.is_playing() or voice.is_paused():
+        if ctx.author.voice:
+            if not voice.queue.is_empty:
+                await voice.stop()
                 skipped = discord.Embed(title="Queue",
-                                        description=f"The song has been skipped.",
+                                        description=f"The song has been skipped and now playing {voice.queue[0]}",
                                         color=ctx.author.color,
                                         timestamp=datetime.datetime.utcnow())
-                await voice.stop()
-                return await ctx.send(embed=skipped)
+                return await ctx.send(embed=skipped, delete_after=5)
             else:
                 not_connected = discord.Embed(title="Queue",
-                                              description=f"Music isn't playing.",
+                                              description=f"Queue might be empty.",
                                               color=ctx.author.color,
                                               timestamp=datetime.datetime.utcnow())
                 await ctx.send(embed=not_connected)
