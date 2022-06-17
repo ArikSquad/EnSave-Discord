@@ -16,7 +16,7 @@ class React(commands.Cog, description="React to messages"):
 
     # Reacts to a message inside MikArt when a new update comes.
     @commands.Cog.listener()
-    async def on_message(self, message):
+    async def on_message(self, message) -> None:
         if message.channel.id == 962313825464504360:
             if message.author.id == 962313982746714142:
                 emoji = self.bot.get_emoji(854963304227930123)

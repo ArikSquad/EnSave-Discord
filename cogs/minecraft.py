@@ -60,8 +60,7 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
                 beds_broken = (data['player']['stats']["Bedwars"]["beds_broken_bedwars"])
                 beds_lost = (data['player']['stats']["Bedwars"]["beds_lost_bedwars"])
             else:
-                return await ctx.send("This command could not be executed. Try again later\n"
-                                      "ERROR: RATELIMIT")
+                return await ctx.send("This command could not be executed. Most likely due ratelimit.")
 
         embed = discord.Embed(title=f"{username} Bedwars Stats", color=discord.Color.orange())
         embed.add_field(name="Games Played", value=f"{games_played} games", inline=False)

@@ -57,14 +57,14 @@ git clone https://github.com/ArikSquad/EnSave-Discord.git
 ```
 2. Open Command Prompt or Terminal. Then go into the folder with this command: 
 ```commandline
-  cd EnSave-Discord
+cd EnSave-Discord
  ```
 3. Then install requirements in your terminal. This is very easy and done by this command:
 ```commandline
 python3 -m pip install -r requirements.txt
 ```
 6. After all that you should create a file named .env and put this inside it, but change "(your token)" to your discord bot token.
-```
+```env
 TOKEN="(your token)"
 
 MUSIC="(your lavalink ip)"
@@ -82,6 +82,27 @@ python3 main.py
 ```
 8. If you want to use Music commands you need to follow [this](https://github.com/PythonistaGuild/Wavelink#lavalink-installation) guide
 9. If you need more help with this then feel free to join our discord server. [Click here](https://discord.gg/WKTcnb86b7) to join the support server.
+
+## Setupping a database for the bot
+1. You should download a database browser, like [this](https://sqlitebrowser.org/).
+2. Create a database.db so it will be like data/db/database.db
+3. Use these sql commands to create tables:
+```sql
+CREATE TABLE "code" (
+	"secret"	TEXT UNIQUE,
+	"messageID"	INTEGER
+);
+CREATE TABLE "guild" (
+	"guildID"	INTEGER UNIQUE,
+	"prefix"	TEXT DEFAULT '.',
+	"spy"	INTEGER DEFAULT 0,
+	"channel"	INTEGER
+);
+CREATE TABLE "user" (
+	"userID"	INTEGER UNIQUE,
+	"premium"	INTEGER DEFAULT 0
+);
+``` 
 
 ## Reporting a Vulnerability or an Issue
 

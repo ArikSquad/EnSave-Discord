@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 from quart import Quart, render_template, redirect, url_for, request, flash
 from quart_discord import DiscordOAuth2Session
 
-from utils import database
+from utils import db
 
 app = Quart(__name__)
 
@@ -131,7 +131,7 @@ async def dashboard_server_customization(guild_id):
             if len(prefix) == 0:
                 await flash('Prefix cannot be empty.', category='error')
             else:
-                database.set_prefix(guild_id, prefix)
+                db.set_guild_prefix(guild_id, prefix)
                 await flash(f'Changed prefix to {prefix}', category='success')
                 await asyncio.sleep(1)
                 return redirect(url_for("dashboard_server_customization", guild_id=guild_id))
@@ -208,4 +208,3 @@ async def get_user_name(member_id):
         return member_id
     else:
         return user["name"]
-

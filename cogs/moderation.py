@@ -7,11 +7,12 @@
 # -----------------------------------------------------------
 import asyncio
 import datetime
-import json
 
 import discord
 from discord import app_commands
 from discord.ext import commands
+
+from utils import db
 
 
 class Moderation(commands.Cog, description="Moderating"):
@@ -73,12 +74,7 @@ class Moderation(commands.Cog, description="Moderating"):
                               color=discord.Color.gold())
         await ctx.send(embed=embed)
 
-        with open('db/prefixes.json', 'r') as f:
-            prefixes = json.load(f)
-        prefixes[str(ctx.guild.id)] = prefix
-
-        with open('db/prefixes.json', 'w') as f:
-            json.dump(prefixes, f, indent=4)
+        db.set_guild_prefix(ctx.guild.id, prefix)
 
         print(f'Changed prefix in {ctx.guild} to {prefix}. Command was ran user {ctx.message.author}.')
 

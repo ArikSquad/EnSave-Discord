@@ -5,10 +5,11 @@
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
 # -----------------------------------------------------------
-import json
-
 import discord
+from discord import app_commands
 from discord.ext import commands
+
+from utils import db
 
 
 class Spy(commands.Cog, description="Spying"):
@@ -19,12 +20,11 @@ class Spy(commands.Cog, description="Spying"):
 
     # When a message is edited, send a message in the spy channel
     @commands.Cog.listener()
-    async def on_message_edit(self, before, after):
-        with open("db/guilds.json", "r") as f:
-            data = json.load(f)
-            spy = data[str(before.guild.id)]["spy_edit"]
-            spy_channel = data[str(before.guild.id)]["spy_channel"]
-        if spy:
+    async def on_message_edit(self, before, after) -> None:
+        spy = db.get_guild_spy(before.guild.id)
+        spy_channel = db.get_guild_spy_channel(before.guild.id)
+
+        if spy and spy_channel:
             if before.author.bot:
                 return
             if before.content == after.content:
@@ -37,25 +37,17 @@ class Spy(commands.Cog, description="Spying"):
             embed.add_field(name="Before", value=before.content, inline=False)
             embed.add_field(name="After", value=after.content, inline=False)
             embed.set_footer(text=f"Message ID: {before.id}")
-            try:
-                channel = self.bot.get_channel(spy_channel)
-                await channel.send(embed=embed)
-            except AttributeError:
-                get_channel = discord.utils.get(before.guild.channels, name="ensave-guard")
-                channel_id = get_channel.id
-                channel = self.bot.get_channel(channel_id)
-                await channel.send(embed=embed)
-            finally:
-                pass
+
+            channel = self.bot.get_channel(spy_channel)
+            await channel.send(embed=embed)
 
     # When a message is deleted, send a message in the spy channel
     @commands.Cog.listener()
-    async def on_message_delete(self, message):
-        with open("db/guilds.json", "r") as f:
-            data = json.load(f)
-            spy = data[str(message.guild.id)]["spy_delete"]
-            spy_channel = data[str(message.guild.id)]["spy_channel"]
-        if spy:
+    async def on_message_delete(self, message) -> None:
+        spy = db.get_guild_spy(message.guild.id)
+        spy_channel = db.get_guild_spy_channel(message.guild.id)
+
+        if spy and spy_channel:
             if message.author.bot:
                 return
             embed = discord.Embed(
@@ -65,61 +57,31 @@ class Spy(commands.Cog, description="Spying"):
             )
             embed.add_field(name="Message", value=message.content)
             embed.set_footer(text=f"Message ID: {message.id}")
-            try:
-                channel = self.bot.get_channel(spy_channel)
-                await channel.send(embed=embed)
-            except AttributeError:
-                get_channel = discord.utils.get(message.guild.channels, name="ensave-guard")
-                channel_id = get_channel.id
-                channel = self.bot.get_channel(channel_id)
-                await channel.send(embed=embed)
-            finally:
-                pass
 
-    # Toggle the spying on a server,
-    # mode: int 1 or 2 (1 = edit, 2 = delete)
-    @commands.command(name="spy", aliases=["spy-edit", "spy-delete"],
-                      help="Toggle spying on the server. Modes are: 1 = edit, 2 = delete, None = both.",
-                      brief="Spy your users.")
+            channel = self.bot.get_channel(spy_channel)
+            await channel.send(embed=embed)
+
+    # Toggle the spying on a server
+    @app_commands.command(name="spy",
+                          description="Toggle spying on the server.")
     @commands.has_permissions(manage_guild=True)
-    async def spy(self, ctx: commands.Context, mode: int = None):
-        desc = "**Something went wrong...**"
-        enabled = "**Something went wrong...**"
-        with open("db/guilds.json", "r") as f:
-            data = json.load(f)
-        if mode == 1:
-            desc = "editing"
-            data[str(ctx.guild.id)]["spy_edit"] = not data[str(ctx.guild.id)]["spy_edit"]
-            enabled = data[str(ctx.guild.id)]["spy_edit"]
-        elif mode == 2:
-            desc = "deleting"
-            data[str(ctx.guild.id)]["spy_delete"] = not data[str(ctx.guild.id)]["spy_delete"]
-            enabled = data[str(ctx.guild.id)]["spy_edit"]
-        elif mode is None or mode > 2 or mode < 1:
-            desc = "editing and deleting"
-            data[str(ctx.guild.id)]["spy_delete"] = not data[str(ctx.guild.id)]["spy_delete"]
-            data[str(ctx.guild.id)]["spy_edit"] = not data[str(ctx.guild.id)]["spy_edit"]
-            enabled = data[str(ctx.guild.id)]["spy_edit"]
+    async def spy(self, ctx: commands.Context, channel: discord.TextChannel, toggle: bool = None) -> None:
+        if toggle:
+            value = 1 if toggle is True else 0
+            db.set_guild_spy(ctx.guild.id, value)
+        else:
+            db.set_guild_spy(ctx.guild.id, not db.get_guild_spy(ctx.guild.id))
+
+        db.set_guild_spy_channel(ctx.guild.id, channel.id)
+
+        toggled = "enabled" if toggle else "disabled"
         embed = discord.Embed(
             title="Spy",
-            description=f"Spying is now {enabled} for {desc} messages.",
+            description=f"Spying is now {toggled} on the channel {channel.name}.",
             color=discord.Color.green(),
         )
-        await ctx.send(embed=embed)
-        with open("db/guilds.json", "w") as f:
-            json.dump(data, f, indent=4)
 
-    # Set a channel for the message to be sent
-    @commands.command(name="spy-channel", help="Set a channel for spying",
-                      brief="A safe channel, that you can see the messages from")
-    @commands.has_permissions(manage_guild=True)
-    async def spy_channel(self, ctx: commands.Context, channel: discord.TextChannel):
-        with open("db/guilds.json", "r") as f:
-            data = json.load(f)
-        data[str(ctx.guild.id)]["spy_channel"] = channel.id
-        await ctx.send(f"Spy channel set to {channel.mention}.")
-        with open("db/guilds.json", "w") as f:
-            json.dump(data, f, indent=4)
+        await ctx.send(embed=embed)
 
 
 async def setup(bot):

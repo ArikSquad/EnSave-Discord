@@ -5,7 +5,6 @@
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
 # -----------------------------------------------------------
-
 import datetime
 import random
 
@@ -13,7 +12,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from utils import database
+from utils import db
 
 
 class Games(commands.Cog, description="Fun game commands"):
@@ -87,7 +86,7 @@ class Games(commands.Cog, description="Fun game commands"):
             except commands.MissingPermissions:
                 pass
             await interaction.response.send_message(embed=embed)
-        elif database.get_premium(member.id):
+        elif db.get_user_premium(member.id):
             embed = discord.Embed(title=interaction.user.name,
                                   description=f"tried to slap {member.name}, but had no strength to hit "
                                               f"a premium user. 😑",

@@ -6,10 +6,11 @@
 #
 # -----------------------------------------------------------
 import datetime
-import json
 
 from colorama import Fore
 from discord.ext import commands
+
+from utils import db
 
 
 class Events(commands.Cog, description="Events"):
@@ -31,77 +32,17 @@ class Events(commands.Cog, description="Events"):
     # When the bot is removed from a guild, remove it from the database
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
-        with open('db/prefixes.json', 'r') as f:
-            prefixes = json.load(f)
-        with open('db/guilds.json', 'r') as f2:
-            guilds = json.load(f2)
-
-        prefixes.pop(str(guild.id))
-        guilds.pop(str(guild.id))
-
-        with open('db/prefixes.json', 'w') as f:
-            json.dump(prefixes, f, indent=4)
-        with open('db/guilds.json', 'w') as f2:
-            json.dump(guilds, f2, indent=4)
+        db.remove_guild(guild.id)
 
     # When the bot joins a guild, it creates it in the database
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
-        with open('db/prefixes.json', 'r') as f:
-            prefixes = json.load(f)
-        with open('db/guilds.json', 'r') as f2:
-            guilds = json.load(f2)
-
-        prefixes[str(guild.id)] = '.'
-        guilds[str(guild.id)] = {
-            "spy_edit": False,
-            "spy_delete": False,
-            "spy_channel": None
-        }
-        with open('db/prefixes.json', 'w') as f:
-            json.dump(prefixes, f, indent=4)
-        with open('db/guilds.json', 'w') as f2:
-            json.dump(guilds, f2, indent=4)
+        self.bot.update_db()
 
     # When a member joins, it adds it to the database
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        with open('db/users.json', 'r') as f:
-            users = json.load(f)
-
-        if member.bot:
-            return
-
-        if member.id not in users:
-            users[str(member.id)] = {
-                "premium": False,
-                "messages": 0
-            }
-
-            with open('db/users.json', 'w') as f:
-                json.dump(users, f, indent=4)
-
-    # When a message is deleted
-    @commands.Cog.listener()
-    async def on_message_delete(self, message):
-        with open('db/codes.json', 'r') as f:
-            codes = json.load(f)
-
-        amount = 0
-        for _ in codes["codes"]:
-            amount = amount + 1
-
-        found = False
-        number = 0
-        for i in range(amount):
-            if codes["codes"][str(i + 1)][0] == int(message.id):
-                found = True
-                number = i
-
-        if found:
-            codes["codes"][number][0] = None
-            with open('db/codes.json', 'w') as f:
-                json.dump(codes, f, indent=4)
+        self.bot.update_db()
 
 
 async def setup(bot):

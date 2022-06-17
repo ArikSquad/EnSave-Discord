@@ -5,7 +5,6 @@
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
 # -----------------------------------------------------------
-
 from discord.ext import commands
 
 from utils import helpCommand

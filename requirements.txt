@@ -16,6 +16,9 @@ Colorama
 PyNaCl
 Wavelink
 
+# This is for the database
+apscheduler
+
 # This library is an addon for discord.py
 git+https://github.com/Rapptz/discord-ext-menus
 

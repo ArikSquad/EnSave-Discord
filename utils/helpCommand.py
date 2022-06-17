@@ -23,43 +23,43 @@ class MenuPages(ui.View, menus.MenuPages):
         self.message = None
         self.delete_message_after = delete_message_after
 
-    async def start(self, ctx, *, channel=None, wait=False):
+    async def start(self, ctx, *, channel=None, wait=False) -> None:
         await self._source._prepare_once()
         self.ctx = ctx
         self.message = await self.send_initial_message(ctx, ctx.channel)
 
-    async def _get_kwargs_from_page(self, page):
+    async def _get_kwargs_from_page(self, page) -> dict:
         value = await super()._get_kwargs_from_page(page)
         if 'view' not in value:
             value.update({'view': self})
         return value
 
-    async def interaction_check(self, interaction):
+    async def interaction_check(self, interaction) -> None:
         return interaction.user == self.ctx.author
 
     @ui.button(emoji='⏪', style=discord.ButtonStyle.blurple)
-    async def first_page(self, interaction: discord.Interaction, button):
+    async def first_page(self, interaction: discord.Interaction, button) -> None:
         await self.show_page(0)
         await interaction.response.defer()
 
     @ui.button(emoji='⬅', style=discord.ButtonStyle.blurple)
-    async def before_page(self, interaction: discord.Interaction, button):
+    async def before_page(self, interaction: discord.Interaction, button) -> None:
         await self.show_checked_page(self.current_page - 1)
         await interaction.response.defer()
 
     @ui.button(emoji='⏹', style=discord.ButtonStyle.blurple)
-    async def stop_page(self, interaction: discord.Interaction, button):
+    async def stop_page(self, interaction: discord.Interaction, button) -> None:
         self.stop()
         if self.delete_message_after:
             await self.message.delete(delay=0)
 
     @ui.button(emoji='➡', style=discord.ButtonStyle.blurple)
-    async def next_page(self, interaction: discord.Interaction, button):
+    async def next_page(self, interaction: discord.Interaction, button) -> None:
         await self.show_checked_page(self.current_page + 1)
         await interaction.response.defer()
 
     @ui.button(emoji='⏩', style=discord.ButtonStyle.blurple)
-    async def last_page(self, interaction: discord.Interaction, button):
+    async def last_page(self, interaction: discord.Interaction, button) -> None:
         await self.show_page(self._source.get_max_pages() - 1)
         await interaction.response.defer()
 
@@ -69,19 +69,19 @@ class PageSource(menus.ListPageSource):
         super().__init__(data, per_page=6)
         self.helpcommand = helpcommand
 
-    def format_command_help(self, no, command):
+    def format_command_help(self, no, command) -> str:
         signature = self.helpcommand.get_command_signature(command)
         docs = self.helpcommand.get_command_brief(command)
-        return f"{no} {signature}\n{docs}"
+        return f"`{no}` {signature}\n{docs}\n"
 
-    async def format_page(self, menu, entries):
+    async def format_page(self, menu, entries) -> discord.Embed:
         page = menu.current_page
         max_page = self.get_max_pages()
         starting_number = page * self.per_page + 1
         iterator = starmap(self.format_command_help, enumerate(entries, start=starting_number))
         page_content = "\n".join(iterator)
         embed = discord.Embed(
-            title=f"Help Command [{page + 1}/{max_page}]",
+            title=f"EnSave Commands {page + 1}/{max_page}",
             description=f'{page_content}',
             color=0xffcccb
         )
@@ -92,7 +92,7 @@ class PageSource(menus.ListPageSource):
 
 class HelpCommand(commands.MinimalHelpCommand):
     # noinspection PyMethodMayBeStatic
-    def get_command_brief(self, command: commands.Command):
+    def get_command_brief(self, command: commands.Command) -> str:
         return command.short_doc or "This command has no description."
 
     async def send_bot_help(self, mapping):
@@ -102,7 +102,7 @@ class HelpCommand(commands.MinimalHelpCommand):
         menu = MenuPages(formatter, delete_message_after=True)
         await menu.start(self.context)
 
-    async def send_command_help(self, command: commands.Command):
+    async def send_command_help(self, command: commands.Command) -> None:
         emoji = getattr(command.cog, "EMOJI", None)
         emoji_string = emoji if emoji is not None else ""
         embed = discord.Embed(
@@ -128,7 +128,11 @@ class HelpCommand(commands.MinimalHelpCommand):
             color=discord.Color.blue()
         )
         embed.add_field(name="Description", value=group.help)
-        embed.add_field(name="Subcommands", value=group.commands)
+        # Tell all the subcommand names
+        subcommands = group.commands
+        if subcommands:
+            subcommand_names = [f"`{c.name}`" for c in subcommands]
+            embed.add_field(name="Subcommands", value=", ".join(subcommand_names), inline=False)
         alias = group.aliases
         brief = group.brief
         if alias:
@@ -136,7 +140,10 @@ class HelpCommand(commands.MinimalHelpCommand):
         if brief:
             embed.add_field(name="Small Explanation", value=brief)
 
-    async def send_cog_help(self, cog: commands.Cog):
+        channel = self.get_destination()
+        await channel.send(embed=embed)
+
+    async def send_cog_help(self, cog: commands.Cog) -> None:
         emoji = getattr(cog, "EMOJI", None)
         emoji_string = emoji if emoji is not None else ""
         embed = discord.Embed(title=f'{emoji_string} {cog.qualified_name}',
@@ -146,7 +153,7 @@ class HelpCommand(commands.MinimalHelpCommand):
         channel = self.get_destination()
         await channel.send(embed=embed)
 
-    async def send_error_message(self, error):
+    async def send_error_message(self, error) -> None:
         embed = discord.Embed(title="Error", description=f'{error}\nRemember that cogs are case sensitive.',
                               color=discord.Color.red())
 

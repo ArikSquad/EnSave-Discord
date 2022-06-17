@@ -8,7 +8,7 @@
 import discord
 from discord.ext import commands, ipc
 
-from utils import database
+from utils import db
 from utils.website import dashboard
 
 
@@ -43,7 +43,7 @@ class Dashboard(commands.Cog, description="Custom dashboard"):
         guild_data = {
             "name": guild.name,
             "id": guild.id,
-            "prefix": database.get_prefix_by_id(guild.id),
+            "prefix": db.get_guild_prefix(guild.id),
             "member_count": len(guild.members)
         }
 
@@ -67,7 +67,7 @@ class Dashboard(commands.Cog, description="Custom dashboard"):
         return member_data
 
     # Command to open the dashboard
-    @commands.command(name="dashboard", aliases=["dash"], description="Open the dashboard")
+    @commands.command(name="dashboard", aliases=["dash"], help="Open the dashboard")
     async def dashboard_command(self, ctx: commands.Context):
         embed = discord.Embed(
             title="Dashboard",

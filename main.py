@@ -14,11 +14,12 @@ import os
 
 import colorama
 import discord
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from colorama import Fore
 from discord.ext import commands, ipc
 from dotenv import load_dotenv
 
-from utils import database
+from utils import utility, db
 
 # Auto reset settings in colorama
 colorama.init(autoreset=True)
@@ -33,6 +34,33 @@ class Main(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.ipc = ipc.Server(self, secret_key=os.getenv('SECRET_KEY'))
+        self.ready = False
+        self.scheduler = AsyncIOScheduler()
+
+        db.autosave(self.scheduler)
+
+    def update_db(self):
+        db.multiexec("INSERT OR IGNORE INTO guild (guildID) VALUES (?)",
+                     ((guild.id,) for guild in self.guilds))
+
+        users = []
+        for guild in self.guilds:
+            for member in guild.members:
+                if member.id not in users:
+                    users.append(member.id)
+
+        db.multiexec("INSERT OR IGNORE INTO user (userID) VALUES (?)",
+                     ((user,) for user in users))
+
+        db.commit()
+
+    async def on_ready(self):
+        if not self.ready:
+            self.scheduler.start()
+            self.ready = True
+            self.update_db()
+        else:
+            print("Reconnected to Discord")
 
 
 # Create the activity for idle
@@ -40,7 +68,7 @@ activity = discord.Activity(type=discord.ActivityType.watching,
                             name=f'24/7', status=discord.Status.idle)
 
 # Create the bot
-bot = Main(command_prefix=database.get_prefix,
+bot = Main(command_prefix=utility.get_prefix,
            case_insensitive=True,
            description="EnSave offers you moderation, fun and utility commands. "
                        "We have frequent updates and fix bugs almost instantly. "

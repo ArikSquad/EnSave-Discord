@@ -4,7 +4,6 @@
 # This file is not protected by any license
 #
 # -----------------------------------------------------------
-
 from __future__ import division
 
 import discord
