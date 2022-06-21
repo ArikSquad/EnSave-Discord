@@ -27,7 +27,7 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
 
     # Command to get information about a Minecraft server
     @app_commands.command(name="mcserver", description="Get the status of a Java Minecraft server.")
-    async def mcserver(self, ctx: commands.Context, server: str):
+    async def mcserver(self, interaction: discord.Interaction, server: str):
         try:
             status = mcstatus.JavaServer.lookup(server).status()
             player = discord.Embed(title=f"Minecraft Server Status: {profanity.censor(server)}",
@@ -37,16 +37,16 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
             player.add_field(name="Version", value=status.version.name, inline=False)
             player.add_field(name="Protocol", value=status.version.protocol, inline=False)
             player.add_field(name="Description", value=status.description, inline=False)
-            await ctx.send(embed=player)
+            await interaction.response.send_message(embed=player)
         except IOError:
             offline = discord.Embed(title=f"Minecraft Server Status: {profanity.censor(server)}",
                                     description=f"Server is offline.",
                                     color=0xFF0000)
-            await ctx.send(embed=offline)
+            await interaction.response.send_message(embed=offline)
 
     # Command to get data about Hypixel Bedwars players
     @app_commands.command(name="bedwars", description="Get the status of Hypixel Bedwars player.")
-    async def hypixel_bedwars(self, ctx: commands.Context, username: str):
+    async def hypixel_bedwars(self, interaction: discord.Interaction, username: str):
         url = f"https://api.hypixel.net/player?key={apikey}&name=" + username
 
         async with request("GET", url, headers={}) as response:
@@ -60,7 +60,8 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
                 beds_broken = (data['player']['stats']["Bedwars"]["beds_broken_bedwars"])
                 beds_lost = (data['player']['stats']["Bedwars"]["beds_lost_bedwars"])
             else:
-                return await ctx.send("This command could not be executed. Most likely due ratelimit.")
+                return await interaction.response.send_message("This command could not be executed. "
+                                                               "Most likely due ratelimit.", ephemeral=True)
 
         embed = discord.Embed(title=f"{username} Bedwars Stats", color=discord.Color.orange())
         embed.add_field(name="Games Played", value=f"{games_played} games", inline=False)
@@ -70,17 +71,17 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
         embed.add_field(name="Beds Broken", value=f"{beds_broken} beds broken", inline=False)
         embed.add_field(name="Beds Lost", value=f"{beds_lost} beds lost", inline=False)
         embed.set_thumbnail(url="https://minotar.net/helm/" + username)
-        await ctx.send(embed=embed)
+        await interaction.response.send_message(embed=embed)
 
     # Command to get a Minecraft user's skin
     @app_commands.command(name="skin", description="Get a Minecraft user skin.")
-    async def get_skin(self, ctx: commands.Context, username: str):
+    async def get_skin(self, interaction: discord.Interaction, username: str):
         embed = discord.Embed(title=f"{username}'s skin",
                               description=f"Loading the skin of {username}...",
                               color=discord.Color.orange())
         embed.set_thumbnail(url="https://minotar.net/helm/" + username)
         embed.set_image(url="https://minotar.net/armor/body/" + username)
-        await ctx.send(embed=embed)
+        await interaction.response.send_message(embed=embed)
 
 
 async def setup(bot):

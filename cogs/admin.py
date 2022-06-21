@@ -16,7 +16,30 @@ import psutil as psutil
 from better_profanity import profanity
 from discord.ext import commands
 
-from utils import utility, buttons, db
+from utils import utility, db
+
+
+# noinspection PyUnusedLocal
+class SureView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=60)
+        self.response = None
+
+    async def on_timeout(self) -> None:
+        for child in self.children:
+            child.disabled = True
+        await self.response.edit(view=self)
+
+    @discord.ui.button(label="Yes", style=discord.ButtonStyle.danger)
+    async def _yes(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+        self.value = True
+        self.stop()
+
+    @discord.ui.button(label="No", style=discord.ButtonStyle.green)
+    async def _no(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+        await interaction.response.send_message(f"Okay!", ephemeral=True)
+        self.value = False
+        self.stop()
 
 
 # Convert input to time. example: 1h = 3600
@@ -89,7 +112,7 @@ class Admin(commands.Cog, description="Gather information"):
                    brief="Close connection to discord")
     async def shutdown(self, ctx: commands.Context):
         if ctx.author.id in utility.get_owner():
-            view = buttons.YesNo()
+            view = SureView()
             sure = discord.Embed(title="Are you sure?", description="This will logout "
                                                                     "from discord and exit the python program.",
                                  color=ctx.author.color)

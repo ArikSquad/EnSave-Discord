@@ -76,7 +76,7 @@ class Misc(commands.Cog, description="Random commands"):
                 try:
                     utility.set_premium(ctx.author.id, True)
                 except KeyError:
-                    await ctx.send("Hey, please contact ArikSquad#6222 to get your price, "
+                    await ctx.send("Hey, please contact ArikSquad#6222 to get your premium, "
                                    "something went wrong when giving automatically.")
                 embed = discord.Embed(
                     title="Success!",

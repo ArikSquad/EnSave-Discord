@@ -21,7 +21,7 @@ load_dotenv()
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 app.config['DISCORD_CLIENT_ID'] = os.getenv('CLIENT_ID')
 app.config['DISCORD_CLIENT_SECRET'] = os.getenv('CLIENT_SECRET')
-app.config['DISCORD_REDIRECT_URI'] = "https://ensave.mikart.eu/callback"
+app.config['DISCORD_REDIRECT_URI'] = "http://ensave.mikart.eu/callback"
 
 ipc_client = ipc.Client(secret_key=os.getenv('SECRET_KEY'))
 discord = DiscordOAuth2Session(app)
@@ -99,7 +99,7 @@ async def dashboard_server_information(guild_id):
         if guild is None:
             return redirect(
                 f'https://discord.com/oauth2/authorize?&client_id={app.config["DISCORD_CLIENT_ID"]}'
-                f'&scope=bot&permissions=8&guild_id={guild_id}'
+                f'&scope=bot&permissions=8%20applications.command&guild_id={guild_id}'
                 f'&response_type=code&redirect_uri={app.config["DISCORD_REDIRECT_URI"]}')
 
         return await render_template("information.html", guild_name=guild["name"], current_prefix=guild["prefix"],
@@ -139,7 +139,7 @@ async def dashboard_server_customization(guild_id):
         if guild is None:
             return redirect(
                 f'https://discord.com/oauth2/authorize?&client_id={app.config["DISCORD_CLIENT_ID"]}'
-                f'&scope=bot&permissions=8&guild_id={guild_id}'
+                f'&permissions=8&scope=bot%20applications.commands&guild_id={guild_id}'
                 f'&response_type=code&redirect_uri={app.config["DISCORD_REDIRECT_URI"]}')
 
         return await render_template("customization.html", server_name=guild["name"],

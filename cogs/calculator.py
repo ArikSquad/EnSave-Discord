@@ -17,6 +17,12 @@ class InteractiveView(discord.ui.View):
         super().__init__()
         self.expr = ""
         self.calc = simpcalc.Calculate()
+        self.response = None
+
+    async def on_timeout(self) -> None:
+        for child in self.children:
+            child.disabled = True
+        await self.response.edit(view=self)
 
     @discord.ui.button(style=discord.ButtonStyle.blurple, label="1", row=0)
     async def one(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -108,8 +114,7 @@ class InteractiveView(discord.ui.View):
             self.expr = await self.calc.calculate(self.expr)
         except simpcalc.BadArgument:
             await interaction.response.defer()
-            return await interaction.message.edit(content=f"```\nBroo, why meee? I can't do that hard calculations? "
-                                                          f"WHAT DO YOU THINK I AM? A MACHINE?\n```")
+            return await interaction.message.edit(content=f"```\nNot possible...\n```")
         await interaction.message.edit(content=f"```\n{self.expr}\n```")
         await interaction.response.defer()
 

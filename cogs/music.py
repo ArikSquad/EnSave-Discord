@@ -15,11 +15,49 @@ from better_profanity import profanity
 from discord.ext import commands
 from dotenv import load_dotenv
 
-from utils import buttons, db
+from utils import db
 
 load_dotenv()
 host_server = str(os.getenv('MUSIC'))
 host_pass = str(os.getenv('MUSIC_PASSWORD'))
+
+
+# noinspection PyUnusedLocal
+class QueueView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=60)
+        self.response = None
+        self._back.disabled = True
+        self._pause.disabled = True
+        self._stop.disabled = True
+        self._resume.disabled = True
+        self._skip.disabled = True
+
+    # After timeout, disable all buttons.
+    async def on_timeout(self) -> None:
+        for child in self.children:
+            child.disabled = True
+        await self.response.edit(view=self)
+
+    @discord.ui.button(label='⬅', style=discord.ButtonStyle.gray)
+    async def _back(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+        await interaction.response.defer()
+
+    @discord.ui.button(label="⏸", style=discord.ButtonStyle.green)
+    async def _pause(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+        await interaction.response.defer()
+
+    @discord.ui.button(label='⏹', style=discord.ButtonStyle.red)
+    async def _stop(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+        await interaction.response.defer()
+
+    @discord.ui.button(label='▶', style=discord.ButtonStyle.green)
+    async def _resume(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+        await interaction.response.defer()
+
+    @discord.ui.button(label='➡', style=discord.ButtonStyle.blurple)
+    async def _skip(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+        await interaction.response.defer()
 
 
 # noinspection PyTypeChecker
@@ -73,6 +111,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
             return await ctx.send(embed=not_connected)
 
         voice: wavelink.Player = ctx.voice_client or await ctx.author.voice.channel.connect(cls=wavelink.Player)
+        view = QueueView()
 
         if voice.queue.is_empty and not voice.is_playing():
             now_playing = discord.Embed(title="Queue",
@@ -81,10 +120,9 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                                         color=ctx.author.color,
                                         timestamp=datetime.datetime.utcnow())
             now_playing.add_field(name="Author", value=f"{search.author}")
-            now_playing.set_thumbnail(url=search.thumbnail)
-
             await voice.play(search)
-            return await ctx.reply(embed=now_playing)
+            view.message = await ctx.reply(embed=now_playing, view=view)
+            return
 
         added_queue = discord.Embed(title="Queue",
                                     description=f"Added [{profanity.censor(search.title)}]"
@@ -92,10 +130,9 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                                     color=ctx.author.color,
                                     timestamp=datetime.datetime.utcnow())
         added_queue.add_field(name="Author", value=f"{search.author}")
-        added_queue.set_thumbnail(url=search.thumbnail)
 
         await voice.queue.put_wait(search)
-        await ctx.reply(embed=added_queue)
+        view.message = await ctx.reply(embed=added_queue, view=view)
         if profanity.contains_profanity(search.title):
             await ctx.message.delete()
 
@@ -110,6 +147,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
             return await ctx.send(embed=not_connected)
 
         voice: wavelink.Player = ctx.voice_client or await ctx.author.voice.channel.connect(cls=wavelink.Player)
+        view = QueueView()
 
         if voice.queue.is_empty and not voice.is_playing():
             now_playing = discord.Embed(title="Queue",
@@ -119,7 +157,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                                         timestamp=datetime.datetime.utcnow())
             now_playing.add_field(name="Author", value=f"{search.author}")
             await voice.play(search)
-            return await ctx.reply(embed=now_playing)
+            return await ctx.reply(embed=now_playing, view=view)
 
         added_queue = discord.Embed(title="Queue",
                                     description=f"Added [{profanity.censor(search.title)}]"
@@ -129,7 +167,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
         added_queue.add_field(name="Author", value=f"{search.author}")
 
         await voice.queue.put_wait(search)
-        await ctx.reply(embed=added_queue)
+        await ctx.reply(embed=added_queue, view=view)
         if profanity.contains_profanity(search.title):
             await ctx.message.delete()
 
@@ -186,7 +224,6 @@ class Music(commands.Cog, description="Play songs in voice channels"):
     # Command for pausing your songs
     @commands.command(name="pause", help="Pause voice channel")
     async def pause_command(self, ctx: commands.Context) -> None:
-        view = buttons.Resume()
         voice: wavelink.Player = ctx.voice_client
         if ctx.author.voice:
             if voice and voice.is_connected():
@@ -202,13 +239,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                                        color=ctx.author.color,
                                        timestamp=datetime.datetime.utcnow())
                 await voice.pause()
-                await ctx.send(embed=paused, view=view)
-                await view.wait()
-                if view.value is None:
-                    return
-                elif view.value:
-                    await voice.resume()
-
+                await ctx.send(embed=paused)
             else:
                 not_connected = discord.Embed(title="Music",
                                               description=f"I am not in a voice channel.",
