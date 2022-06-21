@@ -23,7 +23,7 @@ class Moderation(commands.Cog, description="Moderating"):
 
     # Command to lock a channel, so nobody else than moderators can send messages
     @app_commands.command(name="lock", description="Locks the channel, so people can't send messages.")
-    @commands.has_permissions(manage_channels=True, manage_messages=True)
+    @app_commands.checks.has_permissions(manage_channels=True, manage_messages=True)
     async def lock(self, interaction: discord.Interaction, channel: discord.TextChannel = None,
                    reason: str = None, notify: bool = True):
         channel = interaction.channel or channel
@@ -41,7 +41,7 @@ class Moderation(commands.Cog, description="Moderating"):
 
     # Command to unlock a channel, so everybody can send messages again
     @app_commands.command(name='unlock', description="Unlocks the channel.")
-    @commands.has_permissions(manage_channels=True, manage_messages=True)
+    @app_commands.checks.has_permissions(manage_channels=True, manage_messages=True)
     async def unlock(self, interaction: discord.Interaction, channel: discord.TextChannel = None):
         channel = interaction.channel or channel
         await channel.set_permissions(interaction.guild.default_role, send_messages=True, add_reactions=True)
@@ -55,7 +55,7 @@ class Moderation(commands.Cog, description="Moderating"):
 
     # Command to delete messages in the channel
     @app_commands.command(name='clear', description="Clear an amount of messages from the channel.")
-    @commands.has_permissions(manage_messages=True)
+    @app_commands.checks.has_permissions(manage_messages=True)
     async def clear(self, interaction: discord.Interaction, amount: int):
         await interaction.message.delete()
         await interaction.channel.purge(limit=amount)
@@ -69,7 +69,7 @@ class Moderation(commands.Cog, description="Moderating"):
 
     # Command to change the bot prefix for a guild
     @app_commands.command(name="change-prefix", description="Change the prefix of the guild.")
-    @commands.has_permissions(administrator=True)
+    @app_commands.checks.has_permissions(administrator=True)
     async def change_prefix(self, interaction: discord.Interaction, prefix: str):
         embed = discord.Embed(title="Moderation",
                               description=f"Changed the prefix to: " + prefix,
