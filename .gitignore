@@ -2,4 +2,5 @@
 .git
 venv
 .github
+data/db/database.db
 .env

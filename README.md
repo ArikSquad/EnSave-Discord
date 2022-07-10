@@ -74,7 +74,6 @@ HYPIXELAPI="(your hypixel api key)"
 CLIENT_ID="(you only need this for dashboard)"
 CLIENT_SECRET="(you only need this for dashboard)"
 SECRET_KEY="(you only need this for dashboard)"
-LOGIN_URL="(you only need this for dashboard)"
 ```
 7. Good! Now you can run the bot by opening a new terminal and running this command:
 ```commandline
@@ -85,12 +84,11 @@ python3 main.py
 
 ## Setupping a database for the bot
 1. You should download a database browser, like [this](https://sqlitebrowser.org/).
-2. Create a database.db so it will be like data/db/database.db
+2. Create a database.db in the directory /data/db/
 3. Use these sql commands to create tables:
 ```sql
 CREATE TABLE "code" (
-	"secret"	TEXT UNIQUE,
-	"messageID"	INTEGER
+	"secret"	TEXT UNIQUE
 );
 CREATE TABLE "guild" (
 	"guildID"	INTEGER UNIQUE,
