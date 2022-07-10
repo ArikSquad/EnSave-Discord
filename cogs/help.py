@@ -31,7 +31,8 @@ class Help(commands.Cog, description="Helping new users"):
         for cog in self.bot.cogs:
             cog: commands.Cog = self.bot.get_cog(cog)
             categories.append(
-                f"{getattr(cog, 'EMOJI', None)} - ({cog.qualified_name})[https://ensave.mikart.eu/commands]")
+                f"{getattr(cog, 'EMOJI', None)} - [{cog.qualified_name}](https://ensave.mikart.eu/commands)"
+            )
         embed.add_field(name="Categories", value="\n".join(categories))
         embed.add_field(name="Commands", value=f"For more information about commands you can use "
                                                f"`{utility.get_prefix_id(interaction.guild.id)}help`")
