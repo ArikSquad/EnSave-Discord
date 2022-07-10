@@ -38,6 +38,7 @@ class Events(commands.Cog, description="Events"):
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
         self.bot.update_db()
+        db.set_guild_spy_channel(guild.id, self.bot.get_guild(guild.id).system_channel.id)
 
     # When a member joins, it adds it to the database
     @commands.Cog.listener()

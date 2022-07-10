@@ -4,110 +4,134 @@
 # (C) 2022 MikArt
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
-# This file is for the help command, and it doesn't need comments
 # -----------------------------------------------------------
-from itertools import chain, starmap
+
+from typing import List, Optional, Set
 
 import discord
-from discord import ui
-from discord.ext import commands, menus
+from discord.ext import commands
 
 
-# noinspection PyUnusedLocal
-class MenuPages(ui.View, menus.MenuPages):
-    def __init__(self, source, *, delete_message_after=True):
-        super().__init__(timeout=60)
-        self._source = source
-        self.current_page = 0
-        self.ctx = None
-        self.message = None
-        self.delete_message_after = delete_message_after
+class HelpDropdown(discord.ui.Select):
+    def __init__(self, help_command: "HelpCommand", options: List[discord.SelectOption]):
+        super().__init__(placeholder="Choose a category...", min_values=1, max_values=1, options=options)
+        self._help_command = help_command
 
-    async def start(self, ctx, *, channel=None, wait=False) -> None:
-        await self._source._prepare_once()
-        self.ctx = ctx
-        self.message = await self.send_initial_message(ctx, ctx.channel)
-
-    async def _get_kwargs_from_page(self, page) -> dict:
-        value = await super()._get_kwargs_from_page(page)
-        if 'view' not in value:
-            value.update({'view': self})
-        return value
-
-    async def interaction_check(self, interaction) -> None:
-        return interaction.user == self.ctx.author
-
-    @ui.button(emoji='⏪', style=discord.ButtonStyle.blurple)
-    async def first_page(self, interaction: discord.Interaction, button) -> None:
-        await self.show_page(0)
-        await interaction.response.defer()
-
-    @ui.button(emoji='⬅', style=discord.ButtonStyle.blurple)
-    async def before_page(self, interaction: discord.Interaction, button) -> None:
-        await self.show_checked_page(self.current_page - 1)
-        await interaction.response.defer()
-
-    @ui.button(emoji='⏹', style=discord.ButtonStyle.blurple)
-    async def stop_page(self, interaction: discord.Interaction, button) -> None:
-        self.stop()
-        if self.delete_message_after:
-            await self.message.delete(delay=0)
-
-    @ui.button(emoji='➡', style=discord.ButtonStyle.blurple)
-    async def next_page(self, interaction: discord.Interaction, button) -> None:
-        await self.show_checked_page(self.current_page + 1)
-        await interaction.response.defer()
-
-    @ui.button(emoji='⏩', style=discord.ButtonStyle.blurple)
-    async def last_page(self, interaction: discord.Interaction, button) -> None:
-        await self.show_page(self._source.get_max_pages() - 1)
-        await interaction.response.defer()
-
-
-class PageSource(menus.ListPageSource):
-    def __init__(self, data, helpcommand):
-        super().__init__(data, per_page=6)
-        self.helpcommand = helpcommand
-
-    def format_command_help(self, no, command) -> str:
-        signature = self.helpcommand.get_command_signature(command)
-        docs = self.helpcommand.get_command_brief(command)
-        return f"`{no}` {signature}\n{docs}\n"
-
-    async def format_page(self, menu, entries) -> discord.Embed:
-        page = menu.current_page
-        max_page = self.get_max_pages()
-        starting_number = page * self.per_page + 1
-        iterator = starmap(self.format_command_help, enumerate(entries, start=starting_number))
-        page_content = "\n".join(iterator)
-        embed = discord.Embed(
-            title=f"EnSave Commands {page + 1}/{max_page}",
-            description=f'{page_content}',
-            color=0xffcccb
+    async def callback(self, interaction: discord.Interaction):
+        embed = (
+            await self._help_command.cog_help_embed(self._help_command.context.bot.get_cog(self.values[0]))
+            if self.values[0] != self.options[0].value
+            else await self._help_command.bot_help_embed(self._help_command.get_bot_mapping())
         )
-        author = menu.ctx.author
-        embed.set_footer(text=f"Requested by {author}", icon_url=author.avatar.url)
-        return embed
+        await interaction.response.edit_message(embed=embed)
+
+
+class HelpView(discord.ui.View):
+    def __init__(self, help_command: "HelpCommand", options: List[discord.SelectOption], *,
+                 timeout: Optional[float] = 120.0):
+        super().__init__(timeout=timeout)
+        self.add_item(HelpDropdown(help_command, options))
+        self._help_command = help_command
+        self.response = None
+
+    async def on_timeout(self) -> None:
+        for child in self.children:
+            child.disabled = True
+        await self.response.edit(view=self)
+
+    async def interaction_check(self, interaction: discord.Interaction) -> bool:
+        return self._help_command.context.author == interaction.user
 
 
 class HelpCommand(commands.MinimalHelpCommand):
+
     # noinspection PyMethodMayBeStatic
     def get_command_brief(self, command: commands.Command) -> str:
         return command.short_doc or "This command has no description."
 
-    async def send_bot_help(self, mapping):
-        commands_list = list(chain.from_iterable(mapping.values()))
-        all_commands = await self.filter_commands(commands_list)
-        formatter = PageSource(all_commands, self)
-        menu = MenuPages(formatter, delete_message_after=True)
-        await menu.start(self.context)
+    def get_command_signature(self, command):
+        return f"{self.context.clean_prefix}{command.qualified_name} {command.signature}"
+
+    async def _cog_select_options(self) -> List[discord.SelectOption]:
+        options: List[discord.SelectOption] = [discord.SelectOption(
+            label="Home",
+            emoji="🏠",
+            description="Go back to the main menu.",
+        )]
+
+        for cog, command_set in self.get_bot_mapping().items():
+            filtered = await self.filter_commands(command_set, sort=True)
+            if not filtered:
+                continue
+            emoji = getattr(cog, "EMOJI", None)
+            options.append(discord.SelectOption(
+                label=cog.qualified_name if cog else "No Category",
+                emoji=emoji,
+                description=cog.description[:100] if cog and cog.description else None
+            ))
+
+        return options
+
+    async def _help_embed(
+            self, title: str, description: Optional[str] = None, mapping: Optional[dict] = None,
+            command_set: Optional[Set[commands.Command]] = None, set_author: bool = False
+    ) -> discord.Embed:
+        embed = discord.Embed(title=title, color=discord.Color.from_rgb(48, 50, 54))
+        if description:
+            embed.description = description
+        if set_author:
+            avatar = self.context.bot.user.avatar or self.context.bot.user.default_avatar
+            embed.set_author(name=self.context.bot.user.name, icon_url=avatar.url)
+        if command_set:
+            # show help about all commands in the set
+            filtered = await self.filter_commands(command_set, sort=True)
+            for command in filtered:
+                embed.add_field(
+                    name=self.get_command_signature(command),
+                    value=command.short_doc or "...",
+                    inline=False
+                )
+        elif mapping:
+            # add a short description of commands in each cog
+            for cog, command_set in mapping.items():
+                filtered = await self.filter_commands(command_set, sort=True)
+                if not filtered:
+                    continue
+                name = cog.qualified_name if cog else "No category"
+                emoji = getattr(cog, "EMOJI", None)
+                cog_label = f"{emoji} {name}" if emoji else name
+                # \u2002 is an en-space
+                cmd_list = "\u2002".join(
+                    f"`{self.context.clean_prefix}{cmd.name}`" for cmd in filtered
+                )
+                value = (
+                    f"{cog.description}\n{cmd_list}"
+                    if cog and cog.description
+                    else cmd_list
+                )
+                embed.add_field(name=cog_label, value=value)
+        return embed
+
+    async def bot_help_embed(self, mapping: dict) -> discord.Embed:
+        return await self._help_embed(
+            title="Bot Commands",
+            description=self.context.bot.description,
+            mapping=mapping,
+            set_author=True,
+        )
+
+    async def send_bot_help(self, mapping: dict):
+        embed = await self.bot_help_embed(mapping)
+        options = await self._cog_select_options()
+        view = HelpView(self, options)
+        view.response = await self.get_destination().send(embed=embed, view=view)
 
     async def send_command_help(self, command: commands.Command) -> None:
         emoji = getattr(command.cog, "EMOJI", None)
         emoji_string = emoji if emoji is not None else ""
         embed = discord.Embed(
             title=f'{emoji_string} {self.get_command_signature(command)}',
-            color=discord.Color.blue()
+            color=discord.Color.from_rgb(48, 50, 54)
         )
         embed.add_field(name="Description", value=command.help)
         alias = command.aliases
@@ -125,7 +149,7 @@ class HelpCommand(commands.MinimalHelpCommand):
         emoji_string = emoji if emoji is not None else ""
         embed = discord.Embed(
             title=f'{emoji_string} {self.get_command_signature(group)}',
-            color=discord.Color.blue()
+            color=discord.Color.from_rgb(48, 50, 54)
         )
         embed.add_field(name="Description", value=group.help)
         # Tell all the subcommand names
@@ -143,19 +167,26 @@ class HelpCommand(commands.MinimalHelpCommand):
         channel = self.get_destination()
         await channel.send(embed=embed)
 
-    async def send_cog_help(self, cog: commands.Cog) -> None:
+    async def cog_help_embed(self, cog: Optional[commands.Cog]) -> discord.Embed:
+        if cog is None:
+            return await self._help_embed(
+                title=f"No category",
+                command_set=self.get_bot_mapping()[None]
+            )
         emoji = getattr(cog, "EMOJI", None)
-        emoji_string = emoji if emoji is not None else ""
-        embed = discord.Embed(title=f'{emoji_string} {cog.qualified_name}',
-                              color=discord.Color.blue())
-        embed.add_field(name="Description", value=cog.description)
+        return await self._help_embed(
+            title=f"{emoji} {cog.qualified_name}" if emoji else cog.qualified_name,
+            description=cog.description,
+            command_set=cog.get_commands()
+        )
 
-        channel = self.get_destination()
-        await channel.send(embed=embed)
+    async def send_cog_help(self, cog: commands.Cog):
+        embed = await self.cog_help_embed(cog)
+        await self.get_destination().send(embed=embed)
 
     async def send_error_message(self, error) -> None:
         embed = discord.Embed(title="Error", description=f'{error}\nRemember that cogs are case sensitive.',
-                              color=discord.Color.red())
+                              color=discord.Color.from_rgb(48, 50, 54))
 
         channel = self.get_destination()
         await channel.send(embed=embed)

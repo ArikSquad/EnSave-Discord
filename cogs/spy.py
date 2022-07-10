@@ -66,19 +66,22 @@ class Spy(commands.Cog, description="Spying"):
                           description="Toggle spying on the server.")
     @app_commands.checks.has_permissions(manage_guild=True)
     async def spy(self, interaction: discord.Interaction,
-                  notify_channel: discord.TextChannel, toggle: bool = None) -> None:
+                  notify_channel: discord.TextChannel = None, toggle: bool = None) -> None:
         if toggle:
             value = 1 if toggle is True else 0
             db.set_guild_spy(interaction.guild.id, value)
         else:
             db.set_guild_spy(interaction.guild.id, not db.get_guild_spy(interaction.guild.id))
 
-        db.set_guild_spy_channel(interaction.guild.id, notify_channel.id)
+        channel = ""
+        if notify_channel:
+            db.set_guild_spy_channel(interaction.guild.id, notify_channel.id)
+            channel = f"on the channel {notify_channel.name}."
 
         toggled = "enabled" if toggle else "disabled"
         embed = discord.Embed(
             title="Spy",
-            description=f"Spying is now {toggled} on the channel {notify_channel.name}.",
+            description=f"Spying is now {toggled} {channel}",
             color=discord.Color.green(),
         )
 

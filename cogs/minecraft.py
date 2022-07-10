@@ -41,7 +41,7 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
         except IOError:
             offline = discord.Embed(title=f"Minecraft Server Status: {profanity.censor(server)}",
                                     description=f"Server is offline.",
-                                    color=0xFF0000)
+                                    color=discord.Color.from_rgb(48, 50, 54))
             await interaction.response.send_message(embed=offline)
 
     # Command to get data about Hypixel Bedwars players
@@ -63,7 +63,7 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
                 return await interaction.response.send_message("This command could not be executed. "
                                                                "Most likely due ratelimit.", ephemeral=True)
 
-        embed = discord.Embed(title=f"{username} Bedwars Stats", color=discord.Color.orange())
+        embed = discord.Embed(title=f"{username} Bedwars Stats", color=discord.Color.from_rgb(48, 50, 54))
         embed.add_field(name="Games Played", value=f"{games_played} games", inline=False)
         embed.add_field(name="Losses", value=f"{losses} losses", inline=False)
         embed.add_field(name="Wins", value=f"{wins} wins", inline=False)
@@ -78,7 +78,7 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
     async def get_skin(self, interaction: discord.Interaction, username: str):
         embed = discord.Embed(title=f"{username}'s skin",
                               description=f"Loading the skin of {username}...",
-                              color=discord.Color.orange())
+                              color=discord.Color.from_rgb(48, 50, 54))
         embed.set_thumbnail(url="https://minotar.net/helm/" + username)
         embed.set_image(url="https://minotar.net/armor/body/" + username)
         await interaction.response.send_message(embed=embed)

@@ -22,44 +22,6 @@ host_server = str(os.getenv('MUSIC'))
 host_pass = str(os.getenv('MUSIC_PASSWORD'))
 
 
-# noinspection PyUnusedLocal
-class QueueView(discord.ui.View):
-    def __init__(self):
-        super().__init__(timeout=60)
-        self.response = None
-        self._back.disabled = True
-        self._pause.disabled = True
-        self._stop.disabled = True
-        self._resume.disabled = True
-        self._skip.disabled = True
-
-    # After timeout, disable all buttons.
-    async def on_timeout(self) -> None:
-        for child in self.children:
-            child.disabled = True
-        await self.response.edit(view=self)
-
-    @discord.ui.button(label='⬅', style=discord.ButtonStyle.gray)
-    async def _back(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
-        await interaction.response.defer()
-
-    @discord.ui.button(label="⏸", style=discord.ButtonStyle.green)
-    async def _pause(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
-        await interaction.response.defer()
-
-    @discord.ui.button(label='⏹', style=discord.ButtonStyle.red)
-    async def _stop(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
-        await interaction.response.defer()
-
-    @discord.ui.button(label='▶', style=discord.ButtonStyle.green)
-    async def _resume(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
-        await interaction.response.defer()
-
-    @discord.ui.button(label='➡', style=discord.ButtonStyle.blurple)
-    async def _skip(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
-        await interaction.response.defer()
-
-
 # noinspection PyTypeChecker
 class Music(commands.Cog, description="Play songs in voice channels"):
     EMOJI = "🎵"
@@ -106,68 +68,32 @@ class Music(commands.Cog, description="Play songs in voice channels"):
         if not ctx.author.voice:
             not_connected = discord.Embed(title="Music",
                                           description=f"You are not connected to a voice channel.",
-                                          color=ctx.author.color,
+                                          color=discord.Color.from_rgb(48, 50, 54),
                                           timestamp=datetime.datetime.utcnow())
             return await ctx.send(embed=not_connected)
 
         voice: wavelink.Player = ctx.voice_client or await ctx.author.voice.channel.connect(cls=wavelink.Player)
-        view = QueueView()
 
         if voice.queue.is_empty and not voice.is_playing():
             now_playing = discord.Embed(title="Queue",
                                         description=f'**Now playing**: [{profanity.censor(search.title)}]'
                                                     f'({search.uri})',
-                                        color=ctx.author.color,
+                                        color=discord.Color.from_rgb(48, 50, 54),
                                         timestamp=datetime.datetime.utcnow())
             now_playing.add_field(name="Author", value=f"{search.author}")
             await voice.play(search)
-            view.message = await ctx.reply(embed=now_playing, view=view)
+            await ctx.reply(embed=now_playing)
             return
 
         added_queue = discord.Embed(title="Queue",
                                     description=f"Added [{profanity.censor(search.title)}]"
                                                 f"({search.uri}) to the queue.",
-                                    color=ctx.author.color,
+                                    color=discord.Color.from_rgb(48, 50, 54),
                                     timestamp=datetime.datetime.utcnow())
         added_queue.add_field(name="Author", value=f"{search.author}")
 
         await voice.queue.put_wait(search)
-        view.message = await ctx.reply(embed=added_queue, view=view)
-        if profanity.contains_profanity(search.title):
-            await ctx.message.delete()
-
-    # Command to play songs in a voice channel using Soundcloud
-    @commands.command(name="soundcloud", aliases=['sc'], help="Play a song using soundcloud.")
-    async def soundcloud_command(self, ctx: commands.Context, *, search: wavelink.SoundCloudTrack) -> None:
-        if not ctx.author.voice:
-            not_connected = discord.Embed(title="Music",
-                                          description=f"You are not connected to a voice channel.",
-                                          color=ctx.author.color,
-                                          timestamp=datetime.datetime.utcnow())
-            return await ctx.send(embed=not_connected)
-
-        voice: wavelink.Player = ctx.voice_client or await ctx.author.voice.channel.connect(cls=wavelink.Player)
-        view = QueueView()
-
-        if voice.queue.is_empty and not voice.is_playing():
-            now_playing = discord.Embed(title="Queue",
-                                        description=f'**Now playing**: [{profanity.censor(search.title)}]'
-                                                    f'({search.uri})',
-                                        color=ctx.author.color,
-                                        timestamp=datetime.datetime.utcnow())
-            now_playing.add_field(name="Author", value=f"{search.author}")
-            await voice.play(search)
-            return await ctx.reply(embed=now_playing, view=view)
-
-        added_queue = discord.Embed(title="Queue",
-                                    description=f"Added [{profanity.censor(search.title)}]"
-                                                f"({search.uri}) to the queue.",
-                                    color=ctx.author.color,
-                                    timestamp=datetime.datetime.utcnow())
-        added_queue.add_field(name="Author", value=f"{search.author}")
-
-        await voice.queue.put_wait(search)
-        await ctx.reply(embed=added_queue, view=view)
+        await ctx.reply(embed=added_queue)
         if profanity.contains_profanity(search.title):
             await ctx.message.delete()
 
@@ -177,7 +103,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
         if channel:
             connected_success = discord.Embed(title="Music",
                                               description=f"Connected to `{channel.name}`",
-                                              color=ctx.author.color,
+                                              color=discord.Color.from_rgb(48, 50, 54),
                                               timestamp=datetime.datetime.utcnow())
             await channel.connect(cls=wavelink.Player)
             await ctx.send(embed=connected_success)
@@ -185,14 +111,14 @@ class Music(commands.Cog, description="Play songs in voice channels"):
             if ctx.author.voice:
                 connected_success = discord.Embed(title="Music",
                                                   description=f"Connected to `{ctx.author.voice.channel.name}`",
-                                                  color=ctx.author.color,
+                                                  color=discord.Color.from_rgb(48, 50, 54),
                                                   timestamp=datetime.datetime.utcnow())
                 await ctx.author.voice.channel.connect(cls=wavelink.Player)
                 await ctx.send(embed=connected_success)
             else:
                 not_connected = discord.Embed(title="Music",
                                               description=f"You are not connected to a voice channel.",
-                                              color=ctx.author.color,
+                                              color=discord.Color.from_rgb(48, 50, 54),
                                               timestamp=datetime.datetime.utcnow())
                 return await ctx.send(embed=not_connected)
 
@@ -204,20 +130,20 @@ class Music(commands.Cog, description="Play songs in voice channels"):
             if voice and voice.is_connected():
                 disconnected = discord.Embed(title="Music",
                                              description=f"I have disconnected from `{ctx.author.voice.channel.name}`.",
-                                             color=ctx.author.color,
+                                             color=discord.Color.from_rgb(48, 50, 54),
                                              timestamp=datetime.datetime.utcnow())
                 await voice.disconnect()
                 return await ctx.send(embed=disconnected)
             else:
                 not_connected = discord.Embed(title="Music",
                                               description=f"I am not in a voice channel.",
-                                              color=ctx.author.color,
+                                              color=discord.Color.from_rgb(48, 50, 54),
                                               timestamp=datetime.datetime.utcnow())
                 await ctx.send(embed=not_connected)
         else:
             not_connected = discord.Embed(title="Music",
                                           description=f"You are not connected to the voice channel.",
-                                          color=ctx.author.color,
+                                          color=discord.Color.from_rgb(48, 50, 54),
                                           timestamp=datetime.datetime.utcnow())
             return await ctx.send(embed=not_connected)
 
@@ -230,26 +156,26 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                 if voice.is_paused():
                     paused_already = discord.Embed(title="Queue",
                                                    description=f"I am already paused.",
-                                                   color=ctx.author.color,
+                                                   color=discord.Color.from_rgb(48, 50, 54),
                                                    timestamp=datetime.datetime.utcnow())
                     return await ctx.send(embed=paused_already)
 
                 paused = discord.Embed(title="Queue",
                                        description=f"The playback has been paused.",
-                                       color=ctx.author.color,
+                                       color=discord.Color.from_rgb(48, 50, 54),
                                        timestamp=datetime.datetime.utcnow())
                 await voice.pause()
                 await ctx.send(embed=paused)
             else:
                 not_connected = discord.Embed(title="Music",
                                               description=f"I am not in a voice channel.",
-                                              color=ctx.author.color,
+                                              color=discord.Color.from_rgb(48, 50, 54),
                                               timestamp=datetime.datetime.utcnow())
                 await ctx.send(embed=not_connected)
         else:
             not_connected = discord.Embed(title="Music",
                                           description=f"You are not connected to the voice channel.",
-                                          color=ctx.author.color,
+                                          color=discord.Color.from_rgb(48, 50, 54),
                                           timestamp=datetime.datetime.utcnow())
             return await ctx.send(embed=not_connected)
 
@@ -262,26 +188,26 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                 if voice.is_paused():
                     resumed = discord.Embed(title="Queue",
                                             description=f"The playback has been resumed.",
-                                            color=ctx.author.color,
+                                            color=discord.Color.from_rgb(48, 50, 54),
                                             timestamp=datetime.datetime.utcnow())
                     await voice.resume()
                     await ctx.send(embed=resumed)
                 else:
                     resumed = discord.Embed(title="Queue",
                                             description=f"I am not paused.",
-                                            color=ctx.author.color,
+                                            color=discord.Color.from_rgb(48, 50, 54),
                                             timestamp=datetime.datetime.utcnow())
                     await ctx.send(embed=resumed)
             else:
                 not_connected = discord.Embed(title="Music",
                                               description=f"I am not in a voice channel.",
-                                              color=ctx.author.color,
+                                              color=discord.Color.from_rgb(48, 50, 54),
                                               timestamp=datetime.datetime.utcnow())
                 await ctx.send(embed=not_connected)
         else:
             not_connected = discord.Embed(title="Music",
                                           description=f"You are not connected to the voice channel.",
-                                          color=ctx.author.color,
+                                          color=discord.Color.from_rgb(48, 50, 54),
                                           timestamp=datetime.datetime.utcnow())
             return await ctx.send(embed=not_connected)
 
@@ -293,7 +219,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
             if voice.is_playing() | voice.is_paused():
                 stopped = discord.Embed(title="Queue",
                                         description=f"The playback has been stopped and the queue has been cleared.",
-                                        color=ctx.author.color,
+                                        color=discord.Color.from_rgb(48, 50, 54),
                                         timestamp=datetime.datetime.utcnow())
 
                 # This will clear the queue and stop the player
@@ -304,13 +230,13 @@ class Music(commands.Cog, description="Play songs in voice channels"):
             else:
                 not_connected = discord.Embed(title="Queue",
                                               description=f"Music isn't playing.",
-                                              color=ctx.author.color,
+                                              color=discord.Color.from_rgb(48, 50, 54),
                                               timestamp=datetime.datetime.utcnow())
                 await ctx.send(embed=not_connected)
         else:
             not_connected = discord.Embed(title="Music",
                                           description=f"We are not connected to the voice channel.",
-                                          color=ctx.author.color,
+                                          color=discord.Color.from_rgb(48, 50, 54),
                                           timestamp=datetime.datetime.utcnow())
             return await ctx.send(embed=not_connected)
 
@@ -324,13 +250,13 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                 if volume < 0 or volume > 100:
                     volume_must = discord.Embed(title="Music",
                                                 description="Volume must be between 0 and 100",
-                                                color=ctx.author.color,
+                                                color=discord.Color.from_rgb(48, 50, 54),
                                                 timestamp=datetime.datetime.utcnow())
                     return await ctx.send(embed=volume_must)
                 if ctx.author.voice:
                     changed_volume = discord.Embed(title="Music",
                                                    description=f"Changed volume to **{volume}**%",
-                                                   color=ctx.author.color,
+                                                   color=discord.Color.from_rgb(48, 50, 54),
                                                    timestamp=datetime.datetime.utcnow())
                     await voice.set_volume(volume)
                     await ctx.send(embed=changed_volume)
@@ -338,13 +264,13 @@ class Music(commands.Cog, description="Play songs in voice channels"):
             else:
                 not_connected = discord.Embed(title="Queue",
                                               description=f"Music isn't playing.",
-                                              color=ctx.author.color,
+                                              color=discord.Color.from_rgb(48, 50, 54),
                                               timestamp=datetime.datetime.utcnow())
                 await ctx.send(embed=not_connected)
         else:
             not_connected = discord.Embed(title="Music",
                                           description=f"You are not connected to the voice channel.",
-                                          color=ctx.author.color,
+                                          color=discord.Color.from_rgb(48, 50, 54),
                                           timestamp=datetime.datetime.utcnow())
             return await ctx.send(embed=not_connected)
 
@@ -357,31 +283,31 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                 if not voice.is_playing():
                     not_connected = discord.Embed(title="Queue",
                                                   description="Music isn't playing.",
-                                                  color=ctx.author.color,
+                                                  color=discord.Color.from_rgb(48, 50, 54),
                                                   timestamp=datetime.datetime.utcnow())
                     return await ctx.send(embed=not_connected)
                 if not voice.queue():
                     no_tracks = discord.Embed(title="Queue",
                                               description=f"No tracks are queued for **{ctx.guild.name}**",
-                                              color=ctx.author.color,
+                                              color=discord.Color.from_rgb(48, 50, 54),
                                               timestamp=datetime.datetime.utcnow())
                     return await ctx.send(embed=no_tracks)
                 voice.queue.shuffle()
                 shuffle = discord.Embed(title="Queue",
                                         description=f"Shuffled the queue for **{ctx.guild.name}**",
-                                        color=ctx.author.color,
+                                        color=discord.Color.from_rgb(48, 50, 54),
                                         timestamp=datetime.datetime.utcnow())
                 await ctx.send(embed=shuffle)
             else:
                 premium = discord.Embed(title="EnSave Premium",
                                         description="You need to be a premium member of this to use this command.",
-                                        color=ctx.author.color,
+                                        color=discord.Color.from_rgb(48, 50, 54),
                                         timestamp=datetime.datetime.utcnow())
                 return await ctx.send(embed=premium)
         else:
             not_connected = discord.Embed(title="Music",
                                           description=f"You are not connected to the voice channel.",
-                                          color=ctx.author.color,
+                                          color=discord.Color.from_rgb(48, 50, 54),
                                           timestamp=datetime.datetime.utcnow())
             return await ctx.send(embed=not_connected)
 
@@ -401,7 +327,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
         else:
             no_tracks = discord.Embed(title="Queue",
                                       description=f"No tracks are queued for **{ctx.guild.name}**",
-                                      color=ctx.author.color,
+                                      color=discord.Color.from_rgb(48, 50, 54),
                                       timestamp=datetime.datetime.utcnow())
             await ctx.send(embed=no_tracks)
 
@@ -414,19 +340,19 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                 await voice.stop()
                 skipped = discord.Embed(title="Queue",
                                         description=f"The song has been skipped and now playing {voice.queue[0]}",
-                                        color=ctx.author.color,
+                                        color=discord.Color.from_rgb(48, 50, 54),
                                         timestamp=datetime.datetime.utcnow())
                 return await ctx.send(embed=skipped, delete_after=5)
             else:
                 not_connected = discord.Embed(title="Queue",
                                               description=f"Queue might be empty.",
-                                              color=ctx.author.color,
+                                              color=discord.Color.from_rgb(48, 50, 54),
                                               timestamp=datetime.datetime.utcnow())
                 await ctx.send(embed=not_connected)
         else:
             not_connected = discord.Embed(title="Music",
                                           description=f"We are not connected to the voice channel.",
-                                          color=ctx.author.color,
+                                          color=discord.Color.from_rgb(48, 50, 54),
                                           timestamp=datetime.datetime.utcnow())
             return await ctx.send(embed=not_connected)
 

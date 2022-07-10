@@ -90,13 +90,12 @@ def set_guild_prefix(guild_id: int, prefix: str) -> None:
     execute("UPDATE guild SET prefix = ? WHERE guildID = ?", prefix, guild_id)
 
 
-def get_codes() -> list:
-    print(records("SELECT secret FROM code"))
-    return records("SELECT secret FROM code")
-
-
 def remove_guild(guild_id: int) -> None:
     execute("DELETE FROM guild WHERE guildID = ?", guild_id)
+
+
+def get_codes() -> list:
+    return records("SELECT secret FROM code")
 
 
 def add_code(code: str) -> None:
@@ -105,3 +104,4 @@ def add_code(code: str) -> None:
 
 def remove_code(code: str) -> None:
     execute("DELETE FROM code WHERE secret = ?", code)
+

@@ -20,24 +20,20 @@ from utils import utility, db
 
 
 # noinspection PyUnusedLocal
-class SureView(discord.ui.View):
+class Confirm(discord.ui.View):
     def __init__(self):
-        super().__init__(timeout=60)
-        self.response = None
+        super().__init__()
+        self.value = None
 
-    async def on_timeout(self) -> None:
-        for child in self.children:
-            child.disabled = True
-        await self.response.edit(view=self)
-
-    @discord.ui.button(label="Yes", style=discord.ButtonStyle.danger)
-    async def _yes(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
+    @discord.ui.button(label='Confirm', style=discord.ButtonStyle.green)
+    async def confirm(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.send_message('Confirming', ephemeral=True)
         self.value = True
         self.stop()
 
-    @discord.ui.button(label="No", style=discord.ButtonStyle.green)
-    async def _no(self, interaction: discord.Interaction, button: discord.ui.Button) -> None:
-        await interaction.response.send_message(f"Okay!", ephemeral=True)
+    @discord.ui.button(label='Cancel', style=discord.ButtonStyle.grey)
+    async def cancel(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.send_message('Cancelling', ephemeral=True)
         self.value = False
         self.stop()
 
@@ -54,7 +50,7 @@ def convert(time):
         return -1
     try:
         val = int(time[:-1])
-    except:
+    except ValueError:
         return -2
 
     return val * time_dict[unit]
@@ -82,7 +78,7 @@ class Admin(commands.Cog, description="Gather information"):
     async def admin(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
             if ctx.author.id in utility.get_owner():
-                await ctx.send('Wow, an admin user!')
+                await ctx.send('Wow, you are an admin user!')
 
     # Testing command for profanity, if something doesn't work with it
     @admin.command(name="profanity-test", aliases=["p-t"], hidden=True,
@@ -92,14 +88,14 @@ class Admin(commands.Cog, description="Gather information"):
         if ctx.author.id in utility.get_owner():
             embed = discord.Embed(title="Profanity Test",
                                   description="Results of the debug profanity-test",
-                                  color=0x00ff00)
+                                  color=discord.Color.from_rgb(48, 50, 54))
 
             embed.add_field(name="Original", value=text)
             embed.add_field(name="Censored", value=profanity.censor(text))
             await ctx.send(embed=embed)
 
     # Execute code from Discord
-    @admin.command(name="exec", help="Executing code using python exec", hidden=True,
+    @admin.command(name="exec", help="Execute python code in python process", hidden=True,
                    brief="Try python code")
     async def exec(self, ctx: commands.Context, *, code: str):
         if ctx.author.id in utility.get_owner():
@@ -108,14 +104,14 @@ class Admin(commands.Cog, description="Gather information"):
             except Exception as e:
                 await ctx.send(f"```py\n{e}```")
 
-    @admin.command(name="shutdown", help="Logout from discord.", aliases=["logout"], hidden=True,
+    @admin.command(name="shutdown", help="Logout from discord", aliases=["logout"], hidden=True,
                    brief="Close connection to discord")
     async def shutdown(self, ctx: commands.Context):
         if ctx.author.id in utility.get_owner():
-            view = SureView()
+            view = Confirm()
             sure = discord.Embed(title="Are you sure?", description="This will logout "
                                                                     "from discord and exit the python program.",
-                                 color=ctx.author.color)
+                                 color=discord.Color.from_rgb(48, 50, 54))
             message = await ctx.send(embed=sure, view=view)
             await view.wait()
             if view.value is None:
@@ -170,7 +166,7 @@ class Admin(commands.Cog, description="Gather information"):
     async def info(self, ctx: commands.Context):
         if ctx.invoked_subcommand is None:
             if ctx.author.id in utility.get_owner():
-                embed = discord.Embed(title="Information", color=ctx.author.color)
+                embed = discord.Embed(title="Information", color=discord.Color.from_rgb(48, 50, 54))
                 embed.add_field(name="Authors", value=str(utility.get_owner())[1:-1], inline=False)
                 embed.add_field(name="Author IDs", value=str(utility.get_owner())[1:-1], inline=False)
                 embed.add_field(name="Library", value=f"{discord.__title__} by {discord.__author__}")
@@ -187,7 +183,7 @@ class Admin(commands.Cog, description="Gather information"):
     @info.command(name='user', help="Gather information about a user.", hidden=True)
     async def user(self, ctx: commands.Context, user: discord.User = None):
         if user and ctx.author.id in utility.get_owner():
-            embed = discord.Embed(title="Information", color=user.color)
+            embed = discord.Embed(title="Information", color=discord.Color.from_rgb(48, 50, 54))
             embed.set_thumbnail(url=user.avatar.url)
             embed.add_field(name="Username", value=user.name)
             embed.add_field(name="Discriminator", value=user.discriminator, inline=False)
@@ -204,7 +200,7 @@ class Admin(commands.Cog, description="Gather information"):
     async def server(self, ctx: commands.Context, server: discord.Guild = None):
         guild = server if server else ctx.guild
         if guild and ctx.author.id in utility.get_owner():
-            embed = discord.Embed(title=guild.name, color=discord.Colour.green())
+            embed = discord.Embed(title=guild.name, color=discord.Color.from_rgb(48, 50, 54))
             embed.set_thumbnail(url=guild.icon.url) if guild.icon else None
             embed.add_field(name="ID", value=guild.id, inline=False)
             embed.add_field(name="Owner", value=guild.owner.mention, inline=False)
@@ -255,7 +251,7 @@ class Admin(commands.Cog, description="Gather information"):
             key = key if key else get_string()
 
             # Create the embed and convert the wait time to seconds
-            embed = discord.Embed(title="Key", color=discord.Color.blue(), timestamp=datetime.utcnow())
+            embed = discord.Embed(title="Key", color=discord.Color.from_rgb(48, 50, 54), timestamp=datetime.utcnow())
             wait = convert(time)
 
             # Send the message

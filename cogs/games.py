@@ -29,14 +29,14 @@ class Games(commands.Cog, description="Fun game commands"):
         b = random.choice(emojis)
         c = random.choice(emojis)
 
-        slotmachine = f"**[ {a} {b} {c} ]\n{interaction.user.name}**,"
+        slotmachine = f"**[ {a} | {b} | {c} ]\n{interaction.user.name}**,"
 
-        embed1 = discord.Embed(title=f"Games", description=f"{slotmachine} All matching, you won! 🎉",
-                               color=discord.Color.green())
-        embed2 = discord.Embed(title=f"Games", description=f"{slotmachine} 2 in a row, you won! 🎉",
-                               color=discord.Color.purple())
-        embed3 = discord.Embed(title=f"Games", description=f"{slotmachine} No match, you lost 😢",
-                               color=discord.Color.red())
+        embed1 = discord.Embed(title=f"Slot Machine", description=f"{slotmachine} All matching, you won! 🎉",
+                               color=discord.Color.from_rgb(48, 50, 54))
+        embed2 = discord.Embed(title=f"Slot Machine", description=f"{slotmachine} 2 in a row, you won! 🎉",
+                               color=discord.Color.from_rgb(48, 50, 54))
+        embed3 = discord.Embed(title=f"Slot Machine", description=f"{slotmachine} No match, you lost 😢",
+                               color=discord.Color.from_rgb(48, 50, 54))
 
         if a == b == c:
             await interaction.response.send_message(embed=embed1)
@@ -107,20 +107,35 @@ class Games(commands.Cog, description="Fun game commands"):
             "Without a doubt.",
             "Yes - definitely.",
             "You may rely on it.",
+
             "As I see it, yes.",
-            "Yes.",
             "Most likely.",
             "Outlook good.",
+            "Yes.",
             "Signs point to yes.",
+
             "Reply hazy, try again.",
+            "Ask again later.",
             "Better not tell you now.",
+            "Cannot predict now.",
+            "Concentrate and ask again",
+
+            "Don't count on it.",
+            "My reply is no.",
+            "My sources say no",
+            "Outlook not so good",
+            "Very doubtful.",
+            
             "uwu",
             "no, not today!",
-            "Very doubtful."]
-        embed = discord.Embed(title="Magic 8ball",
-                              description=f"{interaction.user.mention} asked: {question}\n"
-                                          f"Magic 8ball: **{random.choice(responses)}**",
-                              color=interaction.user.color)
+            "I never could've think this would happen.",
+            "I am not so sure",
+            "Of course."
+
+        ]
+        embed = discord.Embed(description=f"You asked: {question}",
+                              color=discord.Color.from_rgb(48, 50, 54))
+        embed.add_field(name="Magic 8ball answers", value=f"*{random.choice(responses)}*", inline=False)
         await interaction.response.send_message(embed=embed)
 
 

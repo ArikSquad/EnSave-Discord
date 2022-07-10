@@ -4,15 +4,13 @@
 # This file is not protected by any license
 #
 # -----------------------------------------------------------
-from __future__ import division
-
 import discord
 from discord.ext import commands
 from simpcalc import simpcalc
 
 
 # noinspection PyUnusedLocal
-class InteractiveView(discord.ui.View):
+class CalculatorView(discord.ui.View):
     def __init__(self):
         super().__init__()
         self.expr = ""
@@ -27,85 +25,99 @@ class InteractiveView(discord.ui.View):
     @discord.ui.button(style=discord.ButtonStyle.blurple, label="1", row=0)
     async def one(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.expr += "1"
-        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.message.edit(embed=discord.Embed(title="Calculator", description=f"\n{self.expr}\n",
+                                                           color=discord.Color.from_rgb(48, 50, 54)))
         await interaction.response.defer()
 
     @discord.ui.button(style=discord.ButtonStyle.blurple, label="2", row=0)
     async def two(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.expr += "2"
-        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.message.edit(embed=discord.Embed(title="Calculator", description=f"\n{self.expr}\n",
+                                                           color=discord.Color.from_rgb(48, 50, 54)))
         await interaction.response.defer()
 
     @discord.ui.button(style=discord.ButtonStyle.blurple, label="3", row=0)
     async def three(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.expr += "3"
-        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.message.edit(embed=discord.Embed(title="Calculator", description=f"\n{self.expr}\n",
+                                                           color=discord.Color.from_rgb(48, 50, 54)))
         await interaction.response.defer()
 
     @discord.ui.button(style=discord.ButtonStyle.green, label="+", row=0)
     async def plus(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.expr += "+"
-        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.message.edit(embed=discord.Embed(title="Calculator", description=f"\n{self.expr}\n",
+                                                           color=discord.Color.from_rgb(48, 50, 54)))
         await interaction.response.defer()
 
     @discord.ui.button(style=discord.ButtonStyle.blurple, label="4", row=1)
     async def last(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.expr += "4"
-        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.message.edit(embed=discord.Embed(title="Calculator", description=f"\n{self.expr}\n",
+                                                           color=discord.Color.from_rgb(48, 50, 54)))
         await interaction.response.defer()
 
     @discord.ui.button(style=discord.ButtonStyle.blurple, label="5", row=1)
     async def five(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.expr += "5"
-        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.message.edit(embed=discord.Embed(title="Calculator", description=f"\n{self.expr}\n",
+                                                           color=discord.Color.from_rgb(48, 50, 54)))
         await interaction.response.defer()
 
     @discord.ui.button(style=discord.ButtonStyle.blurple, label="6", row=1)
     async def six(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.expr += "6"
-        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.message.edit(embed=discord.Embed(title="Calculator", description=f"\n{self.expr}\n",
+                                                           color=discord.Color.from_rgb(48, 50, 54)))
         await interaction.response.defer()
 
     @discord.ui.button(style=discord.ButtonStyle.green, label="/", row=1)
     async def divide(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.expr += "/"
-        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.message.edit(embed=discord.Embed(title="Calculator", description=f"\n{self.expr}\n",
+                                                           color=discord.Color.from_rgb(48, 50, 54)))
         await interaction.response.defer()
 
     @discord.ui.button(style=discord.ButtonStyle.blurple, label="7", row=2)
     async def seven(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.expr += "7"
-        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.message.edit(embed=discord.Embed(title="Calculator", description=f"\n{self.expr}\n",
+                                                           color=discord.Color.from_rgb(48, 50, 54)))
         await interaction.response.defer()
 
     @discord.ui.button(style=discord.ButtonStyle.blurple, label="8", row=2)
     async def eight(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.expr += "8"
-        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.message.edit(embed=discord.Embed(title="Calculator", description=f"\n{self.expr}\n",
+                                                           color=discord.Color.from_rgb(48, 50, 54)))
         await interaction.response.defer()
 
     @discord.ui.button(style=discord.ButtonStyle.blurple, label="9", row=2)
     async def nine(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.expr += "9"
-        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.message.edit(embed=discord.Embed(title="Calculator", description=f"\n{self.expr}\n",
+                                                           color=discord.Color.from_rgb(48, 50, 54)))
         await interaction.response.defer()
 
     @discord.ui.button(style=discord.ButtonStyle.green, label="*", row=2)
     async def multiply(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.expr += "*"
-        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.message.edit(embed=discord.Embed(title="Calculator", description=f"\n{self.expr}\n",
+                                                           color=discord.Color.from_rgb(48, 50, 54)))
         await interaction.response.defer()
 
     @discord.ui.button(style=discord.ButtonStyle.blurple, label=".", row=3)
     async def dot(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.expr += "."
-        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.message.edit(embed=discord.Embed(title="Calculator", description=f"\n{self.expr}\n",
+                                                           color=discord.Color.from_rgb(48, 50, 54)))
         await interaction.response.defer()
 
     @discord.ui.button(style=discord.ButtonStyle.blurple, label="0", row=3)
     async def zero(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.expr += "0"
-        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.message.edit(embed=discord.Embed(title="Calculator", description=f"\n{self.expr}\n",
+                                                           color=discord.Color.from_rgb(48, 50, 54)))
         await interaction.response.defer()
 
     @discord.ui.button(style=discord.ButtonStyle.green, label="=", row=3)
@@ -115,31 +127,36 @@ class InteractiveView(discord.ui.View):
         except simpcalc.BadArgument:
             await interaction.response.defer()
             return await interaction.message.edit(content=f"```\nNot possible...\n```")
-        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.message.edit(embed=discord.Embed(title="Calculator", description=f"\n{self.expr}\n",
+                                                           color=discord.Color.from_rgb(48, 50, 54)))
         await interaction.response.defer()
 
     @discord.ui.button(style=discord.ButtonStyle.green, label="-", row=3)
     async def minus(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.expr += "-"
-        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.message.edit(embed=discord.Embed(title="Calculator", description=f"\n{self.expr}\n",
+                                                           color=discord.Color.from_rgb(48, 50, 54)))
         await interaction.response.defer()
 
     @discord.ui.button(style=discord.ButtonStyle.green, label="(", row=4)
     async def left_bracket(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.expr += "("
-        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.message.edit(embed=discord.Embed(title="Calculator", description=f"\n{self.expr}\n",
+                                                           color=discord.Color.from_rgb(48, 50, 54)))
         await interaction.response.defer()
 
     @discord.ui.button(style=discord.ButtonStyle.green, label=")", row=4)
     async def right_bracket(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.expr += ")"
-        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.message.edit(embed=discord.Embed(title="Calculator", description=f"\n{self.expr}\n",
+                                                           color=discord.Color.from_rgb(48, 50, 54)))
         await interaction.response.defer()
 
     @discord.ui.button(style=discord.ButtonStyle.red, label="C", row=4)
     async def clear(self, interaction: discord.Interaction, button: discord.ui.Button):
         self.expr = ""
-        await interaction.message.edit(content=f"```\n{self.expr}\n```")
+        await interaction.message.edit(embed=discord.Embed(title="Calculator", description=f"\n{self.expr}\n",
+                                                           color=discord.Color.from_rgb(48, 50, 54)))
         await interaction.response.defer()
 
     @discord.ui.button(style=discord.ButtonStyle.danger, label="DEL", row=4)
@@ -158,8 +175,11 @@ class Calculator(commands.Cog, description="Calculator"):
     @commands.command(name="calculate", help="Calculator simulator", aliases=["calc", "calculator"],
                       brief='You can do calculations using this command')
     async def interactive_calc(self, ctx: commands.Context):
-        view = InteractiveView()
-        await ctx.send("```\n```", view=view)
+        view = CalculatorView()
+
+        embed = discord.Embed(title="Calculator", description=f"\n", color=discord.Color.from_rgb(48, 50, 54))
+
+        await ctx.send(embed=embed, view=view)
 
 
 async def setup(bot):

@@ -32,7 +32,7 @@ class Moderation(commands.Cog, description="Moderating"):
         embed = discord.Embed(
             title="Channel locked",
             description=f"This channel was locked by {interaction.user.mention if notify else vanish_name} 🔒",
-            color=discord.Color.dark_red()
+            color=discord.Color.from_rgb(48, 50, 54)
         )
         embed.add_field(name="Reason", value=str(reason).capitalize() if not None else "No reason given.")
         embed.timestamp = datetime.datetime.utcnow()
@@ -48,7 +48,7 @@ class Moderation(commands.Cog, description="Moderating"):
 
         embed = discord.Embed(title="Channel Unlocked",
                               description="This channel has been unlocked.",
-                              color=discord.Color.green())
+                              color=discord.Color.from_rgb(48, 50, 54))
         embed.timestamp = datetime.datetime.utcnow()
         await channel.send(embed=embed)
         await interaction.response.defer()

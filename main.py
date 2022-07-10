@@ -84,6 +84,7 @@ async def main():
     await bot.ipc.start()
 
     for filename in os.listdir('./cogs'):
+        # I have disabled files starting with '_' because of "beta cogs"
         if filename.endswith('.py') and not filename.startswith('_'):
             loader = filename[:-3]
             await bot.load_extension(f'cogs.{loader}')
