@@ -9,7 +9,7 @@ import discord
 from discord.ext import commands, ipc
 
 from utils import db
-from utils.website import dashboard
+from utils.website import webpage
 
 
 class Dashboard(commands.Cog, description="Custom dashboard"):
@@ -20,7 +20,7 @@ class Dashboard(commands.Cog, description="Custom dashboard"):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        self.bot.loop.create_task(dashboard.app.run_task(host="0.0.0.0", port=1201))
+        self.bot.loop.create_task(webpage.app.run_task(host="0.0.0.0", port=1201))
 
     @ipc.server.route()
     async def get_guild_count(self, data):
@@ -72,7 +72,7 @@ class Dashboard(commands.Cog, description="Custom dashboard"):
         embed = discord.Embed(
             title="Dashboard",
             description="[Click here to open the dashboard](https://ensave.mikart.eu/)",
-            color=0x00ff00,
+            color=discord.Color.from_rgb(48, 50, 54),
         )
         await ctx.send(embed=embed)
 

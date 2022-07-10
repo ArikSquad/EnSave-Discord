@@ -8,6 +8,14 @@
     font-family: 'Poppins', sans-serif;
 }
 
+.content-button {
+    /* center button */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
 .sidebar {
     position: fixed;
     height: 100%;
@@ -106,7 +114,6 @@
     justify-content: space-between;
     height: 80px;
     background: #fff;
-    display: flex;
     align-items: center;
     position: fixed;
     width: calc(100% - 240px);
@@ -334,7 +341,6 @@ nav .profile-details i {
 }
 
 .sales-boxes .sales-details li a {
-    font-size: 18px;
     color: #333;
     font-size: 400;
     text-decoration: none;

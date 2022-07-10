@@ -21,7 +21,7 @@ load_dotenv()
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 app.config['DISCORD_CLIENT_ID'] = os.getenv('CLIENT_ID')
 app.config['DISCORD_CLIENT_SECRET'] = os.getenv('CLIENT_SECRET')
-app.config['DISCORD_REDIRECT_URI'] = "http://ensave.mikart.eu/callback"
+app.config['DISCORD_REDIRECT_URI'] = "http://localhost:1201/callback"
 
 ipc_client = ipc.Client(secret_key=os.getenv('SECRET_KEY'))
 discord = DiscordOAuth2Session(app)
@@ -117,20 +117,18 @@ async def dashboard_server_customization(guild_id):
     guild = await ipc_client.request("get_guild", guild_id=guild_id)
     user_guilds = await discord.fetch_guilds()
 
-    accessible = False
+    accessable = False
     for gld in user_guilds:
         if gld.permissions.administrator and gld.id == guild_id:
-            accessible = True
+            accessable = True
             break
 
-    if accessible:
+    if accessable:
         if request.method == 'POST':
-            prefix = await request.form
-            prefix = prefix["prefix"]
+            form = await request.form
+            prefix = form["prefix"]
 
-            if len(prefix) == 0:
-                await flash('Prefix cannot be empty.', category='error')
-            else:
+            if len(prefix) != 0:
                 db.set_guild_prefix(guild_id, prefix)
                 await flash(f'Changed prefix to {prefix}', category='success')
                 await asyncio.sleep(1)
@@ -200,6 +198,11 @@ async def dashboard_server_settings(guild_id):
                                      guild_id=guild_id)
     else:
         return redirect(url_for("dashboard"))
+
+
+@app.route("/commands")
+async def commands():
+    return await render_template("commands.html")
 
 
 async def get_user_name(member_id):

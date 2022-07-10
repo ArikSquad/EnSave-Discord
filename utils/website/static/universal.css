@@ -9,13 +9,13 @@ body {
 
 @keyframes gradient {
 	0% {
-		background-position: 0% 50%;
+		background-position: 0 50%;
 	}
 	50% {
 		background-position: 100% 50%;
 	}
 	100% {
-		background-position: 0% 50%;
+		background-position: 0 50%;
 	}
 }
 
@@ -52,8 +52,8 @@ h2 {
 }
 
 .card:hover {
-  box-shadow: rgba(2, 8, 20, 0.1) 0px 0.35em 1.175em,
-    rgba(2, 8, 20, 0.08) 0px 0.175em 0.5em;
+  box-shadow: rgba(2, 8, 20, 0.1) 0 0.35em 1.175em,
+    rgba(2, 8, 20, 0.08) 0 0.175em 0.5em;
   transform: scale(1.1);
 }
 
