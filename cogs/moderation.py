@@ -26,24 +26,23 @@ class Moderation(commands.Cog, description="Moderating"):
     @app_commands.checks.has_permissions(manage_channels=True, manage_messages=True)
     async def lock(self, interaction: discord.Interaction, channel: discord.TextChannel = None,
                    reason: str = None, notify: bool = True):
-        channel = interaction.channel or channel
+        channel = interaction.channel if interaction.channel else channel
         await channel.set_permissions(interaction.guild.default_role, send_messages=False, add_reactions=False)
-        vanish_name = "nobody"
+        vanish_name = f' by {interaction.user.name}' if notify else ' by nobody'
         embed = discord.Embed(
             title="Channel locked",
-            description=f"This channel was locked by {interaction.user.mention if notify else vanish_name} 🔒",
+            description=f"This channel was locked{vanish_name} 🔒",
             color=discord.Color.from_rgb(48, 50, 54)
         )
         embed.add_field(name="Reason", value=str(reason).capitalize() if not None else "No reason given.")
         embed.timestamp = datetime.datetime.utcnow()
         await channel.send(embed=embed)
-        await interaction.response.defer()
 
     # Command to unlock a channel, so everybody can send messages again
     @app_commands.command(name='unlock', description="Unlocks the channel.")
     @app_commands.checks.has_permissions(manage_channels=True, manage_messages=True)
     async def unlock(self, interaction: discord.Interaction, channel: discord.TextChannel = None):
-        channel = interaction.channel or channel
+        channel = interaction.channel if interaction.channel else channel
         await channel.set_permissions(interaction.guild.default_role, send_messages=True, add_reactions=True)
 
         embed = discord.Embed(title="Channel Unlocked",
@@ -51,7 +50,6 @@ class Moderation(commands.Cog, description="Moderating"):
                               color=discord.Color.from_rgb(48, 50, 54))
         embed.timestamp = datetime.datetime.utcnow()
         await channel.send(embed=embed)
-        await interaction.response.defer()
 
     # Command to delete messages in the channel
     @app_commands.command(name='clear', description="Clear an amount of messages from the channel.")
