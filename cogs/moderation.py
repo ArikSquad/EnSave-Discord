@@ -62,7 +62,7 @@ class Moderation(commands.Cog, description="Moderating"):
 
         embed = discord.Embed(title="Messages Cleared",
                               description=f"{amount} messages have been cleared.",
-                              color=0x00ff00)
+                              color=discord.Color.from_rgb(48, 50, 54))
         message = await interaction.response.send_message(embed=embed)
         await asyncio.sleep(5)
         await message.delete()
@@ -77,6 +77,14 @@ class Moderation(commands.Cog, description="Moderating"):
         await interaction.response.send_message(embed=embed)
 
         db.set_guild_prefix(interaction.guild.id, prefix)
+
+    @app_commands.command(name="get-prefix", description="Get the prefix of the guild.")
+    async def get_prefix(self, interaction: discord.Interaction):
+        prefix = db.get_guild_prefix(interaction.guild.id)
+        embed = discord.Embed(title="Moderation",
+                              description=f"The prefix of this guild is: " + prefix,
+                              color=discord.Color.from_rgb(48, 50, 54))
+        await interaction.response.send_message(embed=embed)
 
 
 async def setup(bot):
