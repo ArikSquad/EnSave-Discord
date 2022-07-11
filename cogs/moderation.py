@@ -71,6 +71,9 @@ class Moderation(commands.Cog, description="Moderating"):
     @app_commands.command(name="change-prefix", description="Change the prefix of the guild.")
     @app_commands.checks.has_permissions(administrator=True)
     async def change_prefix(self, interaction: discord.Interaction, prefix: str):
+        if len(prefix) > 5:
+            await interaction.response.send_message("The prefix can't be longer than 5 characters.", ephemeral=True)
+            return
         embed = discord.Embed(title="Moderation",
                               description=f"Changed the prefix to: " + prefix,
                               color=discord.Color.gold())
