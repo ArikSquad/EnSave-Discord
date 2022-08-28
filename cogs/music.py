@@ -159,13 +159,13 @@ class Player:
 class PlayerView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=30)
-        self.response = None
         self.back_button.disabled = True
+        self.message = None
 
     async def on_timeout(self) -> None:
-        for child in self.children:
-            child.disabled = True
-        await self.response.edit(view=self)
+        for item in self.children:
+            item.disabled = True
+        await self.message.edit(view=self)
 
     @discord.ui.button(label='⬅', style=discord.ButtonStyle.gray)
     async def back_button(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -268,9 +268,10 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                                         color=discord.Color.from_rgb(48, 50, 54),
                                         timestamp=datetime.datetime.utcnow())
             now_playing.add_field(name="Author", value=f"{song.author}")
+            now_playing.set_thumbnail(url=song.thumbnail)
             await voice.play(song)
             await interaction.response.send_message(embed=now_playing, view=view)
-            view.response = await interaction.original_response()
+            view.message = await interaction.original_response()
             return
 
         added_queue = discord.Embed(title="Queue",
@@ -278,11 +279,12 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                                                 f"({song.uri}) to the queue.",
                                     color=discord.Color.from_rgb(48, 50, 54),
                                     timestamp=datetime.datetime.utcnow())
+        added_queue.set_thumbnail(url=song.thumbnail)
         added_queue.add_field(name="Author", value=f"{song.author}")
 
         await voice.queue.put_wait(song)
         await interaction.response.send_message(embed=added_queue, view=view)
-        view.response = await interaction.original_response()
+        view.message = await interaction.original_response()
         if profanity.contains_profanity(song.title):
             await interaction.message.delete()
 
