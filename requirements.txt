@@ -1,5 +1,5 @@
 # The essential libraries for the project
-git+https://github.com/Rapptz/discord.py
+discord.py
 asyncio
 aiohttp
 python-dotenv
@@ -18,12 +18,3 @@ Wavelink
 
 # This is for the database
 apscheduler
-
-# This library is an addon for discord.py
-git+https://github.com/Rapptz/discord-ext-menus
-
-
-# These are for the dashboard
-Quart
-Quart_discord
-git+https://github.com/ArikSquad/discord-ext-ipc
