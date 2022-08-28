@@ -70,10 +70,6 @@ TOKEN="(your token)"
 MUSIC="(your lavalink ip)"
 MUSIC_PASSWORD="(your lavalink password)"
 HYPIXELAPI="(your hypixel api key)"
-
-CLIENT_ID="(you only need this for dashboard)"
-CLIENT_SECRET="(you only need this for dashboard)"
-SECRET_KEY="(you only need this for dashboard)"
 ```
 7. Good! Now you can run the bot by opening a new terminal and running this command:
 ```commandline
