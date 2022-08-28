@@ -62,7 +62,10 @@ class Errorhandler(commands.Cog, description="Errorhandler"):
         if classname in self._error_messages.keys():
             msg = self._error_messages.get(classname, None)
             if isinstance(msg, str):
-                await interaction.response.send_message(msg.format(interaction=interaction, err=error))
+                if interaction.response.is_done():
+                    interaction.followup.send(msg.format(interaction=interaction, err=error))
+                else:
+                    await interaction.response.send_message(msg.format(interaction=interaction, err=error))
         else:
 
             if isinstance(error, (commands.CommandError, commands.CheckFailure)) \
@@ -76,7 +79,10 @@ class Errorhandler(commands.Cog, description="Errorhandler"):
                                       value=f'Command: {interaction.command}\n'
                                             f'Description: {interaction.command.description}\n'
                                             f'Cog: {interaction.command.cog.qualified_name}\n')
-                return await interaction.response.send_message(embed=error_embed)
+                if interaction.response.is_done():
+                    return await interaction.followup.send(embed=error_embed)
+                else:
+                    return await interaction.response.send_message(embed=error_embed)
 
             execute_error = discord.Embed(
                 color=discord.Colour(0xff0000),
@@ -84,8 +90,10 @@ class Errorhandler(commands.Cog, description="Errorhandler"):
                       'Please contact ArikSquad#6222',
                 timestamp=datetime.datetime.utcnow()
             )
-
-            await interaction.response.send_message(embed=execute_error)
+            if interaction.response.is_done():
+                await interaction.followup.send(embed=execute_error)
+            else:
+                await interaction.response.send_message(embed=execute_error)
 
             print(error.original)
 
