@@ -13,8 +13,6 @@ from utils import db
 
 
 class Spy(commands.Cog, description="Spying"):
-    EMOJI = "🕵️"
-
     def __init__(self, bot):
         self.bot = bot
 
@@ -65,6 +63,7 @@ class Spy(commands.Cog, description="Spying"):
     @app_commands.command(name="spy",
                           description="Toggle spying on the server.")
     @app_commands.checks.has_permissions(manage_guild=True)
+    @app_commands.guild_only()
     async def spy(self, interaction: discord.Interaction,
                   notify_channel: discord.TextChannel = None, toggle: bool = None) -> None:
         if toggle:

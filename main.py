@@ -31,8 +31,17 @@ token = os.getenv('TOKEN')
 
 
 class Main(commands.Bot):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self):
+        activity = discord.Activity(type=discord.ActivityType.watching, name=f'24/7')
+        super().__init__(command_prefix=utility.get_prefix,
+                         case_insensitive=True,
+                         description="EnSave offers you moderation, fun and utility commands. "
+                                     "We have frequent updates and fix bugs almost instantly. "
+                                     "This includes everything you need from a discord bot.",
+                         activity=activity,
+                         status=discord.Status.idle,
+                         intents=discord.Intents.all(),
+                         help_command=None)
         self.ipc = ipc.Server(self, secret_key=os.getenv('SECRET_KEY'))
         self.ready = False
         self.scheduler = AsyncIOScheduler()
@@ -40,6 +49,13 @@ class Main(commands.Bot):
         db.autosave(self.scheduler)
 
     def update_db(self):
+        # Create tables
+        db.execute('CREATE TABLE IF NOT EXISTS "code" ("secret"  TEXT UNIQUE)')
+        db.execute('CREATE TABLE IF NOT EXISTS "guild" ( "guildID"  INTEGER UNIQUE, '
+                   '"prefix"	TEXT DEFAULT \'.\', '
+                   '"spy"	INTEGER DEFAULT 0, "channel"	INTEGER )')
+        db.execute('CREATE TABLE IF NOT EXISTS "user" ("userID"	INTEGER UNIQUE, "premium"	INTEGER DEFAULT 0)')
+
         db.multiexec("INSERT OR IGNORE INTO guild (guildID) VALUES (?)",
                      ((guild.id,) for guild in self.guilds))
 
@@ -63,19 +79,8 @@ class Main(commands.Bot):
             print("Reconnected to Discord")
 
 
-# Create the activity for idle
-activity = discord.Activity(type=discord.ActivityType.watching,
-                            name=f'24/7', status=discord.Status.idle)
-
 # Create the bot
-bot = Main(command_prefix=utility.get_prefix,
-           case_insensitive=True,
-           description="EnSave offers you moderation, fun and utility commands. "
-                       "We have frequent updates and fix bugs almost instantly. "
-                       "This includes everything you need from a discord bot.",
-           activity=activity,
-           status=discord.Status.idle,
-           intents=discord.Intents.all())
+bot = Main()
 
 
 # Load all the cogs, then print the cog names that have been loaded
@@ -84,7 +89,7 @@ async def main():
     await bot.ipc.start()
 
     for filename in os.listdir('./cogs'):
-        # I have disabled files starting with '_' because of "beta cogs"
+        # The files starting with '_' are not loaded
         if filename.endswith('.py') and not filename.startswith('_'):
             loader = filename[:-3]
             await bot.load_extension(f'cogs.{loader}')

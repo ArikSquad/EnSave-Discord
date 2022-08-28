@@ -6,21 +6,15 @@
 #
 # -----------------------------------------------------------
 import discord
+from discord import app_commands
 from discord.ext import commands, ipc
 
 from utils import db
-from utils.website import webpage
 
 
 class Dashboard(commands.Cog, description="Custom dashboard"):
-    EMOJI = "📊"
-
     def __init__(self, bot):
         self.bot = bot
-
-    @commands.Cog.listener()
-    async def on_ready(self):
-        self.bot.loop.create_task(webpage.app.run_task(host="0.0.0.0", port=1201))
 
     @ipc.server.route()
     async def get_guild_count(self, data):
@@ -67,7 +61,7 @@ class Dashboard(commands.Cog, description="Custom dashboard"):
         return member_data
 
     # Command to open the dashboard
-    @commands.command(name="dashboard", aliases=["dash"], help="Open the dashboard")
+    @app_commands.command(name="dashboard", description="Open the dashboard")
     async def dashboard_command(self, ctx: commands.Context):
         embed = discord.Embed(
             title="Dashboard",

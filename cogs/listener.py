@@ -7,15 +7,14 @@
 # -----------------------------------------------------------
 import datetime
 
+import discord
 from colorama import Fore
 from discord.ext import commands
 
-from utils import db
+from utils import db, utility
 
 
 class Events(commands.Cog, description="Events"):
-    EMOJI = "📅"
-
     def __init__(self, bot):
         self.bot = bot
 
@@ -41,9 +40,31 @@ class Events(commands.Cog, description="Events"):
         db.set_guild_spy_channel(guild.id, self.bot.get_guild(guild.id).system_channel.id)
 
     # When a member joins, it adds it to the database
+    # noinspection PyUnusedLocal
     @commands.Cog.listener()
     async def on_member_join(self, member):
         self.bot.update_db()
+
+    @commands.Cog.listener()
+    async def on_message(self, message: discord.Message):
+        all_commands = ["admin", "dashboard", "help", "mcserver", "bedwars", "skin", "redeem", "spy", "role", "play",
+                        "stop", "pause", "skip", "disconnect", "spy", "volume", "shuffle", "playing", "resume", "lock",
+                        "unlock", "clear", "redeem"]
+        if message.author.bot:
+            return
+        if not message.guild:
+            return
+        if message.content.startswith(utility.get_prefix_id(message.guild.id)):
+            after_check = (message.content.split(utility.get_prefix_id(message.guild.id))[1]).split(' ')[0]
+            if after_check in all_commands:
+                embed = discord.Embed(title='Slash Commands',
+                                      description='As you probably have seen, Discord is changing to use more of the '
+                                                  'slash commands, So are we! The old commands '
+                                                  'are no longer supported.',
+                                      color=discord.Color.from_rgb(48, 50, 54))
+                embed.add_field(name='How to use these?',
+                                value="It's easy! You only need to type `/` before the command!")
+                await message.channel.send(embed=embed)
 
 
 async def setup(bot):

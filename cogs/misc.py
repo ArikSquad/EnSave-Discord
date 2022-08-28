@@ -16,13 +16,32 @@ from utils import utility, db
 
 
 class Misc(commands.Cog, description="Random commands"):
-    EMOJI = "🤖"
-
     def __init__(self, bot) -> None:
         self.bot = bot
+        self.ctx_menu = app_commands.ContextMenu(
+            name='Resend',
+            callback=self.resend_context_menu,
+        )
+        self.bot.tree.add_command(self.ctx_menu)
 
-    @commands.hybrid_command(name="dog", description="Posts a fun dog picture in the chat!",
-                             help="Posts a fun dog picture in the chat!")
+    async def cog_unload(self) -> None:
+        self.bot.tree.remove_command(self.ctx_menu.name, type=self.ctx_menu.type)
+
+    @app_commands.checks.has_permissions(send_messages=True)
+    async def resend_context_menu(self, interaction: discord.Interaction, message: discord.Message) -> None:
+        channel: discord.TextChannel = interaction.channel
+        webh = await channel.create_webhook(name=f'Resender', reason='Resend Context Menu')
+        async with aiohttp.ClientSession() as session:
+            webhook: discord.Webhook = discord.Webhook.from_url(webh.url, session=session)
+            msg: discord.WebhookMessage = await webhook.send(message.content, username=message.author.name,
+                                                             avatar_url=message.author.avatar.url
+                                                             if message.author.avatar.url
+                                                             else self.bot.user.avatar.url,
+                                                             wait=True)
+            await interaction.response.send_message(f'Successfully resent message: [Here]({msg.jump_url}) ')
+            await webh.delete(reason='Resend Context Menu ended')
+
+    @app_commands.command(name="dog", description="Posts a fun dog picture in the chat!")
     async def dog(self, ctx: commands.Context):
         title_text = "Dog" if random.randint(1, 2) == 1 else "Doggo"
 
@@ -47,9 +66,9 @@ class Misc(commands.Cog, description="Random commands"):
         )
         await interaction.response.send_message(embed=embed)
 
-    @commands.command(name='redeem', help="Redeem a code for a reward!", hidden=True)
-    async def redeem(self, ctx, code: str):
-        if not db.get_user_premium(ctx.author.id):
+    @app_commands.command(name='redeem', description="Redeem a code for a reward!")
+    async def redeem(self, interaction: discord.Interaction, code: str):
+        if not db.get_user_premium(interaction.user.id):
             keys = db.get_codes()
 
             success = False
@@ -59,30 +78,30 @@ class Misc(commands.Cog, description="Random commands"):
 
             if success:
                 try:
-                    utility.set_premium(ctx.author.id, True)
+                    utility.set_premium(interaction.user.id, True)
                 except KeyError:
-                    await ctx.send("Hey, please contact ArikSquad#6222 to get your premium, "
-                                   "something went wrong when giving automatically.")
+                    await interaction.response.send_message("Hey, please contact ArikSquad#6222 to get your premium, "
+                                                            "something went wrong when giving automatically.")
                 embed = discord.Embed(
                     title="Success!",
                     description=f"You have redeemed {code}!",
                     color=discord.Color.from_rgb(48, 50, 54)
                 )
-                await ctx.reply(embed=embed)
+                await interaction.response.send_message(embed=embed, ephemeral=True)
             else:
                 embed = discord.Embed(
                     title="Error",
-                    description=f"{ctx.author.mention} You have entered an invalid code!",
+                    description=f"{interaction.user.mention} You have entered an invalid code!",
                     color=discord.Color.from_rgb(48, 50, 54)
                 )
-                await ctx.reply(embed=embed)
+                await interaction.response.send_message(embed=embed, ephemeral=True)
         else:
             embed = discord.Embed(
                 title="Error",
-                description=f"{ctx.author.mention} You are already a premium access!",
+                description=f"{interaction.user.mention} You are already a premium access!",
                 color=discord.Color.from_rgb(48, 50, 54)
             )
-            await ctx.reply(embed=embed)
+            await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
 async def setup(bot):

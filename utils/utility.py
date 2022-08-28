@@ -21,6 +21,7 @@ def get_owner() -> list:
     return owners
 
 
+# These will be removed later, after week of warnings.
 def get_prefix(ctx, message):
     return db.get_guild_prefix(message.guild.id)
 

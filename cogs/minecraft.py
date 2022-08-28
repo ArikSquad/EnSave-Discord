@@ -20,8 +20,6 @@ apikey = os.getenv('HYPIXELAPI')
 
 
 class Minecraft(commands.Cog, description="Minecraft tools"):
-    EMOJI = "🎮"
-
     def __init__(self, bot):
         self.bot = bot
 

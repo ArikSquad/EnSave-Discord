@@ -20,12 +20,12 @@
 <p align="center">
 
  <a href="https://www.python.org/downloads/">
-    <img src="https://img.shields.io/badge/Python-3.8%20%7C%203.9%20%7C%203.10-blue.svg">
+    <img src="https://img.shields.io/badge/Python-3.8%20%7C%203.9%20%7C%203.10-blue.svg" alt="python">
   </a>
    <a href="https://github.com/nextcord/nextcord/">
      <img src="https://img.shields.io/badge/discord-py-blue.svg" alt="discord-py">
   <a href="https://creativecommons.org/licenses/by-nc/4.0/">
-    <img src="https://img.shields.io/static/v1?label=license&message=BY-NC%204.0&color=orange&logo=creative%20commons&logoColor=white">
+    <img src="https://img.shields.io/static/v1?label=license&message=BY-NC%204.0&color=orange&logo=creative%20commons&logoColor=white" alt="license">
   <a href="https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2FArikSquad%2FEnSave-Discord">
   </a>
   </a>
@@ -47,8 +47,8 @@
 
 # Overview
 This is an open-source discord bot developed by [ArikSquad](https://github.com/Ariksquad) and [Mhilkos](https://github.com/Mhilkos).
-We also have documented files in this project, so feel free to check the files and see the documentation over there!
-EnSave uses discord.py library which has been unarchived. If you would like to use this as your own bot, please give us some credit.
+We also have some documented files in this project, so feel free to check the files and see the documentation over there!
+EnSave uses the latest discord.py library. If you would like to use this as your template for your bot, please add mention us.
 
 # Installation
 1. Clone this repository using this command:
@@ -85,7 +85,8 @@ python3 main.py
 ## Setupping a database for the bot
 1. You should download a database browser, like [this](https://sqlitebrowser.org/).
 2. Create a database.db in the directory /data/db/
-3. Use these sql commands to create tables:
+3. The database should be automatically created when you run the bot.
+<br><br><br> **If something goes wrong use these SQL commands**: 
 ```sql
 CREATE TABLE "code" (
 	"secret"	TEXT UNIQUE
