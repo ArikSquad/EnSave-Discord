@@ -12,7 +12,6 @@ import typing
 import aiohttp
 import discord
 import wavelink
-from better_profanity import profanity
 from discord import app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -263,7 +262,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
         view = PlayerView()
         if voice.queue.is_empty and not voice.is_playing():
             now_playing = discord.Embed(title="Queue",
-                                        description=f'**Now playing**: [{profanity.censor(song.title)}]'
+                                        description=f'**Now playing**: [{song.title}]'
                                                     f'({song.uri})',
                                         color=discord.Color.from_rgb(48, 50, 54),
                                         timestamp=datetime.datetime.utcnow())
@@ -275,7 +274,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
             return
 
         added_queue = discord.Embed(title="Queue",
-                                    description=f"Added [{profanity.censor(song.title)}]"
+                                    description=f"Added [{song.title}]"
                                                 f"({song.uri}) to the queue.",
                                     color=discord.Color.from_rgb(48, 50, 54),
                                     timestamp=datetime.datetime.utcnow())
@@ -285,8 +284,6 @@ class Music(commands.Cog, description="Play songs in voice channels"):
         await voice.queue.put_wait(song)
         await interaction.response.send_message(embed=added_queue, view=view)
         view.message = await interaction.original_response()
-        if profanity.contains_profanity(song.title):
-            await interaction.message.delete()
 
     # Command for connecting to a voice channel. You can specify the channel or not, so it joins the channel you are in
     @group.command(name="connect", description="Connect to a voice channel")

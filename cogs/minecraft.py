@@ -10,7 +10,6 @@ import os
 import discord
 import mcstatus
 from aiohttp import request
-from better_profanity import profanity
 from discord import app_commands
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -28,7 +27,7 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
     async def mcserver(self, interaction: discord.Interaction, server: str):
         try:
             status = mcstatus.JavaServer.lookup(server).status()
-            player = discord.Embed(title=f"Minecraft Server Status: {profanity.censor(server)}",
+            player = discord.Embed(title=f"Minecraft Server Status: {server}",
                                    description="Server is online",
                                    color=0x00ff00)
             player.add_field(name="Players", value=f"{status.players.online}/{status.players.max}")
@@ -37,7 +36,7 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
             player.add_field(name="Description", value=status.description, inline=False)
             await interaction.response.send_message(embed=player)
         except IOError:
-            offline = discord.Embed(title=f"Minecraft Server Status: {profanity.censor(server)}",
+            offline = discord.Embed(title=f"Minecraft Server Status: {server}",
                                     description=f"Server is offline.",
                                     color=discord.Color.from_rgb(48, 50, 54))
             await interaction.response.send_message(embed=offline)

@@ -15,7 +15,6 @@ from datetime import datetime, timedelta
 import aiohttp
 import discord
 import psutil as psutil
-from better_profanity import profanity
 from discord import app_commands
 from discord.ext import commands
 
@@ -82,19 +81,6 @@ class Admin(commands.Cog, description="Administration commands for the bot"):
     def __init__(self, bot):
         self.bot = bot
 
-    # Testing command for profanity, if something is weird with it
-    @group.command(name="profanity-test",
-                   description="Test the profanity filter used in some commands")
-    async def profanity_test(self, interaction: discord.Interaction, *, text: str):
-        if interaction.user.id in utility.get_owner():
-            embed = discord.Embed(title="Profanity Test",
-                                  description="Results of the debug profanity-test",
-                                  color=discord.Color.from_rgb(48, 50, 54))
-
-            embed.add_field(name="Original", value=text)
-            embed.add_field(name="Censored", value=profanity.censor(text))
-            await interaction.response.send_message(embed=embed)
-
     @group.command(name="shutdown", description="Logout from discord")
     async def shutdown(self, interaction: discord.Interaction):
         if interaction.user.id in utility.get_owner():
@@ -118,7 +104,7 @@ class Admin(commands.Cog, description="Administration commands for the bot"):
                 await interaction.response.send_message(f"Unloaded `{cog}`.")
                 print(f"Unloaded extension {cog}")
             except commands.ExtensionNotLoaded:
-                await interaction.response.send_message(f'The extension {profanity.censor(cog)} '
+                await interaction.response.send_message(f'The extension {cog} '
                                                         f'is not loaded or has not been found.')
 
     @group.command(name='load-cog', description='Load a cog.')
@@ -129,7 +115,7 @@ class Admin(commands.Cog, description="Administration commands for the bot"):
                 await interaction.response.send_message(f'Loaded `{cog}`.')
                 print(f'Loaded extension {cog}')
             except commands.ExtensionNotFound:
-                await interaction.response.send_message(f'There is no extension called {profanity.censor(cog)}')
+                await interaction.response.send_message(f'There is no extension called {cog}')
             except commands.ExtensionAlreadyLoaded:
                 await interaction.response.send_message('The extension is already loaded.')
 

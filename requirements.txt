@@ -6,12 +6,8 @@ python-dotenv
 
 # These libraries are for some special commands
 requests
-better_profanity
 mcstatus
 psutil
-simpcalci
-Tabulate
-Pillow
 Colorama
 PyNaCl
 Wavelink
