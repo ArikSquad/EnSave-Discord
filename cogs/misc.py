@@ -42,7 +42,7 @@ class Misc(commands.Cog, description="Random commands"):
             await webh.delete(reason='Resend Context Menu ended')
 
     @app_commands.command(name="dog", description="Posts a fun dog picture in the chat!")
-    async def dog(self, ctx: commands.Context):
+    async def dog(self, interaction: discord.Interaction):
         title_text = "Dog" if random.randint(1, 2) == 1 else "Doggo"
 
         async with aiohttp.ClientSession() as cs:
@@ -53,7 +53,7 @@ class Misc(commands.Cog, description="Random commands"):
                     color=discord.Color.from_rgb(48, 50, 54)
                 )
                 embed.set_image(url=data['url'])
-                await ctx.send(embed=embed)
+                await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="invite-bot", description='Get the invite link of the bot.')
     async def invite_bot(self, interaction: discord.Interaction):
