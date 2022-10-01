@@ -5,14 +5,13 @@
 # Released under the CC BY-NC 4.0 (BY-NC 4.0)
 #
 # -----------------------------------------------------------
-import datetime
 import random
 
 import discord
 from discord import app_commands
 from discord.ext import commands
 
-from utils import db
+from utils import db, utility
 
 
 class Games(commands.Cog, description="Fun game commands"):
@@ -69,20 +68,18 @@ class Games(commands.Cog, description="Fun game commands"):
     # Slash command to slap someone
     @app_commands.command(name="slap", description="Slap someone!")
     async def slap(self, interaction: discord.Interaction, member: discord.Member):
-        if member.id == 812808865728954399:
+        if member.id == utility.get_id():
             dodge = discord.Embed(title=interaction.user.name,
                                   description=f"tried to slap me, but I dodged. 😑",
                                   color=interaction.user.color)
             await interaction.response.send_message(embed=dodge)
-        elif interaction.user.id == member.id:
+        elif member.id is interaction.user.id:
             embed = discord.Embed(title=interaction.user.name,
                                   description=f"tried to slap themselves, "
-                                              f"but hit too hard and went to a coma for 10 seconds. 😑",
+                                              f"but hit too hard and while in coma " 
+                                              f"Elon Musk visited their house, but "
+                                              f"they were too weak to see him. 😑",
                                   color=interaction.user.color)
-            try:
-                await interaction.user.edit(timed_out_until=datetime.datetime.now() + datetime.timedelta(seconds=10))
-            except commands.MissingPermissions:
-                pass
             await interaction.response.send_message(embed=embed)
         elif db.get_user_premium(member.id):
             embed = discord.Embed(title=interaction.user.name,
