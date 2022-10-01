@@ -29,6 +29,9 @@ class Misc(commands.Cog, description="Random commands"):
 
     @app_commands.checks.has_permissions(send_messages=True)
     async def resend_context_menu(self, interaction: discord.Interaction, message: discord.Message) -> None:
+        await interaction.response.defer(ephemeral=True)
+        if not message.content:
+            return await interaction.followup.send("You can't resend an empty message")
         channel: discord.TextChannel = interaction.channel
         webh = await channel.create_webhook(name=f'Resender', reason='Resend Context Menu')
         async with aiohttp.ClientSession() as session:
@@ -38,8 +41,8 @@ class Misc(commands.Cog, description="Random commands"):
                                                              if message.author.avatar.url
                                                              else self.bot.user.avatar.url,
                                                              wait=True)
-            await interaction.response.send_message(f'Successfully resent message: [Here]({msg.jump_url}) ')
-            await webh.delete(reason='Resend Context Menu ended')
+        await interaction.followup.send(f'Successfully resent message: [Here]({msg.jump_url}) ',)
+        await webh.delete(reason='Resend Context Menu ended')
 
     @app_commands.command(name="dog", description="Posts a fun dog picture in the chat!")
     async def dog(self, interaction: discord.Interaction):
