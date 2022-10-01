@@ -247,14 +247,15 @@ class Music(commands.Cog, description="Play songs in voice channels"):
     @app_commands.autocomplete(query=play_autocomplete)
     @app_commands.describe(query='Song that you want to play')
     async def play(self, interaction: discord.Interaction, query: str) -> None:
-        search = await self.node.get_tracks(cls=wavelink.YouTubeTrack, query=f"ytsearch:{query}")
-        song: wavelink.YouTubeTrack = search[0]
+        await interaction.response.defer()
+        song: wavelink.YouTubeTrack = (await self.node.get_tracks(cls=wavelink.YouTubeTrack,
+                                                                  query=f"ytsearch:{query}"))[0]
         if not interaction.user.voice:
             not_connected = discord.Embed(title="Music",
                                           description=f"You are not connected to a voice channel.",
                                           color=discord.Color.from_rgb(48, 50, 54),
                                           timestamp=datetime.datetime.utcnow())
-            return await interaction.response.send_message(embed=not_connected, ephemeral=True)
+            return await interaction.user.send(embed=not_connected)
 
         voice: wavelink.Player = interaction.guild.voice_client or await \
             interaction.user.voice.channel.connect(cls=wavelink.Player)
@@ -269,7 +270,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
             now_playing.add_field(name="Author", value=f"{song.author}")
             now_playing.set_thumbnail(url=song.thumbnail)
             await voice.play(song)
-            await interaction.response.send_message(embed=now_playing, view=view)
+            await interaction.followup.send(embed=now_playing, view=view)
             view.message = await interaction.original_response()
             return
 
@@ -282,7 +283,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
         added_queue.add_field(name="Author", value=f"{song.author}")
 
         await voice.queue.put_wait(song)
-        await interaction.response.send_message(embed=added_queue, view=view)
+        await interaction.followup.send(embed=added_queue, view=view)
         view.message = await interaction.original_response()
 
     # Command for connecting to a voice channel. You can specify the channel or not, so it joins the channel you are in
