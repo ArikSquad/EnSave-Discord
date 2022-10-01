@@ -171,14 +171,11 @@ class Admin(commands.Cog, description="Administration commands for the bot"):
     @group.command(name='set-premium', description='Set premium state of a user.')
     async def set_premium(self, interaction: discord.Interaction, user: discord.Member, state: bool = None):
         if interaction.user.id in utility.get_owner():
-            if user.id in utility.get_owner():
-                await interaction.response.send_message("You can't set the premium state of an owner.")
+            if state:
+                utility.set_premium(user.id, state)
             else:
-                if state:
-                    utility.set_premium(user.id, state)
-                else:
-                    utility.set_premium(user.id)
-                await interaction.response.send_message(f"{user.mention}'s new state of premium: {state}")
+                utility.set_premium(user.id)
+            await interaction.response.send_message(f"{user.mention}'s new state of premium: {state}")
 
     @group.command(name='get-premium', description='Get premium state of a user.')
     async def get_premium(self, interaction: discord.Interaction, user: discord.Member):
