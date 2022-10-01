@@ -242,12 +242,13 @@ class Music(commands.Cog, description="Play songs in voice channels"):
             for track in search if current.lower() in track.title.lower()
         ]
 
-    # Command to play songs in a voice channel using YouTube
-    @group.command(name="play", description="Play a song using YouTube.")
+    # Command to play songs in a voice channel
+    @group.command(name="play", description="Play a song.")
     @app_commands.autocomplete(query=play_autocomplete)
     @app_commands.describe(query='Song that you want to play')
     async def play(self, interaction: discord.Interaction, query: str) -> None:
         await interaction.response.defer()
+        # This will soon change when we find a way to use spotify
         song: wavelink.YouTubeTrack = (await self.node.get_tracks(cls=wavelink.YouTubeTrack,
                                                                   query=f"ytsearch:{query}"))[0]
         if not interaction.user.voice:
@@ -260,8 +261,8 @@ class Music(commands.Cog, description="Play songs in voice channels"):
         voice: wavelink.Player = interaction.guild.voice_client or await \
             interaction.user.voice.channel.connect(cls=wavelink.Player)
 
-        view = PlayerView()
         if voice.queue.is_empty and not voice.is_playing():
+            view = PlayerView()
             now_playing = discord.Embed(title="Queue",
                                         description=f'**Now playing**: [{song.title}]'
                                                     f'({song.uri})',
@@ -283,8 +284,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
         added_queue.add_field(name="Author", value=f"{song.author}")
 
         await voice.queue.put_wait(song)
-        await interaction.followup.send(embed=added_queue, view=view)
-        view.message = await interaction.original_response()
+        await interaction.followup.send(embed=added_queue)
 
     # Command for connecting to a voice channel. You can specify the channel or not, so it joins the channel you are in
     @group.command(name="connect", description="Connect to a voice channel")
