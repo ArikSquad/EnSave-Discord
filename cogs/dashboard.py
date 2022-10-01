@@ -62,13 +62,13 @@ class Dashboard(commands.Cog, description="Custom dashboard"):
 
     # Command to open the dashboard
     @app_commands.command(name="dashboard", description="Open the dashboard")
-    async def dashboard_command(self, ctx: commands.Context):
+    async def dashboard_command(self, interaction: discord.Interaction):
         embed = discord.Embed(
             title="Dashboard",
             description="[Click here to open the dashboard](https://ensave.mikart.eu/)",
             color=discord.Color.from_rgb(48, 50, 54),
         )
-        await ctx.send(embed=embed)
+        await interaction.response.send_message(embed=embed)
 
 
 async def setup(bot):
