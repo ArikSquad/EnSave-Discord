@@ -325,8 +325,6 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                                                              f'`{voice.channel.name}`.',
                                                  color=discord.Color.from_rgb(48, 50, 54),
                                                  timestamp=datetime.datetime.utcnow())
-                    disconnected.set_footer(text=f"Requested by {interaction.user.mention}",
-                                            icon_url=interaction.user.avatar.url)
                     await voice.disconnect()
                     return await interaction.response.send_message(embed=disconnected)
                 else:
