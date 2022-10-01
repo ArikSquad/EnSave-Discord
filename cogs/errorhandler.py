@@ -11,6 +11,8 @@ import aiohttp
 import discord
 from discord.ext import commands
 
+from utils import utility
+
 
 def error_formatter(error, maxlength):
     v = ''
@@ -30,18 +32,22 @@ class Errorhandler(commands.Cog, description="Errorhandler"):
         bot.tree.on_error = self.on_app_command_error
 
     async def traceback(self, interaction: discord.Interaction, embed: discord.Embed):
-        app_info = await self.bot.application_info()
+        owner: list = utility.get_owner()
+        for _owner_id in owner:
+            _owner = self.bot.get_user(_owner_id)
+            if _owner is None:
+                continue
 
-        channel = app_info.owner.dm_channel if app_info.owner.dm_channel else await app_info.owner.create_dm()
+            channel = _owner.dm_channel if _owner.dm_channel else await _owner.create_dm()
 
-        if not channel:
-            return
+            if not channel:
+                return
 
-        perms = channel.permissions_for(interaction.guild.me if interaction.guild else None)
-        if not perms.view_channel or not perms.send_messages or not perms.embed_links:
-            return
+            perms = channel.permissions_for(interaction.guild.me if interaction.guild else None)
+            if not perms.view_channel or not perms.send_messages or not perms.embed_links:
+                return
 
-        await channel.send(embed=embed)
+            await channel.send(embed=embed)
 
     _error_messages = {
         commands.NoPrivateMessage: 'This command cannot be used in private messages',
@@ -103,9 +109,7 @@ class Errorhandler(commands.Cog, description="Errorhandler"):
                 timestamp=datetime.datetime.utcnow()
             )
 
-            embed.add_field(name='Command', value=interaction.command)
-            embed.add_field(name='Original message',
-                            value=interaction.message.content[:1021] + (interaction.message.content[1021:] and '...'))
+            embed.add_field(name='Command', value=interaction.command.name)
             embed.add_field(name='Channel',
                             value='Private Message' if isinstance(interaction.channel,
                                                                   discord.DMChannel)
@@ -114,7 +118,7 @@ class Errorhandler(commands.Cog, description="Errorhandler"):
             embed.add_field(name='Sender', value=f'{interaction.user} (`{interaction.user.id}`)')
             embed.add_field(name='Exception', value=str(error))
             formatted_traceback = error_formatter(error.original, 4094)
-            embed.description = f'```py\nCog {interaction.command.cog.qualified_name}\n{formatted_traceback}```'
+            embed.description = f'```py\n{formatted_traceback}```'
 
             await self.traceback(interaction, embed)
 
