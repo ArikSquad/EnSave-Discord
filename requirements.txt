@@ -11,6 +11,7 @@ psutil
 Colorama
 PyNaCl
 Wavelink
+requests
 
 # This is for the database
 apscheduler

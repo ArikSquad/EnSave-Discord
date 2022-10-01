@@ -6,11 +6,12 @@
 #
 # -----------------------------------------------------------
 import datetime
+import json
 import os
 import typing
 
-import aiohttp
 import discord
+import requests
 import wavelink
 from discord import app_commands
 from discord.ext import commands
@@ -457,6 +458,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
     @group.command(name="lyrics", description="Gets the lyrics of the current track.")
     @app_commands.describe(name='The name of the song')
     async def lyrics_command(self, interaction: discord.Interaction, name: str = None):
+        await interaction.response.defer()
         voice: wavelink.Player = interaction.guild.voice_client
         if not name:
             if voice.is_playing():
@@ -464,19 +466,19 @@ class Music(commands.Cog, description="Play songs in voice channels"):
             else:
                 name = "Never Gonna Give You Up"
 
-        async with aiohttp.request("GET", "https://some-random-api.ml/lyrics?title=" + name, headers={}) as r:
-            if not 200 <= r.status <= 299:
-                return await interaction.response.send_message("Could not found anything.", ephemeral=True)
-
-            data = await r.json()
-
-            if len(data["lyrics"]) > 2000:
+        response = requests.get("https://some-random-api.ml/lyrics?title=" + name)
+        if response.status_code == 200:
+            data = json.loads(response.content)
+        else:
+            return await interaction.followup.send("Could not found anything.")
+        if data.get("lyrics"):
+            if len(data.get("lyrics")) > 2000:
                 embed2 = discord.Embed(
-                    title=data["title"],
+                    title=data.get("title"),
                     description=f"<{data['links']['genius']}>",
                     colour=interaction.user.colour,
                     timestamp=datetime.datetime.utcnow())
-                return await interaction.response.send_message(embed=embed2)
+                return await interaction.followup.send(embed=embed2)
 
             embed = discord.Embed(
                 title=data["title"],
@@ -485,7 +487,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                 timestamp=datetime.datetime.utcnow())
             embed.set_thumbnail(url=data["thumbnail"]["genius"])
             embed.set_author(name=data["author"])
-            await interaction.response.send_message(embed=embed)
+            await interaction.followup.send(embed=embed)
 
 
 async def setup(bot):
