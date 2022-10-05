@@ -291,20 +291,28 @@ class Music(commands.Cog, description="Play songs in voice channels"):
     @group.command(name="connect", description="Connect to a voice channel")
     @app_commands.describe(channel='The channel to connect to')
     async def connect_command(self, interaction: discord.Interaction, channel: discord.VoiceChannel = None) -> None:
+        voice: wavelink.Player = interaction.guild.voice_client
         if channel:
+            if voice.channel != channel:
+                await voice.move_to(channel)
+            else:
+                await channel.connect(cls=wavelink.Player)
             connected_success = discord.Embed(title="Music",
                                               description=f"Connected to `{channel.name}`",
                                               color=discord.Color.from_rgb(48, 50, 54),
                                               timestamp=datetime.datetime.utcnow())
-            await channel.connect(cls=wavelink.Player)
-            await interaction.response.send_message(embed=connected_success)
+
+            return await interaction.response.send_message(embed=connected_success)
         else:
             if interaction.user.voice:
+                if voice.channel != interaction.user.voice.channel:
+                    await voice.move_to(interaction.user.voice.channel)
+                else:
+                    await interaction.user.voice.channel.connect(cls=wavelink.Player)
                 connected_success = discord.Embed(title="Music",
                                                   description=f"Connected to `{interaction.user.voice.channel.name}`",
                                                   color=discord.Color.from_rgb(48, 50, 54),
                                                   timestamp=datetime.datetime.utcnow())
-                await interaction.user.voice.channel.connect(cls=wavelink.Player)
                 await interaction.response.send_message(embed=connected_success)
             else:
                 not_connected = discord.Embed(title="Music",
