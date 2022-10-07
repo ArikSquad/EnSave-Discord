@@ -1,8 +1,8 @@
 # -----------------------------------------------------------
 # This is a discord bot by ArikSquad and you are viewing the source code of it.
 #
-# (C) 2022 MikArt
-# Released under the CC BY-NC 4.0 (BY-NC 4.0)
+# (C) 2021-2022 MikArt
+# Released under the Apache License 2.0
 #
 # -----------------------------------------------------------
 import datetime
@@ -198,7 +198,6 @@ class Music(commands.Cog, description="Play songs in voice channels"):
 
     def __init__(self, bot):
         self.bot = bot
-        self.node: wavelink.Node = None
 
     # Create connect node task, when the bot is ready
     @commands.Cog.listener()
@@ -207,8 +206,10 @@ class Music(commands.Cog, description="Play songs in voice channels"):
 
     # Connect the bot to a lavalink server
     async def connect_nodes(self) -> None:
-        node = await wavelink.NodePool.create_node(bot=self.bot, host=host_server, port=2333, password=host_pass)
-        self.node = node
+        await wavelink.NodePool.create_node(bot=self.bot, host=host_server, port=2333, password=host_pass)
+        # If you connect, then atleast join our discord!
+        await wavelink.NodePool.create_node(bot=self.bot, host='lavalink.arilive.repl.co',
+                                            port=443, password='thatsrealfunny', https=True)
 
     # When a Wavelink node is ready this will be run
     @commands.Cog.listener()
@@ -237,7 +238,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
     # noinspection PyUnusedLocal
     async def play_autocomplete(self, interaction: discord.Interaction,
                                 current: str) -> typing.List[app_commands.Choice[str]]:
-        search = await self.node.get_tracks(cls=wavelink.YouTubeTrack, query=f"ytsearch:{current}")
+        search = await wavelink.YouTubeTrack.search(query=f"ytsearch:{current}")
         return [
             app_commands.Choice(name=track.title, value=track.title)
             for track in search if current.lower() in track.title.lower()
@@ -250,8 +251,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
     async def play(self, interaction: discord.Interaction, query: str) -> None:
         await interaction.response.defer()
         # This will soon change when we find a way to use spotify
-        song: wavelink.YouTubeTrack = (await self.node.get_tracks(cls=wavelink.YouTubeTrack,
-                                                                  query=f"ytsearch:{query}"))[0]
+        song: wavelink.YouTubeTrack = (await wavelink.YouTubeTrack.search(query=f"ytsearch:{query}"))[0]
         if not interaction.user.voice:
             not_connected = discord.Embed(title="Music",
                                           description=f"You are not connected to a voice channel.",
@@ -292,7 +292,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
     @app_commands.describe(channel='The channel to connect to')
     async def connect_command(self, interaction: discord.Interaction, channel: discord.VoiceChannel = None) -> None:
         voice: wavelink.Player = interaction.guild.voice_client
-        if channel:
+        if channel is not None:
             if voice.channel != channel:
                 await voice.move_to(channel)
             else:
