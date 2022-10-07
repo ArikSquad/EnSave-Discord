@@ -6,10 +6,10 @@
   <br>
 </h1>
 
-<h4 align="center">True bot for everything you need from a bot.</h4>
+<h4 align="center">True bot everything you need from a bot.</h4>
 
 <p align="center">
-  <a href="https://discord.gg/Z5N5AWJmrA">
+  <a href="https://discord.gg/mikart">
     <img src="https://discordapp.com/api/guilds/770634445370687519/widget.png?style=shield" alt="Discord Server">
   </a>
 
@@ -26,7 +26,8 @@
      <img src="https://img.shields.io/badge/discord-py-blue.svg" alt="discord-py">
   <a href="https://www.apache.org/licenses/LICENSE-2.0">
     <img src="https://img.shields.io/badge/License-Apache_2.0-olive.svg" alt="license">
-  <a href="https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2FArikSquad%2FEnSave-Discord">
+  <a href="https://twitter.com/intent/tweet?text=This%20is%20amazing:&url=https%3A%2F%2Fgithub.com%2FArikSquad%2FEnSave-Discord">
+    <img src="https://img.shields.io/badge/tweet-us-blue.svg" alt="discord-py">
   </a>
   </a>
 </a>
@@ -104,5 +105,7 @@ CREATE TABLE "user" (
 If you found any vulnerabilities or issues please open an issue at the [Issues](https://github.com/ArikSquad/EnSave-Discord/issues) tab.
  
 # License
-This work is licensed under the [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/). To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA. You are allowed to fork the project and distribute it, if you give credit. You may not sell any code protected by the license. Not all source files are protected by this license - Some third party libraries may be under different copyright.
+This work is licensed under the [Apache License](https://www.apache.org/licenses/LICENSE-2.0), you may not use this file except in compliance with the License. You may obtain a copy of the License at https://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+<br>
+<b>Not all source files are protected by this license - Some third party libraries may be under different copyright.</b>
 
