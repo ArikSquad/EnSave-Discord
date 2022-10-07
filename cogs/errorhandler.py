@@ -1,8 +1,5 @@
 # -----------------------------------------------------------
 # This is a discord bot by ArikSquad and you are viewing the source code of it.
-#
-# This file is not protected by any license
-#
 # -----------------------------------------------------------
 import datetime
 import traceback
@@ -60,7 +57,8 @@ class Errorhandler(commands.Cog, description="Errorhandler"):
         commands.BadArgument: 'Invalid argument given!',
         commands.CommandNotFound: None,
         commands.UserInputError: 'Invalid command usage!',
-        aiohttp.ClientConnectorError: 'The music server is currently offline.',
+        aiohttp.ClientConnectorError: 'The EnSave music servers are currently offline, '
+                                      'please retry later as they restart.'
     }
 
     async def on_app_command_error(self, interaction: discord.Interaction, error):

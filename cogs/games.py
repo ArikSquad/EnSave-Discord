@@ -2,7 +2,7 @@
 # This is a discord bot by ArikSquad and you are viewing the source code of it.
 #
 # (C) 2021-2022 MikArt
-# Released under the CC BY-NC 4.0 (BY-NC 4.0)
+# Released under the Apache License 2.0
 #
 # -----------------------------------------------------------
 import random
