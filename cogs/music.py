@@ -238,7 +238,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
     # noinspection PyUnusedLocal
     async def play_autocomplete(self, interaction: discord.Interaction,
                                 current: str) -> typing.List[app_commands.Choice[str]]:
-        search = await wavelink.YouTubeTrack.search(query=f"ytsearch:{current}")
+        search = await wavelink.YouTubeTrack.search(query=current)
         return [
             app_commands.Choice(name=track.title, value=track.title)
             for track in search if current.lower() in track.title.lower()
@@ -251,7 +251,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
     async def play(self, interaction: discord.Interaction, query: str) -> None:
         await interaction.response.defer()
         # This will soon change when we find a way to use spotify
-        song: wavelink.YouTubeTrack = (await wavelink.YouTubeTrack.search(query=f"ytsearch:{query}"))[0]
+        song: wavelink.YouTubeTrack = await wavelink.YouTubeTrack.search(query=query, return_first=True)
         if not interaction.user.voice:
             not_connected = discord.Embed(title="Music",
                                           description=f"You are not connected to a voice channel.",
