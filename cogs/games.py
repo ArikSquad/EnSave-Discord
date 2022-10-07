@@ -11,7 +11,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from utils import db, utility
+from utils import db
 
 
 class Games(commands.Cog, description="Fun game commands"):
@@ -68,7 +68,7 @@ class Games(commands.Cog, description="Fun game commands"):
     # Slash command to slap someone
     @app_commands.command(name="slap", description="Slap someone!")
     async def slap(self, interaction: discord.Interaction, member: discord.Member):
-        if member.id == utility.get_id():
+        if member.id == self.bot.user.id:
             dodge = discord.Embed(title=interaction.user.name,
                                   description=f"tried to slap me, but I dodged. 😑",
                                   color=interaction.user.color)

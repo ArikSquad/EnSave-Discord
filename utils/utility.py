@@ -34,12 +34,6 @@ def set_prefix(guild_id, prefix) -> None:
     db.set_guild_prefix(guild_id, prefix)
 
 
-def get_id():
-    with open('data/config.json', 'r') as f:
-        config = json.load(f)
-    return config['bot_id']
-
-
 def set_premium(user_id, premium: bool = True) -> None:
     value = 1 if premium else 0
     db.set_user_premium(user_id, value)
