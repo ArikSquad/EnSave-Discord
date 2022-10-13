@@ -435,26 +435,6 @@ class Music(commands.Cog, description="Play songs in voice channels"):
                                           timestamp=datetime.datetime.utcnow())
             return await interaction.response.send_message(embed=not_connected, ephemeral=True)
 
-    # Command to see information about the current track.
-    @group.command(name="playing", description="Gives more information about the current track.")
-    async def playing_command(self, interaction: discord.Interaction):
-        voice: wavelink.Player = interaction.guild.voice_client
-        if voice.queue:
-            song = await voice.queue.get()
-            embed = discord.Embed(title="Queue",
-                                  description=f"**{song.title}**\n\n"
-                                  )
-            if isinstance(song, wavelink.YouTubeTrack):
-                embed.set_thumbnail(url=song.thumbnail)
-            embed.add_field(name="Author", value=song.author)
-            await interaction.response.send_message(embed=embed)
-        else:
-            no_tracks = discord.Embed(title="Queue",
-                                      description=f"No tracks are queued.",
-                                      color=discord.Color.from_rgb(48, 50, 54),
-                                      timestamp=datetime.datetime.utcnow())
-            await interaction.response.send_message(embed=no_tracks, ephemeral=True)
-
     # Command to skip songs
     @group.command(name="skip", description="Skips the current song.")
     async def skip_command(self, interaction: discord.Interaction):
