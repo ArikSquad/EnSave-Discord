@@ -305,7 +305,7 @@ class Music(commands.Cog, description="Play songs in voice channels"):
             return await interaction.response.send_message(embed=connected_success)
         else:
             if interaction.user.voice:
-                if voice.channel != interaction.user.voice.channel:
+                if voice and voice.is_connected() and voice.channel != interaction.user.voice.channel:
                     await voice.move_to(interaction.user.voice.channel)
                 else:
                     await interaction.user.voice.channel.connect(cls=wavelink.Player)
