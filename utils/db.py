@@ -1,7 +1,7 @@
 # -----------------------------------------------------------
 # This is a discord bot by ArikSquad and you are viewing the source code of it.
 #
-# (C) 2021-2022 MikArt
+# (C) 2021-2023 MikArt
 # Released under the Apache License 2.0
 #
 # -----------------------------------------------------------
@@ -90,14 +90,6 @@ def set_guild_spy_channel(guild_id: int, channel: int) -> None:
     execute("UPDATE guild SET channel = ? WHERE guildID = ?", channel, guild_id)
 
 
-def get_guild_prefix(guild_id: int) -> str:
-    return str(field("SELECT prefix FROM guild WHERE guildID = ?", guild_id))
-
-
-def set_guild_prefix(guild_id: int, prefix: str) -> None:
-    execute("UPDATE guild SET prefix = ? WHERE guildID = ?", prefix, guild_id)
-
-
 def remove_guild(guild_id: int) -> None:
     execute("DELETE FROM guild WHERE guildID = ?", guild_id)
 
@@ -112,4 +104,3 @@ def add_code(code: str) -> None:
 
 def remove_code(code: str) -> None:
     execute("DELETE FROM code WHERE secret = ?", code)
-

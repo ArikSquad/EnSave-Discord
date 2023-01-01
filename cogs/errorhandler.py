@@ -4,8 +4,8 @@
 import datetime
 import traceback
 
-import aiohttp
 import discord
+from discord.app_commands import MissingPermissions
 from discord.ext import commands
 
 from utils import utility
@@ -47,29 +47,24 @@ class Errorhandler(commands.Cog, description="Errorhandler"):
             await channel.send(embed=embed)
 
     _error_messages = {
-        commands.NoPrivateMessage: 'This command cannot be used in private messages',
-        commands.BotMissingPermissions: '{err}',
-        commands.DisabledCommand: 'This command is disabled and cannot be used',
-        commands.CheckFailure: '{err}',
-        commands.CommandOnCooldown: '{err}',
-        commands.errors.CommandOnCooldown: '{err}',
-        commands.MissingRequiredArgument: 'You are missing a required argument! ',
-        commands.BadArgument: 'Invalid argument given!',
-        commands.CommandNotFound: None,
-        commands.UserInputError: 'Invalid command usage!',
-        aiohttp.ClientConnectorError: 'The EnSave music servers are currently offline, '
-                                      'please retry later as they restart.'
+        MissingPermissions: 'You don\'t have the required permissions to use this command!',
     }
 
     async def on_app_command_error(self, interaction: discord.Interaction, error):
         classname = error.__class__
         if classname in self._error_messages.keys():
             msg = self._error_messages.get(classname, None)
+            msg_embed = discord.Embed(
+                title=msg.format(interaction=interaction, err=error),
+                description='If you think this is a mistake, please contact server administration!',
+                timestamp=datetime.datetime.utcnow(),
+                colour=discord.Color.from_rgb(48, 50, 54)
+            )
             if isinstance(msg, str):
                 if interaction.response.is_done():
-                    interaction.followup.send(msg.format(interaction=interaction, err=error))
+                    interaction.followup.send(embed=msg_embed)
                 else:
-                    await interaction.response.send_message(msg.format(interaction=interaction, err=error))
+                    await interaction.response.send_message(embed=msg_embed)
         else:
 
             if isinstance(error, (commands.CommandError, commands.CheckFailure)) \
@@ -77,7 +72,7 @@ class Errorhandler(commands.Cog, description="Errorhandler"):
                 error_embed = discord.Embed(
                     title=f'Something went wrong',
                     description=f'{error}',
-                    color=discord.Color.red()
+                    color=discord.Color.from_rgb(48, 50, 54)
                 )
                 error_embed.add_field(name='Command Information',
                                       value=f'Command: {interaction.command}\n'
@@ -90,8 +85,9 @@ class Errorhandler(commands.Cog, description="Errorhandler"):
 
             execute_error = discord.Embed(
                 color=discord.Colour(0xff0000),
-                title='An error occured while trying to execute that command, '
-                      'Please contact ArikSquad#6222',
+                title='Something went wrong',
+                description='An error has occurred while executing the command, '
+                            'try contacting ArikSquad#6222 to help us fix this issue!',
                 timestamp=datetime.datetime.utcnow()
             )
             if interaction.response.is_done():

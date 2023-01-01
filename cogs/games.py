@@ -1,7 +1,7 @@
 # -----------------------------------------------------------
 # This is a discord bot by ArikSquad and you are viewing the source code of it.
 #
-# (C) 2021-2022 MikArt
+# (C) 2021-2023 MikArt
 # Released under the Apache License 2.0
 #
 # -----------------------------------------------------------
@@ -56,13 +56,13 @@ class Games(commands.Cog, description="Fun game commands"):
         if random.choice(determine_flip) == 1:
             embed = discord.Embed(title="Fun",
                                   description=f"{interaction.user.mention} Flipped coin, we got **Heads**!",
-                                  color=interaction.user.color)
+                                  color=discord.Color.from_rgb(48, 50, 54))
             await interaction.response.send_message(embed=embed)
 
         else:
             embed = discord.Embed(title="Fun",
                                   description=f"{interaction.user.mention} Flipped coin, we got **Tails**!",
-                                  color=interaction.user.color)
+                                  color=discord.Color.from_rgb(48, 50, 54))
             await interaction.response.send_message(embed=embed)
 
     # Slash command to slap someone
@@ -71,7 +71,7 @@ class Games(commands.Cog, description="Fun game commands"):
         if member.id == self.bot.user.id:
             dodge = discord.Embed(title=interaction.user.name,
                                   description=f"tried to slap me, but I dodged. 😑",
-                                  color=interaction.user.color)
+                                  color=discord.Color.from_rgb(48, 50, 54))
             await interaction.response.send_message(embed=dodge)
         elif member.id is interaction.user.id:
             embed = discord.Embed(title=interaction.user.name,
@@ -79,18 +79,18 @@ class Games(commands.Cog, description="Fun game commands"):
                                               f"but hit too hard and while in coma " 
                                               f"Elon Musk visited their house, but "
                                               f"they were too weak to see him. 😑",
-                                  color=interaction.user.color)
+                                  color=discord.Color.from_rgb(48, 50, 54))
             await interaction.response.send_message(embed=embed)
         elif db.get_user_premium(member.id):
             embed = discord.Embed(title=interaction.user.name,
                                   description=f"tried to slap {member.name}, but had no strength to hit "
                                               f"a premium user. 😑",
-                                  color=interaction.user.color)
+                                  color=discord.Color.from_rgb(48, 50, 54))
             await interaction.response.send_message(embed=embed)
         else:
             embed = discord.Embed(title=interaction.user.name,
                                   description=f"just slapped {member.mention} in the face!",
-                                  color=interaction.user.color)
+                                  color=discord.Color.from_rgb(48, 50, 54))
             await interaction.response.send_message(embed=embed)
 
     # Slash command to ask the 8ball a question

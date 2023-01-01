@@ -1,7 +1,7 @@
 # -----------------------------------------------------------
 # This is a discord bot by ArikSquad and you are viewing the source code of it.
 #
-# (C) 2021-2022 MikArt
+# (C) 2021-2023 MikArt
 # Released under the Apache License 2.0
 #
 # -----------------------------------------------------------
@@ -18,7 +18,7 @@ class Spy(commands.Cog, description="Spying"):
 
     # When a message is edited, send a message in the spy channel
     @commands.Cog.listener()
-    async def on_message_edit(self, before, after) -> None:
+    async def on_message_edit(self, before: discord.Message, after: discord.Message) -> None:
         spy = db.get_guild_spy(before.guild.id)
         spy_channel = db.get_guild_spy_channel(before.guild.id)
 
@@ -27,13 +27,17 @@ class Spy(commands.Cog, description="Spying"):
                 return
             if before.content == after.content:
                 return
+
             embed = discord.Embed(
                 title="Message edited",
-                description=f"{before.author.mention} message was edited",
+                description=f"A message sent by {before.author.mention} was edited",
                 color=discord.Color.blue(),
             )
             embed.add_field(name="Before", value=before.content, inline=False)
             embed.add_field(name="After", value=after.content, inline=False)
+            embed.add_field(name="Channel", value=before.channel.mention, inline=False)
+            embed.add_field(name="Time changed", value=after.edited_at, inline=False)
+            embed.add_field(name="Message link", value=before.jump_url, inline=False)
             embed.set_footer(text=f"Message ID: {before.id}")
 
             channel = self.bot.get_channel(spy_channel)
@@ -48,12 +52,15 @@ class Spy(commands.Cog, description="Spying"):
         if spy and spy_channel:
             if message.author.bot:
                 return
+
             embed = discord.Embed(
                 title="Message deleted",
-                description=f"{message.author.mention} message was deleted.",
+                description=f"A message sent by {message.author.mention} was deleted",
                 color=discord.Color.red(),
             )
             embed.add_field(name="Message", value=message.content)
+            embed.add_field(name="Channel", value=message.channel.mention)
+            embed.add_field(name="Time posted", value=message.created_at.strftime("%d/%m/%Y %H:%M:%S"))
             embed.set_footer(text=f"Message ID: {message.id}")
 
             channel = self.bot.get_channel(spy_channel)
@@ -61,26 +68,18 @@ class Spy(commands.Cog, description="Spying"):
 
     # Toggle the spying on a server
     @app_commands.command(name="spy",
-                          description="Toggle spying on the server.")
+                          description="Enable or disable message editing or deleting messages.")
     @app_commands.checks.has_permissions(manage_guild=True)
     @app_commands.guild_only()
     async def spy(self, interaction: discord.Interaction,
-                  notify_channel: discord.TextChannel = None, toggle: bool = None) -> None:
-        if toggle:
-            value = 1 if toggle is True else 0
-            db.set_guild_spy(interaction.guild.id, value)
-        else:
-            db.set_guild_spy(interaction.guild.id, not db.get_guild_spy(interaction.guild.id))
+                  notify_channel: discord.TextChannel, toggle: bool) -> None:
+        db.set_guild_spy(interaction.guild.id, 1 if toggle is True else 0)
+        db.set_guild_spy_channel(interaction.guild.id, notify_channel.id)
 
-        channel = ""
-        if notify_channel:
-            db.set_guild_spy_channel(interaction.guild.id, notify_channel.id)
-            channel = f"on the channel {notify_channel.name}."
-
-        toggled = "enabled" if toggle else "disabled"
         embed = discord.Embed(
             title="Spy",
-            description=f"Spying is now {toggled} {channel}",
+            description=f"Spying is now {'enabled' if toggle else 'disabled'} "
+                        f"{f'on the channel {notify_channel.name}.' if notify_channel else ''}",
             color=discord.Color.green(),
         )
 

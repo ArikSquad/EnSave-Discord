@@ -90,7 +90,6 @@ CREATE TABLE "code" (
 );
 CREATE TABLE "guild" (
 	"guildID"	INTEGER UNIQUE,
-	"prefix"	TEXT DEFAULT '.',
 	"spy"	INTEGER DEFAULT 0,
 	"channel"	INTEGER
 );

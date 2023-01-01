@@ -1,7 +1,7 @@
 # -----------------------------------------------------------
 # This is a discord bot by ArikSquad and you are viewing the source code of it.
 #
-# (C) 2021-2022 MikArt
+# (C) 2021-2023 MikArt
 # Released under the Apache License 2.0
 #
 # -----------------------------------------------------------
@@ -20,20 +20,5 @@ def get_owner() -> list:
     return owners
 
 
-# These will be removed later, after week of warnings.
-def get_prefix(ctx, message):
-    return db.get_guild_prefix(message.guild.id)
-
-
-def get_prefix_id(guild_id):
-    prefix = db.get_guild_prefix(guild_id)
-    return prefix
-
-
-def set_prefix(guild_id, prefix) -> None:
-    db.set_guild_prefix(guild_id, prefix)
-
-
 def set_premium(user_id, premium: bool = True) -> None:
-    value = 1 if premium else 0
-    db.set_user_premium(user_id, value)
+    db.set_user_premium(user_id, 1 if premium else 0)

@@ -1,7 +1,7 @@
 # -----------------------------------------------------------
 # This is a discord bot by ArikSquad and you are viewing the source code of it.
 #
-# (C) 2021-2022 MikArt
+# (C) 2021-2023 MikArt
 # Released under the Apache License 2.0
 #
 # -----------------------------------------------------------
@@ -71,7 +71,7 @@ def get_string():
     sample_list = list(letters + digits)
     random.shuffle(sample_list)
     final_string = ''.join(sample_list)
-    return "a" + final_string
+    return final_string
 
 
 class Admin(commands.Cog, description="Administration commands for the bot"):
@@ -135,52 +135,60 @@ class Admin(commands.Cog, description="Administration commands for the bot"):
     @group.command(name="info", description="Gather information about the bot.")
     @app_commands.guild_only()
     async def info(self, interaction: discord.Interaction, user: discord.Member = None):
-        if not user and interaction.user.id in utility.get_owner():
-            embed = discord.Embed(title="Information", color=discord.Color.from_rgb(48, 50, 54))
-            embed.add_field(name="Authors", value=str(utility.get_owner())[1:-1], inline=False)
-            embed.add_field(name="Author IDs", value=str(utility.get_owner())[1:-1], inline=False)
-            embed.add_field(name="Library", value=f"{discord.__title__} by {discord.__author__}")
-            embed.add_field(name="Version", value=discord.__version__)
-            embed.add_field(name="Guilds", value=len(self.bot.guilds))
-            embed.add_field(name="Users", value=len(self.bot.users))
-            embed.add_field(name="Latency", value=f"{self.bot.latency * 1000:.2f}ms")
-            embed.add_field(name="Memory", value=str(round(psutil.virtual_memory().total /
-                                                           (1024.0 ** 3))) + " GB",
-                            inline=False)
-            embed.add_field(name="OS Last Boot", value=f"{psutil.boot_time()}")
-            embed.add_field(name="CPU Percentage", value=f"{psutil.cpu_percent()}%")
-            await interaction.response.send_message(embed=embed)
-        else:
-            if user and interaction.user.id in utility.get_owner():
-                embed = discord.Embed(title="Information", color=discord.Color.from_rgb(48, 50, 54))
-                embed.set_thumbnail(url=user.avatar.url)
-                embed.add_field(name="Username", value=user.name)
-                embed.add_field(name="Discriminator", value=user.discriminator, inline=False)
-                embed.add_field(name="ID", value=user.id, inline=False)
-                embed.add_field(name="Created at", value=user.created_at.strftime("%d/%m/%Y %H:%M:%S"),
-                                inline=False)
-                embed.add_field(name="Premium", value="Yes" if db.get_user_premium(user.id) is True else "No",
-                                inline=False)
-                embed.add_field(name="Bot Status", value="Yes" if user.bot is True else "No", inline=False)
-                embed.add_field(name="Bot Owner", value="Yes" if user.id in utility.get_owner() else "No",
-                                inline=False)
-                await interaction.response.send_message(embed=embed)
-            else:
-                await interaction.response.send_message("You do not have permissions.")
+        if interaction.user.id in utility.get_owner():
+            return await interaction.response.send_message("You do not have permissions.", ephemeral=True)
 
-    @group.command(name='set-premium', description='Set premium state of a user.')
-    async def set_premium(self, interaction: discord.Interaction, user: discord.Member, state: bool = None):
+        user = self.bot.get_user(interaction.user.id if user is None else user.id)
+
+        # Guild Information
+        guild_embed = discord.Embed(title="Guild Information", color=discord.Color.from_rgb(48, 50, 54))
+        guild_embed.add_field(
+            name="Discord Api Library",
+            value=f"**Lib Name**: {discord.__title__}\n**Lib Author**: "
+                  f"{discord.__author__}\n**Lib Version**: {discord.__version__}",
+        )
+        guild_embed.add_field(name="Guilds", value=len(self.bot.guilds))
+        guild_embed.add_field(name="Users", value=len(self.bot.users))
+        guild_embed.add_field(name="Latency", value=f"{self.bot.latency * 1000:.2f}ms")
+        guild_embed.add_field(name="Memory", value=str(round(psutil.virtual_memory().total /
+                                                             (1024.0 ** 3))) + " GB",
+                              inline=False)
+        guild_embed.add_field(name="OS Last Boot", value=f"OS was last booted {psutil.boot_time()} seconds ago")
+        guild_embed.add_field(name="CPU Percentage", value=f"{psutil.cpu_percent()}%")
+
+        # User Information
+        user_embed = discord.Embed(title="User Information", color=discord.Color.from_rgb(48, 50, 54))
+        user_embed.set_thumbnail(url=user.avatar.url)
+        user_embed.add_field(name="Username", value=user.name)
+        user_embed.add_field(name="Discriminator", value=user.discriminator, inline=False)
+        user_embed.add_field(name="ID", value=user.id, inline=False)
+
+        if user.bot:
+            user_embed.add_field(name="Status", value=f"{user.name} is a bot", inline=False)
+
+        user_embed.add_field(name="Created at", value=user.created_at.strftime("%d/%m/%Y %H:%M:%S"),
+                             inline=False)
+
+        user_embed.add_field(
+            name="Status",
+            value=f"{user.name} is a {'owner' if user.id in utility.get_owner() else 'premium user' if db.get_user_premium(user.id) is True else 'bot' if user.bot else 'happy user'}",
+            inline=False
+        )
+
+        await interaction.response.send_message(embeds=[guild_embed, user_embed])
+
+    @group.command(name='premium', description='Set premium state of a user.')
+    async def premium(self, interaction: discord.Interaction, user: discord.Member, state: bool = None):
         if interaction.user.id in utility.get_owner():
             if state:
                 utility.set_premium(user.id, state)
             else:
                 utility.set_premium(user.id)
-            await interaction.response.send_message(f"{user.mention}'s new state of premium: {state}")
 
-    @group.command(name='get-premium', description='Get premium state of a user.')
-    async def get_premium(self, interaction: discord.Interaction, user: discord.Member):
-        if interaction.user.id in utility.get_owner():
-            await interaction.response.send_message(f"{user.mention}'s premium state: {db.get_user_premium(user.id)}")
+            await interaction.response.send_message(
+                f"{user.mention}'s premium state: {db.get_user_premium(user.id)}",
+                ephemeral=True
+            )
 
     @group.command(name="message", description="Send an group message to a user.")
     async def message(self, interaction: discord.Interaction, user: discord.Member, message: str):
@@ -225,10 +233,8 @@ class Admin(commands.Cog, description="Administration commands for the bot"):
     @app_commands.guild_only()
     async def keydrop(self, interaction: discord.Interaction, time: str = "1m", key: str = None):
         if interaction.user.id in utility.get_owner():
-            if not str(key).startswith("a"):
-                await interaction.message.delete()
-
             key = key if key else get_string()
+            await interaction.user.send_message(f"Succesfully created a key with key: {key}")
 
             # Create the embed and convert the wait time to seconds
             embed = discord.Embed(title="Key", color=discord.Color.from_rgb(48, 50, 54), timestamp=datetime.utcnow())

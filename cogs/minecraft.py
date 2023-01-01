@@ -1,10 +1,11 @@
 # -----------------------------------------------------------
 # This is a discord bot by ArikSquad and you are viewing the source code of it.
 #
-# (C) 2021-2022 MikArt
+# (C) 2021-2023 MikArt
 # Released under the Apache License 2.0
 #
 # -----------------------------------------------------------
+import datetime
 import os
 
 import discord
@@ -57,8 +58,13 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
                 beds_broken = (data['player']['stats']["Bedwars"]["beds_broken_bedwars"])
                 beds_lost = (data['player']['stats']["Bedwars"]["beds_lost_bedwars"])
             else:
-                return await interaction.response.send_message("This command could not be executed. "
-                                                               "Most likely due ratelimit.", ephemeral=True)
+                err_embed = discord.Embed(
+                    title="Sorry, but we couldn't find that player.",
+                    description='If you think this is a mistake, please contact us!',
+                    timestamp=datetime.datetime.utcnow(),
+                    colour=discord.Color.from_rgb(48, 50, 54)
+                )
+                return await interaction.response.send_message(embed=err_embed, ephemeral=True)
 
         embed = discord.Embed(title=f"{username} Bedwars Stats", color=discord.Color.from_rgb(48, 50, 54))
         embed.add_field(name="Games Played", value=f"{games_played} games", inline=False)
@@ -72,10 +78,11 @@ class Minecraft(commands.Cog, description="Minecraft tools"):
 
     # Command to get a Minecraft user's skin
     @app_commands.command(name="skin", description="Get a Minecraft user skin.")
-    async def get_skin(self, interaction: discord.Interaction, username: str):
-        embed = discord.Embed(title=f"{username}'s skin",
-                              description=f"Loading the skin of {username}...",
-                              color=discord.Color.from_rgb(48, 50, 54))
+    async def skin(self, interaction: discord.Interaction, username: str):
+        embed = discord.Embed(
+            title=f"{username}'s skin",
+            color=discord.Color.from_rgb(48, 50, 54)
+        )
         embed.set_thumbnail(url="https://minotar.net/helm/" + username)
         embed.set_image(url="https://minotar.net/armor/body/" + username)
         await interaction.response.send_message(embed=embed)

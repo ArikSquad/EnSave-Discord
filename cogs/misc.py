@@ -1,7 +1,7 @@
 # -----------------------------------------------------------
 # This is a discord bot by ArikSquad and you are viewing the source code of it.
 #
-# (C) 2021-2022 MikArt
+# (C) 2021-2023 MikArt
 # Released under the Apache License 2.0
 #
 # -----------------------------------------------------------
@@ -15,7 +15,7 @@ from discord.ext import commands
 from utils import utility, db
 
 
-class Misc(commands.Cog, description="Random commands"):
+class Misc(commands.Cog, description="Random set of commands that might be useful"):
     def __init__(self, bot) -> None:
         self.bot = bot
         self.ctx_menu = app_commands.ContextMenu(
@@ -41,7 +41,7 @@ class Misc(commands.Cog, description="Random commands"):
                                                              if message.author.avatar.url
                                                              else self.bot.user.avatar.url,
                                                              wait=True)
-        await interaction.followup.send(f'Successfully resent message: [Here]({msg.jump_url}) ',)
+        await interaction.followup.send(f'Successfully resent message: [Here]({msg.jump_url}) ')
         await webh.delete(reason='Resend Context Menu ended')
 
     @app_commands.command(name="dog", description="Posts a fun dog picture in the chat!")
